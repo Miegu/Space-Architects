@@ -10,144 +10,135 @@
     <link rel="stylesheet" href="css/editor.css">
     
     <!-- Preload critical assets for better performance -->
-    <link rel="preload" href="assets/images/lunar-surface.jpg" as="image">
     <link rel="preload" href="assets/images/nasa-logo.png" as="image">
 </head>
 <body>
-    <!-- 
-        WELCOME PAGE 
-        First screen - NASA branding and project introduction
-        Shows when app first loads
-    -->
+    <!-- WELCOME PAGE - Modern Blueprint Design -->
     <div id="welcome-page" class="page active">
-    <!-- Animated Background -->
-    <div class="space-background">
-        <div class="stars-layer"></div>
-        <div class="nebula-overlay"></div>
-        <div class="grid-overlay"></div>
+        <!-- Animated Background -->
+        <div class="space-background">
+            <div class="stars-layer"></div>
+            <div class="nebula-overlay"></div>
+            <div class="grid-overlay"></div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="welcome-container">
+            <!-- NASA Header with Animation -->
+            <header class="nasa-header-modern">
+                <div class="logo-container">
+                    <img src="assets/images/nasa-logo.png" alt="NASA Logo" class="nasa-logo-modern">
+                    <div class="logo-glow"></div>
+                </div>
+                
+                <!-- Main Title with Animations -->
+                <div class="title-section">
+                    <h1 class="main-title-modern">
+                        <span class="title-line-1">Space Architects</span>
+                        <span class="title-separator">—</span>
+                        <span class="title-line-2">Habitat Layout Creator</span>
+                    </h1>
+                    <div class="title-underline"></div>
+                </div>
+                
+                <p class="mission-subtitle-modern">Design the Future of Space Living</p>
+            </header>
+            
+            <!-- Primary CTA Section -->
+            <div class="cta-section">
+                <button class="btn-primary-modern" id="start-mission-btn">
+                    <span class="btn-icon">🚀</span>
+                    <span class="btn-text">Start Mission Planning</span>
+                    <span class="btn-arrow">→</span>
+                    <div class="btn-glow-effect"></div>
+                </button>
+                
+                <!-- Brief Description -->
+                <p class="mission-description">
+                    Design safe, efficient living spaces for astronauts on lunar and Mars missions.<br>
+                    Built on real <strong>NASA standards</strong> and requirements for space habitation.
+                </p>
+            </div>
+            
+            <!-- Compact Feature Cards with Hover Effects -->
+            <div class="features-compact">
+                <div class="feature-card-compact" data-feature="design">
+                    <div class="feature-icon">
+                        <svg class="icon-svg" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M12 12V22" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="feature-info">
+                        <h3>Drag & Drop Design</h3>
+                        <p>Intuitive room placement with real-time NASA compliance validation</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card-compact" data-feature="standards">
+                    <div class="feature-icon">
+                        <svg class="icon-svg" viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="feature-info">
+                        <h3>NASA Standards</h3>
+                        <p>Built-in checking for safety requirements and space efficiency</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card-compact" data-feature="mission">
+                    <div class="feature-icon">
+                        <svg class="icon-svg" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <path d="M12 2A10 10 0 0 0 12 22" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M2 12H22" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="feature-info">
+                        <h3>Mission Ready</h3>
+                        <p>Optimized for Luna and Mars environments with realistic constraints</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card-compact" data-feature="education">
+                    <div class="feature-icon">
+                        <svg class="icon-svg" viewBox="0 0 24 24">
+                            <path d="M2 3H6.5L9 5.5L15 5.5L17.5 3H22V21H2V3Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <path d="M9 12H15" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M9 16H13" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="feature-info">
+                        <h3>Educational</h3>
+                        <p>Learn about space architecture through interactive design</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Technical Stats Footer -->
+            <div class="tech-stats">
+                <div class="stat-item">
+                    <span class="stat-number">25+</span>
+                    <span class="stat-label">m³ per astronaut</span>
+                </div>
+                <div class="stat-separator">|</div>
+                <div class="stat-item">
+                    <span class="stat-number">8</span>
+                    <span class="stat-label">essential areas</span>
+                </div>
+                <div class="stat-separator">|</div>
+                <div class="stat-item">
+                    <span class="stat-number">NASA</span>
+                    <span class="stat-label">compliant</span>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <!-- Main Content -->
-    <div class="welcome-container">
-        <!-- NASA Header with Animation -->
-        <header class="nasa-header-modern">
-            <div class="logo-container">
-                <img src="assets/images/nasa-logo.png" alt="NASA Logo" class="nasa-logo">
-                <div class="logo-glow"></div>
-            </div>
-            
-            <!-- Main Title with Typewriter Effect -->
-            <div class="title-section">
-                <h1 class="main-title">
-                    <span class="title-line-1">Space Architects</span>
-                    <span class="title-separator">—</span>
-                    <span class="title-line-2">Habitat Layout Creator</span>
-                </h1>
-                <div class="title-underline"></div>
-            </div>
-            
-            <p class="mission-subtitle">Design the Future of Space Living</p>
-        </header>
-        
-        <!-- Primary CTA Section -->
-        <div class="cta-section">
-            <button class="btn-primary-modern" id="start-mission-btn">
-                <span class="btn-icon">🚀</span>
-                <span class="btn-text">Start Mission Planning</span>
-                <span class="btn-arrow">→</span>
-                <div class="btn-glow-effect"></div>
-            </button>
-            
-            <!-- Brief Description -->
-            <p class="mission-description">
-                Design safe, efficient living spaces for astronauts on lunar and Mars missions.<br>
-                Built on real <strong>NASA standards</strong> and requirements for space habitation.
-            </p>
-        </div>
-        
-        <!-- Compact Feature Cards with Hover Effects -->
-        <div class="features-compact">
-            <div class="feature-card-compact" data-feature="design">
-                <div class="feature-icon">
-                    <svg class="icon-svg" viewBox="0 0 24 24">
-                        <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                        <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="1.5"/>
-                        <path d="M12 12V22" stroke="currentColor" stroke-width="1.5"/>
-                    </svg>
-                </div>
-                <div class="feature-info">
-                    <h3>Drag & Drop Design</h3>
-                    <p>Intuitive room placement with real-time NASA compliance validation</p>
-                </div>
-            </div>
-            
-            <div class="feature-card-compact" data-feature="standards">
-                <div class="feature-icon">
-                    <svg class="icon-svg" viewBox="0 0 24 24">
-                        <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                        <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.5"/>
-                    </svg>
-                </div>
-                <div class="feature-info">
-                    <h3>NASA Standards</h3>
-                    <p>Built-in checking for safety requirements and space efficiency</p>
-                </div>
-            </div>
-            
-            <div class="feature-card-compact" data-feature="mission">
-                <div class="feature-icon">
-                    <svg class="icon-svg" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                        <path d="M12 2A10 10 0 0 0 12 22" stroke="currentColor" stroke-width="1.5"/>
-                        <path d="M2 12H22" stroke="currentColor" stroke-width="1.5"/>
-                    </svg>
-                </div>
-                <div class="feature-info">
-                    <h3>Mission Ready</h3>
-                    <p>Optimized for Luna and Mars environments with realistic constraints</p>
-                </div>
-            </div>
-            
-            <div class="feature-card-compact" data-feature="education">
-                <div class="feature-icon">
-                    <svg class="icon-svg" viewBox="0 0 24 24">
-                        <path d="M2 3H6.5L9 5.5L15 5.5L17.5 3H22V21H2V3Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-                        <path d="M9 12H15" stroke="currentColor" stroke-width="1.5"/>
-                        <path d="M9 16H13" stroke="currentColor" stroke-width="1.5"/>
-                    </svg>
-                </div>
-                <div class="feature-info">
-                    <h3>Educational</h3>
-                    <p>Learn about space architecture through interactive design</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Technical Stats Footer -->
-        <div class="tech-stats">
-            <div class="stat-item">
-                <span class="stat-number">25+</span>
-                <span class="stat-label">m³ per astronaut</span>
-            </div>
-            <div class="stat-separator">|</div>
-            <div class="stat-item">
-                <span class="stat-number">8</span>
-                <span class="stat-label">essential areas</span>
-            </div>
-            <div class="stat-separator">|</div>
-            <div class="stat-item">
-                <span class="stat-number">NASA</span>
-                <span class="stat-label">compliant</span>
-            </div>
-        </div>
-    </div>
-</div>
 
-    <!-- 
-        CONFIGURATION PAGE 
-        Second screen - mission parameter selection
-        Where users choose mission type, crew size, duration
-    -->
+    <!-- CONFIG PAGE -->
     <div id="config-page" class="page">
         <header class="nasa-header">
             <div class="nasa-logo-container">
@@ -166,7 +157,7 @@
                 <div class="form-group">
                     <label for="mission-type">Mission Destination</label>
                     <select id="mission-type" class="form-control">
-                        <option value="moon">Moon - 1/6 Earth gravity</option>
+                        <option value="luna">Luna (Moon) - 1/6 Earth gravity</option>
                         <option value="mars">Mars - 3/8 Earth gravity</option>
                     </select>
                     <div class="field-info">
@@ -179,11 +170,9 @@
                 <div class="form-group">
                     <label for="crew-size">Crew Size</label>
                     <div class="slider-container">
-                        <input type="range" id="crew-size" class="form-range" min="2" max="20" value="4">
+                        <input type="range" id="crew-size" class="form-range" min="2" max="6" value="4">
                         <div class="slider-labels">
-                            <span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
-                            <span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span>
-                            <span>18</span><span>19</span><span>20</span>
+                            <span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
                         </div>
                     </div>
                     <div class="slider-value">
@@ -229,7 +218,7 @@
                     <div class="module-specs">
                         <div class="spec-item">
                             <strong>Dimensions:</strong> 
-                            <span id="module-dimensions">10.3m x 6.9m x 2.5m</span>
+                            <span id="module-dimensions">10.3m × 6.9m × 2.5m</span>
                         </div>
                         <div class="spec-item">
                             <strong>Total Volume:</strong> 
@@ -259,11 +248,7 @@
         </main>
     </div>
 
-    <!-- 
-        MAIN EDITOR PAGE 
-        Third screen - the actual habitat designer
-        This is where the main interaction happens
-    -->
+    <!-- EDITOR PAGE -->
     <div id="editor-page" class="page">
         <header class="editor-header">
             <div class="nasa-logo-container">
@@ -284,14 +269,10 @@
         </header>
 
         <div class="editor-layout">
-            <!-- 
-                LEFT PANEL - NASA Requirements Dashboard
-                Shows real-time compliance with NASA standards
-            -->
+            <!-- Requirements Panel -->
             <aside class="requirements-panel">
                 <h2>NASA Standards Validation</h2>
                 <div class="requirements-list">
-                    <!-- These indicators update in real-time as rooms are placed -->
                     <div class="requirement-item" id="req-volume">
                         <div class="req-status red"></div>
                         <div class="req-content">
@@ -351,10 +332,7 @@
                 </div>
             </aside>
 
-            <!-- 
-                CENTER PANEL - Main Design Canvas
-                This is where users drag and drop rooms
-            -->
+            <!-- Design Canvas -->
             <main class="design-canvas">
                 <div class="canvas-header">
                     <h2>Design Canvas</h2>
@@ -369,27 +347,18 @@
                     </div>
                 </div>
 
-                <!-- The actual drag-and-drop canvas -->
                 <div class="habitat-canvas" id="habitat-canvas">
-                    <!-- Grid background is generated by CSS -->
                     <div class="canvas-background"></div>
-                    
-                    <!-- Module outline showing available space -->
                     <div class="module-outline" id="module-outline">
                         <div class="module-label">Habitat Module</div>
                     </div>
-                    
-                    <!-- Rooms will be dynamically placed here -->
                     <div class="placed-rooms" id="placed-rooms"></div>
-                    
-                    <!-- Drop zones for better UX -->
                     <div class="drop-zones" id="drop-zones"></div>
                 </div>
 
-                <!-- Canvas information bar -->
                 <div class="canvas-info">
                     <div class="info-item">
-                        <strong>Module Size:</strong> <span id="canvas-dimensions">10.3m x 6.9m</span>
+                        <strong>Module Size:</strong> <span id="canvas-dimensions">10.3m × 6.9m</span>
                     </div>
                     <div class="info-item">
                         <strong>Scale:</strong> 1 grid = 0.5m
@@ -403,33 +372,26 @@
                 </div>
             </main>
 
-            <!-- 
-                RIGHT PANEL - Room Catalog
-                Library of available rooms to drag into the canvas
-            -->
+            <!-- Rooms Panel -->
             <aside class="rooms-panel">
                 <h2>Available Rooms</h2>
                 <p class="panel-description">Drag rooms to the canvas to build your habitat</p>
 
-                <!-- Room categories for better organization -->
                 <div class="room-categories">
                     <button class="category-btn active" data-category="all">All Rooms</button>
                     <button class="category-btn" data-category="essential">Essential</button>
                     <button class="category-btn" data-category="optional">Optional</button>
                 </div>
 
-                <!-- Scrollable list of draggable rooms -->
                 <div class="rooms-catalog" id="rooms-catalog">
-                    <!-- Essential Rooms Section -->
                     <div class="room-section">
                         <h3>Essential Rooms</h3>
                         
-                        <!-- Each room is draggable and shows key info -->
                         <div class="room-item draggable" draggable="true" data-room-type="crew_quarters" data-category="essential">
                             <div class="room-icon">🛏️</div>
                             <div class="room-info">
                                 <h4>Crew Quarters</h4>
-                                <p>2.0m x 2.5m</p>
+                                <p>2.0m × 2.5m</p>
                                 <p class="room-volume">10.5 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #4CAF50;"></div>
@@ -439,7 +401,7 @@
                             <div class="room-icon">🚿</div>
                             <div class="room-info">
                                 <h4>Hygiene Station</h4>
-                                <p>1.2m x 1.2m</p>
+                                <p>1.2m × 1.2m</p>
                                 <p class="room-volume">3.0 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #2196F3;"></div>
@@ -449,7 +411,7 @@
                             <div class="room-icon">🍳</div>
                             <div class="room-info">
                                 <h4>Galley</h4>
-                                <p>2.0m x 1.5m</p>
+                                <p>2.0m × 1.5m</p>
                                 <p class="room-volume">6.3 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #FF9800;"></div>
@@ -459,7 +421,7 @@
                             <div class="room-icon">🍽️</div>
                             <div class="room-info">
                                 <h4>Wardroom</h4>
-                                <p>3.0m x 2.0m</p>
+                                <p>3.0m × 2.0m</p>
                                 <p class="room-volume">12.6 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #FFC107;"></div>
@@ -469,7 +431,7 @@
                             <div class="room-icon">🏃</div>
                             <div class="room-info">
                                 <h4>Exercise Area</h4>
-                                <p>3.0m x 2.0m</p>
+                                <p>3.0m × 2.0m</p>
                                 <p class="room-volume">15.0 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #E91E63;"></div>
@@ -479,7 +441,7 @@
                             <div class="room-icon">💻</div>
                             <div class="room-info">
                                 <h4>Work Station</h4>
-                                <p>2.0m x 1.5m</p>
+                                <p>2.0m × 1.5m</p>
                                 <p class="room-volume">6.3 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #9C27B0;"></div>
@@ -489,7 +451,7 @@
                             <div class="room-icon">🏥</div>
                             <div class="room-info">
                                 <h4>Medical Bay</h4>
-                                <p>2.0m x 1.5m</p>
+                                <p>2.0m × 1.5m</p>
                                 <p class="room-volume">6.3 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #F44336;"></div>
@@ -499,14 +461,13 @@
                             <div class="room-icon">📦</div>
                             <div class="room-info">
                                 <h4>Storage</h4>
-                                <p>4.0m x 2.0m</p>
+                                <p>4.0m × 2.0m</p>
                                 <p class="room-volume">16.8 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #795548;"></div>
                         </div>
                     </div>
 
-                    <!-- Optional Rooms Section (for future expansion) -->
                     <div class="room-section">
                         <h3>Optional Rooms</h3>
                         
@@ -514,7 +475,7 @@
                             <div class="room-icon">🎮</div>
                             <div class="room-info">
                                 <h4>Recreation</h4>
-                                <p>2.5m x 2.5m</p>
+                                <p>2.5m × 2.5m</p>
                                 <p class="room-volume">13.1 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #00BCD4;"></div>
@@ -524,7 +485,7 @@
                             <div class="room-icon">🌱</div>
                             <div class="room-info">
                                 <h4>Greenhouse</h4>
-                                <p>3.0m x 2.5m</p>
+                                <p>3.0m × 2.5m</p>
                                 <p class="room-volume">15.8 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #8BC34A;"></div>
@@ -535,12 +496,7 @@
         </div>
     </div>
 
-    <!-- 
-        MODAL DIALOGS 
-        Pop-up windows for various interactions
-    -->
-    
-    <!-- Educational tip modal -->
+    <!-- MODAL DIALOGS -->
     <div class="modal" id="tip-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -556,7 +512,6 @@
         </div>
     </div>
 
-    <!-- Final submission modal -->
     <div class="modal" id="submission-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -587,180 +542,134 @@
     </div>
 
     <!-- Include all JavaScript files -->
-    <!-- Order matters here - dependencies must be loaded first -->
-  <!-- Load in EXACTLY this order -->
-    <script src="data/nasa_standarts.js"></script>  <!-- First - provides NASA_STANDARDS -->
-    <script src="js/rooms.js"></script>            <!-- Second - uses NASA_STANDARDS -->
-    <script src="js/configuration.js"></script>    <!-- Third - uses NASA_STANDARDS -->
-    <script src="js/validation.js"></script>       <!-- Fourth - uses RoomsManager -->
-    <script src="js/score.js"></script>           <!-- Fifth - uses RoomsManager -->
-    <script src="js/editor.js"></script>          <!-- Last - uses all others -->
-
+    <script src="data/nasa_standarts.js"></script>
+    <script src="js/rooms.js"></script>
+    <script src="js/configuration.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/score.js"></script>
+    <script src="js/editor.js"></script>
+    
     <!-- Main Application Controller -->
-<script>
-        /* ==========================================================================
-        SPACE ARCHITECTS - MAIN APPLICATION CONTROLLER
-        This coordinates all modules and handles page navigation
-        ========================================================================== */
-
-        const SpaceArchitects = (function() {
-            'use strict';
+    <script>
+    const SpaceArchitects = (function() {
+        'use strict';
+        
+        let currentPage = 'welcome';
+        
+        function init() {
+            console.log('🚀 Initializing Space Architects Application...');
             
-            let currentPage = 'welcome';
+            showPage('welcome');
+            setupNavigation();
             
-            /**
-             * Initialize the main application
-             */
-            function init() {
-                console.log('🚀 Initializing Space Architects Application...');
-                
-                // Show welcome page initially
-                showPage('welcome');
-                
-                // Set up navigation handlers
-                setupNavigation();
-                
-                // Initialize modules that need setup
-                if (typeof ValidationSystem !== 'undefined') {
-                    ValidationSystem.initialize();
-                }
-                
-                console.log('✅ Space Architects Application Ready!');
+            if (typeof ValidationSystem !== 'undefined') {
+                ValidationSystem.initialize();
             }
             
-            /**
-             * Set up page navigation handlers
-             */
-            function setupNavigation() {
-                // Start Mission Planning button (Welcome -> Config)
-                const startMissionBtn = document.getElementById('start-mission-btn');
-                if (startMissionBtn) {
-                    startMissionBtn.addEventListener('click', function() {
-                        console.log('🎯 Starting mission planning...');
-                        showPage('config');
-                    });
-                }
-                
-                // Generate Habitat button (Config -> Editor)
-                const generateBtn = document.getElementById('generate-habitat-btn');
-                if (generateBtn) {
-                    generateBtn.addEventListener('click', function() {
-                        console.log('🏗️ Generating habitat...');
-                        
-                        // Show loading state
-                        this.disabled = true;
-                        this.textContent = 'Generating...';
-                        
-                        setTimeout(() => {
-                            showPage('editor');
-                            this.disabled = false;
-                            this.textContent = 'Generate Habitat Module →';
-                        }, 500);
-                    });
-                }
-                
-                // Back to Welcome button (Config -> Welcome)
-                const backToWelcomeBtn = document.getElementById('back-to-welcome');
-                if (backToWelcomeBtn) {
-                    backToWelcomeBtn.addEventListener('click', function() {
-                        showPage('welcome');
-                    });
-                }
-                
-                // Reconfigure button (Editor -> Config)
-                const reconfigureBtn = document.getElementById('reconfigure-btn');
-                if (reconfigureBtn) {
-                    reconfigureBtn.addEventListener('click', function() {
-                        showPage('config');
-                    });
-                }
-                
-                // Listen for custom navigation events
-                document.addEventListener('navigateToPage', function(event) {
-                    showPage(event.detail.page);
+            console.log('✅ Space Architects Application Ready!');
+        }
+        
+        function setupNavigation() {
+            const startMissionBtn = document.getElementById('start-mission-btn');
+            if (startMissionBtn) {
+                startMissionBtn.addEventListener('click', function() {
+                    console.log('🎯 Starting mission planning...');
+                    showPage('config');
                 });
             }
             
-            /**
-             * Show a specific page and hide others
-             * @param {string} pageName - Name of page to show ('welcome', 'config', 'editor')
-             */
-            function showPage(pageName) {
-                console.log('📄 Navigating to page:', pageName);
-                
-                // Hide all pages
-                const pages = document.querySelectorAll('.page');
-                pages.forEach(page => {
-                    page.classList.remove('active');
-                });
-                
-                // Show target page
-                const targetPage = document.getElementById(`${pageName}-page`);
-                if (targetPage) {
-                    targetPage.classList.add('active');
-                    currentPage = pageName;
+            const generateBtn = document.getElementById('generate-habitat-btn');
+            if (generateBtn) {
+                generateBtn.addEventListener('click', function() {
+                    console.log('🏗️ Generating habitat...');
                     
-                    // Initialize page-specific functionality
-                    initializePage(pageName);
-                } else {
-                    console.error('❌ Page not found:', pageName);
-                }
+                    this.disabled = true;
+                    this.textContent = 'Generating...';
+                    
+                    setTimeout(() => {
+                        showPage('editor');
+                        this.disabled = false;
+                        this.textContent = 'Generate Habitat Module →';
+                    }, 500);
+                });
             }
             
-            /**
-             * Initialize page-specific functionality
-             * @param {string} pageName - Name of page being shown
-             */
-            function initializePage(pageName) {
-                switch(pageName) {
-                    case 'config':
-                        // Initialize configuration page
-                        if (typeof MissionConfig !== 'undefined' && MissionConfig.initializeConfigPage) {
-                            setTimeout(() => MissionConfig.initializeConfigPage(), 100);
-                        }
-                        break;
-                        
-                    case 'editor':
-                        // Initialize habitat editor
-                        if (typeof HabitatEditor !== 'undefined' && HabitatEditor.initialize) {
-                            setTimeout(() => HabitatEditor.initialize(), 100);
-                        }
-                        break;
-                        
-                    default:
-                        // Welcome page - no special initialization needed
-                        break;
-                }
+            const backToWelcomeBtn = document.getElementById('back-to-welcome');
+            if (backToWelcomeBtn) {
+                backToWelcomeBtn.addEventListener('click', function() {
+                    showPage('welcome');
+                });
             }
             
-            /**
-             * Get current page
-             * @returns {string} Current page name
-             */
-            function getCurrentPage() {
-                return currentPage;
+            const reconfigureBtn = document.getElementById('reconfigure-btn');
+            if (reconfigureBtn) {
+                reconfigureBtn.addEventListener('click', function() {
+                    showPage('config');
+                });
             }
             
-            // Public API
-            return {
-                init: init,
-                showPage: showPage,
-                getCurrentPage: getCurrentPage
-            };
-        })();
+            document.addEventListener('navigateToPage', function(event) {
+                showPage(event.detail.page);
+            });
+        }
+        
+        function showPage(pageName) {
+            console.log('📄 Navigating to page:', pageName);
+            
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            const targetPage = document.getElementById(`${pageName}-page`);
+            if (targetPage) {
+                targetPage.classList.add('active');
+                currentPage = pageName;
+                
+                initializePage(pageName);
+            } else {
+                console.error('❌ Page not found:', pageName);
+            }
+        }
+        
+        function initializePage(pageName) {
+            switch(pageName) {
+                case 'config':
+                    if (typeof MissionConfig !== 'undefined' && MissionConfig.initializeConfigPage) {
+                        setTimeout(() => MissionConfig.initializeConfigPage(), 100);
+                    }
+                    break;
+                    
+                case 'editor':
+                    if (typeof HabitatEditor !== 'undefined' && HabitatEditor.initialize) {
+                        setTimeout(() => HabitatEditor.initialize(), 100);
+                    }
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
+        
+        function getCurrentPage() {
+            return currentPage;
+        }
+        
+        return {
+            init: init,
+            showPage: showPage,
+            getCurrentPage: getCurrentPage
+        };
+    })();
 
-        // Make available globally
-        window.SpaceArchitects = SpaceArchitects;
-        </script>
+    window.SpaceArchitects = SpaceArchitects;
+    </script>
+    
     <!-- Main application initialization -->
     <script>
-        // Initialize the application when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 NASA Space Architects - Application Loading...');
-            
-            // Initialize all modules
             SpaceArchitects.init();
-            
             console.log('✅ Application Ready');
         });
     </script>

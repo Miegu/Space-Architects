@@ -2,21 +2,16 @@
    SPACE ARCHITECTS - MAIN STYLES
    NASA Space Apps Challenge Project
    
-   This is the main stylesheet containing:
-   - CSS Variables for theming and consistency
-   - Base styles and typography
-   - Component styles
-   - Layout systems
-   - Responsive design
+   This is the complete stylesheet with the modern welcome page design
    ========================================================================== */
+
+/* Import Futuristic Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Michroma&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
 /* 
    CSS CUSTOM PROPERTIES (VARIABLES)
    These define the design system - colors, fonts, spacing, etc.
-   Changing these values updates the entire app's appearance
 */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Michroma&family=Rajdhani:wght@300;400;500;600;700&display=swap');
-
 :root {
     /* NASA Brand Colors */
     --nasa-blue: #0B3D91;           /* Primary NASA blue */
@@ -24,7 +19,8 @@
     --nasa-white: #FFFFFF;          /* Clean white */
     --nasa-light-gray: #F5F5F5;     /* Background gray */
     --nasa-dark-gray: #2C2C2C;      /* Text gray */
-
+    
+    /* Modern Blueprint Colors */
     --bp-dark-blue: #0A1628;
     --bp-medium-blue: #1E3A5F; 
     --bp-accent-blue: #2E5A87;
@@ -34,59 +30,59 @@
     --bp-light-gray: #E5E7EB;
     --bp-tech-green: #00FF88;
     
-    /* Semantic Colors - these have meaning in the app */
-    --color-success: #4CAF50;        /* Green for "good" states */
-    --color-warning: #FF9800;        /* Orange for "warning" states */
-    --color-error: #F44336;          /* Red for "error" states */
-    --color-info: #2196F3;           /* Blue for "info" states */
+    /* Semantic Colors */
+    --color-success: #4CAF50;
+    --color-warning: #FF9800;
+    --color-error: #F44336;
+    --color-info: #2196F3;
     
-    /* Room Category Colors - each room type has a color */
-    --room-sleeping: #4CAF50;        /* Green for sleeping quarters */
-    --room-hygiene: #2196F3;         /* Blue for hygiene facilities */
-    --room-kitchen: #FF9800;         /* Orange for galley/kitchen */
-    --room-dining: #FFC107;          /* Yellow for wardroom/dining */
-    --room-fitness: #E91E63;         /* Pink for exercise areas */
-    --room-work: #9C27B0;            /* Purple for work stations */
-    --room-medical: #F44336;         /* Red for medical bay */
-    --room-storage: #795548;         /* Brown for storage */
-    --room-optional: #607D8B;        /* Gray for optional rooms */
+    /* Room Category Colors */
+    --room-sleeping: #4CAF50;
+    --room-hygiene: #2196F3;
+    --room-kitchen: #FF9800;
+    --room-dining: #FFC107;
+    --room-fitness: #E91E63;
+    --room-work: #9C27B0;
+    --room-medical: #F44336;
+    --room-storage: #795548;
+    --room-optional: #607D8B;
     
-    /* Typography Scale - consistent text sizing */
-    --font-size-xs: 0.75rem;         /* 12px */
-    --font-size-sm: 0.875rem;        /* 14px */
-    --font-size-base: 1rem;          /* 16px - base size */
-    --font-size-lg: 1.125rem;        /* 18px */
-    --font-size-xl: 1.25rem;         /* 20px */
-    --font-size-2xl: 1.5rem;         /* 24px */
-    --font-size-3xl: 1.875rem;       /* 30px */
-    --font-size-4xl: 2.25rem;        /* 36px */
+    /* Typography Scale */
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
     
-    /* Spacing Scale - consistent margins and padding */
-    --space-xs: 0.25rem;             /* 4px */
-    --space-sm: 0.5rem;              /* 8px */
-    --space-md: 1rem;                /* 16px */
-    --space-lg: 1.5rem;              /* 24px */
-    --space-xl: 2rem;                /* 32px */
-    --space-2xl: 3rem;               /* 48px */
-    --space-3xl: 4rem;               /* 64px */
+    /* Spacing Scale */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    --space-3xl: 4rem;
     
-    /* Border Radius - consistent rounding */
-    --radius-sm: 0.25rem;            /* 4px */
-    --radius-md: 0.5rem;             /* 8px */
-    --radius-lg: 1rem;               /* 16px */
-    --radius-full: 9999px;           /* Full circle */
+    /* Border Radius */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+    --radius-full: 9999px;
     
-    /* Shadows - depth and elevation */
+    /* Shadows */
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
     --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
     
-    /* Transitions - smooth animations */
+    /* Transitions */
     --transition-fast: 0.15s ease;
     --transition-normal: 0.3s ease;
     --transition-slow: 0.5s ease;
-
+    
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, var(--bp-bright-blue) 0%, var(--bp-accent-blue) 100%);
     --gradient-bg: radial-gradient(ellipse at center, var(--bp-medium-blue) 0%, var(--bp-dark-blue) 70%);
@@ -96,7 +92,7 @@
     --font-secondary: 'Rajdhani', sans-serif;
     --font-display: 'Michroma', monospace;
     
-    /* Z-index Scale - layering elements */
+    /* Z-index Scale */
     --z-dropdown: 1000;
     --z-sticky: 1020;
     --z-fixed: 1030;
@@ -113,32 +109,31 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box;          /* Makes sizing more predictable */
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
 html {
-    font-size: 16px;                 /* Base font size for rem calculations */
-    scroll-behavior: smooth;         /* Smooth scrolling for anchor links */
+    font-size: 16px;
+    scroll-behavior: smooth;
 }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     font-size: var(--font-size-base);
-    line-height: 1.6;               /* Comfortable reading line height */
+    line-height: 1.6;
     color: var(--nasa-dark-gray);
     background-color: var(--nasa-light-gray);
-    overflow-x: hidden;             /* Prevent horizontal scroll */
+    overflow-x: hidden;
 }
 
 /* 
    TYPOGRAPHY SYSTEM
-   Consistent text styling throughout the app
 */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
-    line-height: 1.2;               /* Tighter line height for headings */
+    line-height: 1.2;
     margin-bottom: var(--space-md);
     color: var(--nasa-blue);
 }
@@ -155,7 +150,6 @@ p {
     color: var(--nasa-dark-gray);
 }
 
-/* Links */
 a {
     color: var(--nasa-blue);
     text-decoration: none;
@@ -168,7 +162,6 @@ a:hover {
 
 /* 
    BUTTON SYSTEM
-   Consistent button styles with different variants
 */
 .btn {
     display: inline-flex;
@@ -187,7 +180,6 @@ a:hover {
     white-space: nowrap;
 }
 
-/* Button variants */
 .btn--primary {
     background-color: var(--nasa-blue);
     color: var(--nasa-white);
@@ -195,9 +187,9 @@ a:hover {
 }
 
 .btn--primary:hover {
-    background-color: #083468;      /* Darker blue on hover */
+    background-color: #083468;
     border-color: #083468;
-    transform: translateY(-1px);    /* Subtle lift effect */
+    transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
 
@@ -223,28 +215,15 @@ a:hover {
     border-color: #45a049;
 }
 
-.btn--warning {
-    background-color: var(--color-warning);
-    color: var(--nasa-white);
-    border-color: var(--color-warning);
-}
-
-.btn--error {
-    background-color: var(--color-error);
-    color: var(--nasa-white);
-    border-color: var(--color-error);
-}
-
-/* Button sizes */
-.btn--sm {
-    padding: var(--space-xs) var(--space-md);
-    font-size: var(--font-size-sm);
-}
-
 .btn--lg {
     padding: var(--space-lg) var(--space-2xl);
     font-size: var(--font-size-lg);
     font-weight: 600;
+}
+
+.btn--sm {
+    padding: var(--space-xs) var(--space-md);
+    font-size: var(--font-size-sm);
 }
 
 .btn:disabled {
@@ -253,17 +232,419 @@ a:hover {
     transform: none !important;
     box-shadow: none !important;
 }
- #welcome-page {
+
+/* 
+   PAGE SYSTEM
+*/
+.page {
+    display: none;
+    min-height: 100vh;
+    padding: var(--space-xl);
+    background: linear-gradient(135deg, var(--nasa-light-gray) 0%, #e8eef3 100%);
+}
+
+.page.active {
+    display: block;
+}
+
+/* ==========================================================================
+   MODERN WELCOME PAGE STYLES
+   Dark theme with technical aesthetic and smooth animations
+   ========================================================================== */
+
+/* Welcome Page Container */
+#welcome-page {
     min-height: 100vh;
     position: relative;
     overflow: hidden;
     background: var(--bp-dark-blue);
+    padding: 0;
 }
 
-/* 
-   FORM CONTROLS
-   Consistent styling for form inputs
-*/
+/* Animated Space Background */
+.space-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.stars-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(2px 2px at 20px 30px, var(--bp-white), transparent),
+        radial-gradient(2px 2px at 40px 70px, var(--bp-bright-blue), transparent),
+        radial-gradient(1px 1px at 90px 40px, var(--bp-white), transparent),
+        radial-gradient(1px 1px at 130px 80px, var(--bp-tech-green), transparent),
+        radial-gradient(2px 2px at 160px 30px, var(--bp-white), transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: starsMovement 60s linear infinite;
+    opacity: 0.6;
+}
+
+.nebula-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-bg);
+    opacity: 0.8;
+}
+
+.grid-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(74, 158, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(74, 158, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.3;
+}
+
+@keyframes starsMovement {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-200px); }
+}
+
+/* Main Welcome Container */
+.welcome-container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    text-align: center;
+}
+
+/* Modern NASA Header */
+.nasa-header-modern {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.logo-container {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.nasa-logo-modern {
+    width: 60px;
+    height: 60px;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+    position: relative;
+    z-index: 2;
+}
+
+.logo-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, var(--bp-bright-blue) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0.5;
+    z-index: 1;
+    animation: logoGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes logoGlow {
+    0% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* Title Section with Animations */
+.title-section {
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.main-title-modern {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 400;
+    color: var(--bp-white);
+    margin: 0;
+    letter-spacing: 2px;
+    line-height: 1.2;
+}
+
+.title-line-1 {
+    display: block;
+    margin-bottom: 0.5rem;
+    animation: slideInLeft 1s ease-out;
+}
+
+.title-separator {
+    display: block;
+    color: var(--bp-nasa-red);
+    margin: 0.5rem 0;
+    font-size: 1.5rem;
+    animation: fadeIn 1.5s ease-out;
+}
+
+.title-line-2 {
+    display: block;
+    color: var(--bp-bright-blue);
+    animation: slideInRight 1s ease-out 0.3s both;
+}
+
+.title-underline {
+    width: 100px;
+    height: 2px;
+    background: var(--gradient-primary);
+    margin: 1rem auto;
+    animation: expandWidth 1.5s ease-out 0.8s both;
+}
+
+.mission-subtitle-modern {
+    font-family: var(--font-secondary);
+    font-size: 1.2rem;
+    color: var(--bp-light-gray);
+    font-weight: 300;
+    margin: 0;
+    opacity: 0.9;
+    animation: fadeInUp 1s ease-out 1s both;
+}
+
+/* Primary CTA Section */
+.cta-section {
+    margin: 3rem 0 2rem 0;
+    position: relative;
+}
+
+.btn-primary-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 32px;
+    background: var(--gradient-primary);
+    border: 2px solid var(--bp-bright-blue);
+    border-radius: 8px;
+    color: var(--bp-white);
+    font-family: var(--font-primary);
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(74, 158, 255, 0.3);
+    animation: buttonGlow 2s ease-in-out infinite alternate;
+}
+
+.btn-primary-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(74, 158, 255, 0.5);
+    border-color: var(--bp-tech-green);
+}
+
+.btn-primary-modern:hover .btn-arrow {
+    transform: translateX(5px);
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+}
+
+.btn-arrow {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.btn-glow-effect {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-primary-modern:hover .btn-glow-effect {
+    left: 100%;
+}
+
+@keyframes buttonGlow {
+    0% { box-shadow: 0 4px 20px rgba(74, 158, 255, 0.3); }
+    100% { box-shadow: 0 4px 20px rgba(74, 158, 255, 0.6); }
+}
+
+.mission-description {
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    color: var(--bp-light-gray);
+    max-width: 600px;
+    margin: 2rem auto 0;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+.mission-description strong {
+    color: var(--bp-bright-blue);
+    font-weight: 600;
+}
+
+/* Compact Feature Cards */
+.features-compact {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    max-width: 900px;
+    margin: 2rem 0;
+}
+
+.feature-card-compact {
+    background: rgba(30, 58, 95, 0.3);
+    border: 1px solid rgba(74, 158, 255, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.feature-card-compact:hover {
+    transform: translateY(-5px);
+    border-color: var(--bp-tech-green);
+    background: rgba(30, 58, 95, 0.6);
+    box-shadow: 0 8px 25px rgba(74, 158, 255, 0.2);
+}
+
+.feature-card-compact:hover .feature-info {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.feature-icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 0.5rem;
+    color: var(--bp-bright-blue);
+    transition: color 0.3s ease;
+}
+
+.feature-card-compact:hover .feature-icon {
+    color: var(--bp-tech-green);
+}
+
+.icon-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.feature-info {
+    opacity: 0.7;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+.feature-info h3 {
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    color: var(--bp-white);
+    margin: 0 0 0.5rem;
+    font-weight: 600;
+}
+
+.feature-info p {
+    font-family: var(--font-secondary);
+    font-size: 0.8rem;
+    color: var(--bp-light-gray);
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Technical Stats Footer */
+.tech-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+    padding: 1rem 2rem;
+    background: rgba(10, 22, 40, 0.8);
+    border: 1px solid rgba(74, 158, 255, 0.2);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.stat-number {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--bp-tech-green);
+    line-height: 1;
+}
+
+.stat-label {
+    font-family: var(--font-secondary);
+    font-size: 0.7rem;
+    color: var(--bp-light-gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0.2rem;
+}
+
+.stat-separator {
+    color: var(--bp-bright-blue);
+    opacity: 0.5;
+    font-size: 1.2rem;
+}
+
+/* Animations */
+@keyframes slideInLeft {
+    0% { opacity: 0; transform: translateX(-50px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+    0% { opacity: 0; transform: translateX(50px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes expandWidth {
+    0% { width: 0; }
+    100% { width: 100px; }
+}
+
+/* ==========================================================================
+   OTHER PAGES STYLES (Config, Editor, etc.)
+   Keep your existing styles for other pages here
+   ========================================================================== */
+
+/* FORM CONTROLS */
 .form-control {
     width: 100%;
     padding: var(--space-md);
@@ -291,7 +672,6 @@ a:hover {
     color: var(--nasa-dark-gray);
 }
 
-/* Range slider styling */
 .form-range {
     width: 100%;
     height: 6px;
@@ -318,25 +698,7 @@ a:hover {
     border: none;
 }
 
-/* 
-   PAGE SYSTEM
-   Controls the multi-page navigation
-*/
-.page {
-    display: none;                  /* Hide all pages by default */
-    min-height: 100vh;
-    padding: var(--space-xl);
-    background: linear-gradient(135deg, var(--nasa-light-gray) 0%, #e8eef3 100%);
-}
-
-.page.active {
-    display: block;                 /* Show active page */
-}
-
-/* 
-   NASA HEADER COMPONENT
-   Used across all pages for consistent branding
-*/
+/* NASA HEADER COMPONENT (for other pages) */
 .nasa-header {
     display: flex;
     align-items: center;
@@ -377,105 +739,7 @@ a:hover {
     opacity: 0.8;
 }
 
-/* 
-   WELCOME PAGE STYLES
-   Specific styling for the landing page
-*/
-.welcome-content {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.mission-overview {
-    text-align: center;
-}
-
-.intro-text {
-    margin-bottom: var(--space-3xl);
-}
-
-.intro-text h2 {
-    margin-bottom: var(--space-lg);
-    font-size: var(--font-size-3xl);
-}
-
-.intro-text p {
-    font-size: var(--font-size-lg);
-    max-width: 600px;
-    margin: 0 auto var(--space-lg);
-    opacity: 0.9;
-}
-
-/* Feature cards grid */
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--space-xl);
-    margin-bottom: var(--space-3xl);
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.feature-card {
-    background: var(--nasa-white);
-    padding: var(--space-xl);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    text-align: center;
-    transition: transform var(--transition-normal);
-}
-
-.feature-card:hover {
-    transform: translateY(-4px);    /* Lift effect on hover */
-    box-shadow: var(--shadow-lg);
-}
-
-.feature-icon {
-    font-size: 3rem;
-    margin-bottom: var(--space-lg);
-}
-
-.feature-card h3 {
-    color: var(--nasa-blue);
-    margin-bottom: var(--space-md);
-    font-size: var(--font-size-xl);
-}
-
-.feature-card p {
-    color: var(--nasa-dark-gray);
-    opacity: 0.8;
-    margin-bottom: 0;
-}
-
-.action-section {
-    margin-top: var(--space-3xl);
-}
-
-.action-subtitle {
-    margin-top: var(--space-md);
-    font-size: var(--font-size-base);
-    opacity: 0.7;
-}
-
-.space-background::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('../assets/images/space-background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    opacity: 0.4;
-    z-index: 0;
-}
-/* 
-   CONFIGURATION PAGE STYLES
-   Form layouts and mission parameter selection
-*/
+/* CONFIG PAGE STYLES */
 .config-content {
     max-width: 800px;
     margin: 0 auto;
@@ -499,7 +763,6 @@ a:hover {
     opacity: 0.8;
 }
 
-/* Field info tooltips */
 .field-info {
     display: flex;
     align-items: center;
@@ -510,11 +773,6 @@ a:hover {
     opacity: 0.7;
 }
 
-.info-icon {
-    font-size: var(--font-size-base);
-}
-
-/* Slider container */
 .slider-container {
     position: relative;
     margin: var(--space-lg) 0;
@@ -537,7 +795,6 @@ a:hover {
     color: var(--nasa-blue);
 }
 
-/* Radio button group */
 .radio-group {
     display: grid;
     gap: var(--space-md);
@@ -561,7 +818,7 @@ a:hover {
 }
 
 .radio-option input[type="radio"] {
-    display: none;              /* Hide default radio button */
+    display: none;
 }
 
 .radio-custom {
@@ -590,7 +847,6 @@ a:hover {
     transform: translate(-50%, -50%);
 }
 
-/* Module preview */
 .module-preview {
     margin-top: var(--space-3xl);
     padding: var(--space-xl);
@@ -630,7 +886,6 @@ a:hover {
     color: var(--nasa-blue);
 }
 
-/* Form actions */
 .form-actions {
     display: flex;
     justify-content: space-between;
@@ -640,25 +895,22 @@ a:hover {
     border-top: 2px solid #dee2e6;
 }
 
-/* 
-   MODAL SYSTEM
-   Pop-up dialogs for tips and submissions
-*/
+/* MODAL SYSTEM */
 .modal {
-    display: none;                  /* Hidden by default */
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent backdrop */
+    background: rgba(0, 0, 0, 0.5);
     z-index: var(--z-modal);
     justify-content: center;
     align-items: center;
 }
 
 .modal.active {
-    display: flex;                  /* Show when active */
+    display: flex;
 }
 
 .modal-content {
@@ -724,10 +976,7 @@ a:hover {
     background: #f8f9fa;
 }
 
-/* 
-   UTILITY CLASSES
-   Helper classes for common styling needs
-*/
+/* UTILITY CLASSES */
 .text-center { text-align: center; }
 .text-left { text-align: left; }
 .text-right { text-align: right; }
@@ -751,23 +1000,34 @@ a:hover {
 .opacity-70 { opacity: 0.7; }
 .opacity-90 { opacity: 0.9; }
 
-/* 
-   RESPONSIVE DESIGN
-   Mobile-first approach with breakpoints
-*/
+/* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
-    /* Mobile styles */
+    .welcome-container {
+        padding: 1rem;
+    }
+    
+    .features-compact {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+    
+    .tech-stats {
+        gap: 1rem;
+        padding: 0.8rem 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .btn-primary-modern {
+        padding: 14px 24px;
+        font-size: 1rem;
+    }
+    
     .page {
         padding: var(--space-lg);
     }
     
     .main-title {
         font-size: var(--font-size-2xl);
-    }
-    
-    .features-grid {
-        grid-template-columns: 1fr;
-        gap: var(--space-lg);
     }
     
     .form-actions {
@@ -786,7 +1046,18 @@ a:hover {
 }
 
 @media (max-width: 480px) {
-    /* Extra small mobile */
+    .features-compact {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-title-modern {
+        font-size: 2rem;
+    }
+    
+    .mission-subtitle-modern {
+        font-size: 1rem;
+    }
+    
     .nasa-logo-container {
         flex-direction: column;
         gap: var(--space-sm);
@@ -801,18 +1072,13 @@ a:hover {
         font-size: var(--font-size-xl);
     }
     
-    .config-form,
-    .feature-card {
+    .config-form {
         padding: var(--space-lg);
     }
 }
 
-/* 
-   ACCESSIBILITY IMPROVEMENTS
-   Better support for screen readers and keyboard navigation
-*/
+/* ACCESSIBILITY */
 @media (prefers-reduced-motion: reduce) {
-    /* Respect user's motion preferences */
     *,
     *::before,
     *::after {
@@ -822,7 +1088,6 @@ a:hover {
     }
 }
 
-/* Focus styles for keyboard navigation */
 button:focus,
 .btn:focus,
 input:focus,
@@ -831,7 +1096,6 @@ select:focus {
     outline-offset: 2px;
 }
 
-/* Screen reader only content */
 .sr-only {
     position: absolute;
     width: 1px;
