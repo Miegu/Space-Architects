@@ -231,6 +231,21 @@ const MissionConfig = (function() {
             console.error('❌ Failed to save configuration:', error);
         }
     }
+        const generateBtn = document.getElementById('generate-habitat-btn');
+    if (generateBtn) {
+        generateBtn.addEventListener('click', function() {
+            console.log('🏗️ Going to structure selection...');
+            
+            this.disabled = true;
+            this.textContent = 'Loading...';
+            
+            setTimeout(() => {
+                SpaceArchitects.showPage('structure'); // Change from 'editor' to 'structure'
+                this.disabled = false;
+                this.textContent = 'Generate Habitat Module →';
+            }, 500);
+        });
+    }
     
     /**
      * Load configuration from localStorage

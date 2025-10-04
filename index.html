@@ -247,7 +247,7 @@
                         <div class="spec-icon">📐</div>
                         <div class="spec-content">
                             <span class="spec-label">Dimensions</span>
-                            <span class="spec-value" id="module-dimensions">9.8m × 6.5m × 2.5m</span>
+                            <span class="spec-value" id="module-dimensions">9.8m x 6.5m x 2.5m</span>
                         </div>
                     </div>
                     
@@ -286,6 +286,213 @@
                 
                 <button class="btn-primary-modern" id="generate-habitat-btn">
                     <span class="btn-text">Generate Habitat Module</span>
+                    <span class="btn-icon">→</span>
+                    <div class="btn-glow-effect"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- HABITAT STRUCTURE PAGE - Module Selection -->
+<div id="structure-page" class="page">
+    <!-- Same animated background as other pages -->
+    <div class="space-background">
+        <div class="stars-layer"></div>
+        <div class="nebula-overlay"></div>
+        <div class="grid-overlay"></div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="structure-container">
+        <!-- Header -->
+        <header class="structure-header">
+            <div class="logo-container">
+                <img src="assets/images/nasa-logo.png" alt="NASA Logo" class="nasa-logo-modern">
+                <div class="logo-glow"></div>
+            </div>
+            
+            <div class="title-section">
+                <h1 class="structure-title">
+                    <span class="title-line-1">Habitat</span>
+                    <span class="title-separator">—</span>
+                    <span class="title-line-2">Structure</span>
+                </h1>
+                <div class="title-underline"></div>
+            </div>
+            
+            <p class="structure-subtitle">Choose Your Module Architecture</p>
+        </header>
+
+        <!-- Module Selection -->
+        <div class="structure-form-modern">
+            <!-- Module Types -->
+            <div class="modules-section">
+                <h3 class="section-title">Module Types</h3>
+                <div class="modules-grid">
+                    <!-- Dome Module -->
+                    <div class="module-card" data-module="dome">
+                        <div class="module-visual">
+                            <div class="module-3d dome-3d">
+                                <div class="dome-shape">
+                                    <div class="dome-hemisphere"></div>
+                                    <div class="dome-base"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="module-info">
+                            <h4>🏠 Dome</h4>
+                            <p class="module-desc">Spherical pressure vessel</p>
+                            <div class="module-specs">
+                                <span class="spec-item">Optimal pressure distribution</span>
+                                <span class="spec-item">85% space efficiency</span>
+                            </div>
+                        </div>
+                        <div class="module-selector">
+                            <input type="checkbox" id="dome-select" class="module-checkbox">
+                            <label for="dome-select" class="checkbox-label">Select</label>
+                        </div>
+                    </div>
+
+                    <!-- Torus Module -->
+                    <div class="module-card" data-module="torus">
+                        <div class="module-visual">
+                            <div class="module-3d torus-3d">
+                                <div class="torus-shape">
+                                    <div class="torus-ring"></div>
+                                    <div class="torus-inner"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="module-info">
+                            <h4>🍩 Torus</h4>
+                            <p class="module-desc">Ring-shaped habitat</p>
+                            <div class="module-specs">
+                                <span class="spec-item">Artificial gravity via rotation</span>
+                                <span class="spec-item">70% space efficiency</span>
+                            </div>
+                        </div>
+                        <div class="module-selector">
+                            <input type="checkbox" id="torus-select" class="module-checkbox">
+                            <label for="torus-select" class="checkbox-label">Select</label>
+                        </div>
+                    </div>
+
+                    <!-- Cube Module -->
+                    <div class="module-card" data-module="cube">
+                        <div class="module-visual">
+                            <div class="module-3d cube-3d">
+                                <div class="cube-shape">
+                                    <div class="cube-face front"></div>
+                                    <div class="cube-face back"></div>
+                                    <div class="cube-face right"></div>
+                                    <div class="cube-face left"></div>
+                                    <div class="cube-face top"></div>
+                                    <div class="cube-face bottom"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="module-info">
+                            <h4>📦 Cube</h4>
+                            <p class="module-desc">Rectangular habitat</p>
+                            <div class="module-specs">
+                                <span class="spec-item">Maximum volume efficiency</span>
+                                <span class="spec-item">95% space efficiency</span>
+                            </div>
+                        </div>
+                        <div class="module-selector">
+                            <input type="checkbox" id="cube-select" class="module-checkbox">
+                            <label for="cube-select" class="checkbox-label">Select</label>
+                        </div>
+                    </div>
+
+                    <!-- Cylinder Module -->
+                    <div class="module-card" data-module="cylinder">
+                        <div class="module-visual">
+                            <div class="module-3d cylinder-3d">
+                                <div class="cylinder-shape">
+                                    <div class="cylinder-body"></div>
+                                    <div class="cylinder-nose"></div>
+                                    <div class="cylinder-end"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="module-info">
+                            <h4>🚀 Cylinder</h4>
+                            <p class="module-desc">Elongated comet design</p>
+                            <div class="module-specs">
+                                <span class="spec-item">Aerodynamic transport</span>
+                                <span class="spec-item">80% space efficiency</span>
+                            </div>
+                        </div>
+                        <div class="module-selector">
+                            <input type="checkbox" id="cylinder-select" class="module-checkbox">
+                            <label for="cylinder-select" class="checkbox-label">Select</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selected Modules Configuration -->
+            <div class="selected-modules-section" id="selected-modules-section" style="display: none;">
+                <h3 class="section-title">Configure Selected Modules</h3>
+                <div id="selected-modules-list">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Module Information Panel -->
+            <div class="module-info-panel" id="module-info-panel" style="display: none;">
+                <h3 class="section-title">Module Details</h3>
+                <div class="info-content" id="info-content">
+                    <!-- Dynamic content will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Total Module Stats -->
+            <div class="total-stats-section" id="total-stats-section" style="display: none;">
+                <h3 class="section-title">Combined Habitat Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📐</div>
+                        <div class="stat-content">
+                            <span class="stat-label">Total Floor Area</span>
+                            <span class="stat-value" id="total-area">0 m²</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <span class="stat-label">Total Volume</span>
+                            <span class="stat-value" id="total-volume">0 m³</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👨‍🚀</div>
+                        <div class="stat-content">
+                            <span class="stat-label">Crew Capacity</span>
+                            <span class="stat-value" id="crew-capacity">0 astronauts</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-content">
+                            <span class="stat-label">Efficiency Rating</span>
+                            <span class="stat-value" id="efficiency-rating">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="structure-actions">
+                <button class="btn-secondary-modern" id="back-to-config">
+                    <span class="btn-icon">←</span>
+                    <span class="btn-text">Back to Configuration</span>
+                </button>
+                
+                <button class="btn-primary-modern" id="continue-to-designer" disabled>
+                    <span class="btn-text">Continue to Designer</span>
                     <span class="btn-icon">→</span>
                     <div class="btn-glow-effect"></div>
                 </button>
@@ -404,7 +611,7 @@
 
                 <div class="canvas-info">
                     <div class="info-item">
-                        <strong>Module Size:</strong> <span id="canvas-dimensions">10.3m × 6.9m</span>
+                        <strong>Module Size:</strong> <span id="canvas-dimensions">10.3m x 6.9m</span>
                     </div>
                     <div class="info-item">
                         <strong>Scale:</strong> 1 grid = 0.5m
@@ -437,7 +644,7 @@
                             <div class="room-icon">🛏️</div>
                             <div class="room-info">
                                 <h4>Crew Quarters</h4>
-                                <p>2.0m × 2.5m</p>
+                                <p>2.0m x 2.5m</p>
                                 <p class="room-volume">10.5 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #4CAF50;"></div>
@@ -447,7 +654,7 @@
                             <div class="room-icon">🚿</div>
                             <div class="room-info">
                                 <h4>Hygiene Station</h4>
-                                <p>1.2m × 1.2m</p>
+                                <p>1.2m x 1.2m</p>
                                 <p class="room-volume">3.0 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #2196F3;"></div>
@@ -457,7 +664,7 @@
                             <div class="room-icon">🍳</div>
                             <div class="room-info">
                                 <h4>Galley</h4>
-                                <p>2.0m × 1.5m</p>
+                                <p>2.0m x 1.5m</p>
                                 <p class="room-volume">6.3 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #FF9800;"></div>
@@ -467,7 +674,7 @@
                             <div class="room-icon">🍽️</div>
                             <div class="room-info">
                                 <h4>Wardroom</h4>
-                                <p>3.0m × 2.0m</p>
+                                <p>3.0m x 2.0m</p>
                                 <p class="room-volume">12.6 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #FFC107;"></div>
@@ -477,7 +684,7 @@
                             <div class="room-icon">🏃</div>
                             <div class="room-info">
                                 <h4>Exercise Area</h4>
-                                <p>3.0m × 2.0m</p>
+                                <p>3.0m x 2.0m</p>
                                 <p class="room-volume">15.0 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #E91E63;"></div>
@@ -487,7 +694,7 @@
                             <div class="room-icon">💻</div>
                             <div class="room-info">
                                 <h4>Work Station</h4>
-                                <p>2.0m × 1.5m</p>
+                                <p>2.0m x 1.5m</p>
                                 <p class="room-volume">6.3 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #9C27B0;"></div>
@@ -497,7 +704,7 @@
                             <div class="room-icon">🏥</div>
                             <div class="room-info">
                                 <h4>Medical Bay</h4>
-                                <p>2.0m × 1.5m</p>
+                                <p>2.0m x 1.5m</p>
                                 <p class="room-volume">6.3 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #F44336;"></div>
@@ -507,7 +714,7 @@
                             <div class="room-icon">📦</div>
                             <div class="room-info">
                                 <h4>Storage</h4>
-                                <p>4.0m × 2.0m</p>
+                                <p>4.0m x 2.0m</p>
                                 <p class="room-volume">16.8 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #795548;"></div>
@@ -521,7 +728,7 @@
                             <div class="room-icon">🎮</div>
                             <div class="room-info">
                                 <h4>Recreation</h4>
-                                <p>2.5m × 2.5m</p>
+                                <p>2.5m x 2.5m</p>
                                 <p class="room-volume">13.1 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #00BCD4;"></div>
@@ -531,7 +738,7 @@
                             <div class="room-icon">🌱</div>
                             <div class="room-info">
                                 <h4>Greenhouse</h4>
-                                <p>3.0m × 2.5m</p>
+                                <p>3.0m x 2.5m</p>
                                 <p class="room-volume">15.8 m³</p>
                             </div>
                             <div class="room-color" style="background-color: #8BC34A;"></div>
@@ -785,7 +992,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const volumePerPerson = Math.round((habitableVolume / crewSize) * 10) / 10;
         
         // Update displays
-        document.getElementById('module-dimensions').textContent = `${width}m × ${length}m × ${height}m`;
+        document.getElementById('module-dimensions').textContent = `${width}m x ${length}m x ${height}m`;
         document.getElementById('module-volume').textContent = `${totalVolume} m³`;
         document.getElementById('habitable-volume').textContent = `${habitableVolume} m³`;
         document.getElementById('volume-per-person').textContent = `${volumePerPerson} m³`;
@@ -797,6 +1004,311 @@ document.addEventListener('DOMContentLoaded', function() {
     updateModuleSpecs();
     
     console.log('✅ Config page functionality initialized');
+});
+</script>
+
+<script>
+// Structure Page JavaScript - Module Selection Logic
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🏗️ Initializing structure page functionality...');
+    
+    // Module definitions with NASA facts and design tips
+    const MODULE_TYPES = {
+        dome: {
+            name: 'Dome',
+            icon: '🏠',
+            description: 'Spherical pressure vessel optimized for structural integrity',
+            efficiency: 85,
+            sizes: {
+                small: { diameter: 8, volume: 268, area: 50 },
+                medium: { diameter: 12, volume: 905, area: 113 },
+                large: { diameter: 16, volume: 2145, area: 201 }
+            },
+            nasaFacts: [
+                'Spherical structures provide optimal pressure distribution with minimal material stress',
+                'Dome habitats require 40% less structural material than rectangular designs',
+                'The curved walls naturally distribute atmospheric pressure loads evenly'
+            ],
+            designTips: [
+                'Position airlocks at the base for easy access and structural stability',
+                'Use the curved walls for efficient air circulation patterns',
+                'Consider the center height advantage for multi-level interior design'
+            ]
+        },
+        torus: {
+            name: 'Torus',
+            icon: '🍩',
+            description: 'Ring-shaped habitat enabling artificial gravity through rotation',
+            efficiency: 70,
+            sizes: {
+                small: { diameter: 20, volume: 400, area: 80 },
+                medium: { diameter: 30, volume: 900, area: 180 },
+                large: { diameter: 40, volume: 1600, area: 320 }
+            },
+            nasaFacts: [
+                'Rotating habitats can generate artificial gravity through centrifugal force',
+                'Optimal rotation rate is 2-3 RPM to avoid motion sickness in crew',
+                'Ring structures allow for natural day/night cycles with controlled lighting'
+            ],
+            designTips: [
+                'Place heavy equipment on the outer ring for maximum artificial gravity',
+                'Design spoke connections for access to the zero-gravity hub',
+                'Plan for Coriolis effects when designing fluid systems'
+            ]
+        },
+        cube: {
+            name: 'Cube',
+            icon: '📦',
+            description: 'Rectangular habitat maximizing internal volume efficiency',
+            efficiency: 95,
+            sizes: {
+                small: { width: 8, length: 10, height: 3, volume: 240, area: 80 },
+                medium: { width: 12, length: 15, height: 3, volume: 540, area: 180 },
+                large: { width: 16, length: 20, height: 4, volume: 1280, area: 320 }
+            },
+            nasaFacts: [
+                'Rectangular modules maximize usable interior space with minimal waste',
+                'Flat walls simplify equipment mounting and interior layout design',
+                'Modular construction allows for easy expansion and reconfiguration'
+            ],
+            designTips: [
+                'Reinforce corners with structural supports for pressure containment',
+                'Use the rectangular grid for efficient room layout planning',
+                'Design flat surfaces for easy integration with life support systems'
+            ]
+        },
+        cylinder: {
+            name: 'Cylinder',
+            icon: '🚀',
+            description: 'Elongated comet design optimized for transport and assembly',
+            efficiency: 80,
+            sizes: {
+                small: { length: 15, diameter: 6, volume: 424, area: 71 },
+                medium: { length: 20, diameter: 8, volume: 1005, area: 126 },
+                large: { length: 25, diameter: 10, volume: 1963, area: 196 }
+            },
+            nasaFacts: [
+                'Cylindrical modules are ideal for rocket transport due to aerodynamic shape',
+                'The pointed nose reduces atmospheric drag during planetary entry',
+                'Cylindrical pressure vessels are structurally efficient for internal pressure'
+            ],
+            designTips: [
+                'Utilize the length for sequential room layout and workflow efficiency',
+                'Position critical systems along the central axis for easy maintenance',
+                'Design the tapered end for specialized functions like observation or docking'
+            ]
+        }
+    };
+    
+    let selectedModules = [];
+    let crewRequirement = 4; // From config page
+    
+    // Initialize module selection handlers
+    initializeModuleSelection();
+    
+    // Navigation handlers
+    setupStructureNavigation();
+    
+    function initializeModuleSelection() {
+        const moduleCards = document.querySelectorAll('.module-card');
+        const moduleCheckboxes = document.querySelectorAll('.module-checkbox');
+        
+        // Module card click handlers
+        moduleCards.forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (e.target.type !== 'checkbox') {
+                    const checkbox = this.querySelector('.module-checkbox');
+                    checkbox.checked = !checkbox.checked;
+                    handleModuleSelection(checkbox);
+                }
+            });
+            
+            // Show module info on hover
+            card.addEventListener('mouseenter', function() {
+                const moduleType = this.dataset.module;
+                showModuleInfo(moduleType);
+            });
+        });
+        
+        // Checkbox change handlers
+        moduleCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                handleModuleSelection(this);
+            });
+        });
+    }
+    
+    function handleModuleSelection(checkbox) {
+        const moduleType = checkbox.id.replace('-select', '');
+        const moduleCard = checkbox.closest('.module-card');
+        
+        if (checkbox.checked) {
+            // Add to selected modules
+            moduleCard.classList.add('selected');
+            if (!selectedModules.find(m => m.type === moduleType)) {
+                selectedModules.push({
+                    type: moduleType,
+                    size: 'medium', // default size
+                    config: MODULE_TYPES[moduleType]
+                });
+            }
+        } else {
+            // Remove from selected modules
+            moduleCard.classList.remove('selected');
+            selectedModules = selectedModules.filter(m => m.type !== moduleType);
+        }
+        
+        updateSelectedModulesSection();
+        updateTotalStats();
+        updateContinueButton();
+        
+        console.log('🏗️ Selected modules:', selectedModules);
+    }
+    
+    function showModuleInfo(moduleType) {
+        const module = MODULE_TYPES[moduleType];
+        const infoPanel = document.getElementById('module-info-panel');
+        const infoContent = document.getElementById('info-content');
+        
+        if (!module) return;
+        
+        infoContent.innerHTML = `
+            <div class="nasa-facts">
+                <h4>🚀 NASA Facts</h4>
+                ${module.nasaFacts.map(fact => `
+                    <div class="fact-item">
+                        <div class="fact-icon">🔬</div>
+                        <div class="fact-text">${fact}</div>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div class="design-tips">
+                <h4>💡 Design Tips</h4>
+                ${module.designTips.map(tip => `
+                    <div class="tip-item">
+                        <div class="tip-icon">💡</div>
+                        <div class="tip-text">${tip}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        
+        infoPanel.style.display = 'block';
+    }
+    
+    function updateSelectedModulesSection() {
+        const section = document.getElementById('selected-modules-section');
+        const modulesList = document.getElementById('selected-modules-list');
+        
+        if (selectedModules.length === 0) {
+            section.style.display = 'none';
+            return;
+        }
+        
+        section.style.display = 'block';
+        
+        modulesList.innerHTML = selectedModules.map(module => `
+            <div class="module-config-item" data-module="${module.type}">
+                <div class="config-module-name">
+                    ${module.config.icon} ${module.config.name}
+                </div>
+                <div class="size-selector">
+                    <button class="size-btn ${module.size === 'small' ? 'active' : ''}" data-size="small">Small</button>
+                    <button class="size-btn ${module.size === 'medium' ? 'active' : ''}" data-size="medium">Medium</button>
+                    <button class="size-btn ${module.size === 'large' ? 'active' : ''}" data-size="large">Large</button>
+                </div>
+            </div>
+        `).join('');
+        
+        // Add size selection handlers
+        modulesList.querySelectorAll('.size-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const moduleType = this.closest('.module-config-item').dataset.module;
+                const size = this.dataset.size;
+                
+                // Update selected module size
+                const module = selectedModules.find(m => m.type === moduleType);
+                if (module) {
+                    module.size = size;
+                }
+                
+                // Update UI
+                this.closest('.size-selector').querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                updateTotalStats();
+            });
+        });
+    }
+    
+    function updateTotalStats() {
+        const statsSection = document.getElementById('total-stats-section');
+        
+        if (selectedModules.length === 0) {
+            statsSection.style.display = 'none';
+            return;
+        }
+        
+        statsSection.style.display = 'block';
+        
+        // Calculate totals
+        let totalArea = 0;
+        let totalVolume = 0;
+        let totalEfficiency = 0;
+        
+        selectedModules.forEach(module => {
+            const sizeData = module.config.sizes[module.size];
+            totalArea += sizeData.area;
+            totalVolume += sizeData.volume;
+            totalEfficiency += module.config.efficiency;
+        });
+        
+        const averageEfficiency = Math.round(totalEfficiency / selectedModules.length);
+        const crewCapacity = Math.floor(totalVolume / 25); // 25m³ per person minimum
+        
+        // Update displays
+        document.getElementById('total-area').textContent = `${totalArea} m²`;
+        document.getElementById('total-volume').textContent = `${totalVolume} m³`;
+        document.getElementById('crew-capacity').textContent = `${crewCapacity} astronauts`;
+        document.getElementById('efficiency-rating').textContent = `${averageEfficiency}%`;
+    }
+    
+    function updateContinueButton() {
+        const continueBtn = document.getElementById('continue-to-designer');
+        
+        if (selectedModules.length > 0) {
+            continueBtn.disabled = false;
+            continueBtn.style.opacity = '1';
+        } else {
+            continueBtn.disabled = true;
+            continueBtn.style.opacity = '0.6';
+        }
+    }
+    
+    function setupStructureNavigation() {
+        // Back to config button
+        const backBtn = document.getElementById('back-to-config');
+        if (backBtn) {
+            backBtn.addEventListener('click', function() {
+                SpaceArchitects.showPage('config');
+            });
+        }
+        
+        // Continue to designer button
+        const continueBtn = document.getElementById('continue-to-designer');
+        if (continueBtn) {
+            continueBtn.addEventListener('click', function() {
+                if (selectedModules.length > 0) {
+                    // Store selected modules for the editor page
+                    window.selectedHabitatModules = selectedModules;
+                    SpaceArchitects.showPage('editor');
+                }
+            });
+        }
+    }
+    
+    console.log('✅ Structure page functionality initialized');
 });
 </script>
 </body>
