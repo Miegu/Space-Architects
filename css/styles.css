@@ -15,6 +15,8 @@
    These define the design system - colors, fonts, spacing, etc.
    Changing these values updates the entire app's appearance
 */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Michroma&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
 :root {
     /* NASA Brand Colors */
     --nasa-blue: #0B3D91;           /* Primary NASA blue */
@@ -22,6 +24,15 @@
     --nasa-white: #FFFFFF;          /* Clean white */
     --nasa-light-gray: #F5F5F5;     /* Background gray */
     --nasa-dark-gray: #2C2C2C;      /* Text gray */
+
+    --bp-dark-blue: #0A1628;
+    --bp-medium-blue: #1E3A5F; 
+    --bp-accent-blue: #2E5A87;
+    --bp-bright-blue: #4A9EFF;
+    --bp-nasa-red: #FC3D21;
+    --bp-white: #FFFFFF;
+    --bp-light-gray: #E5E7EB;
+    --bp-tech-green: #00FF88;
     
     /* Semantic Colors - these have meaning in the app */
     --color-success: #4CAF50;        /* Green for "good" states */
@@ -75,6 +86,15 @@
     --transition-fast: 0.15s ease;
     --transition-normal: 0.3s ease;
     --transition-slow: 0.5s ease;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--bp-bright-blue) 0%, var(--bp-accent-blue) 100%);
+    --gradient-bg: radial-gradient(ellipse at center, var(--bp-medium-blue) 0%, var(--bp-dark-blue) 70%);
+    
+    /* Typography */
+    --font-primary: 'Orbitron', monospace;
+    --font-secondary: 'Rajdhani', sans-serif;
+    --font-display: 'Michroma', monospace;
     
     /* Z-index Scale - layering elements */
     --z-dropdown: 1000;
@@ -232,6 +252,12 @@ a:hover {
     cursor: not-allowed;
     transform: none !important;
     box-shadow: none !important;
+}
+ #welcome-page {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background: var(--bp-dark-blue);
 }
 
 /* 
@@ -432,6 +458,20 @@ a:hover {
     opacity: 0.7;
 }
 
+.space-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../assets/images/space-background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    opacity: 0.4;
+    z-index: 0;
+}
 /* 
    CONFIGURATION PAGE STYLES
    Form layouts and mission parameter selection

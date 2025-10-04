@@ -20,57 +20,128 @@
         Shows when app first loads
     -->
     <div id="welcome-page" class="page active">
-        <header class="nasa-header">
-            <div class="nasa-logo-container">
-                <img src="assets/images/nasa-logo.png" alt="NASA Logo" class="nasa-logo">
-                <span class="nasa-text">NASA</span>
-            </div>
-            <h1 class="main-title">Space Architects - Habitat Layout Creator</h1>
-            <p class="subtitle">Design the Future of Space Living</p>
-        </header>
-
-        <main class="welcome-content">
-            <div class="mission-overview">
-                <div class="intro-text">
-                    <h2>Welcome to NASA's Advanced Habitat Planning System</h2>
-                    <p>Design safe, efficient living spaces for astronauts on lunar and Mars missions. 
-                       Built on real NASA standards and requirements for space habitation.</p>
-                </div>
-
-                <!-- Feature highlights to show what the tool can do -->
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🏗️</div>
-                        <h3>Drag & Drop Design</h3>
-                        <p>Intuitive room placement with real-time NASA compliance validation</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📊</div>
-                        <h3>NASA Standards</h3>
-                        <p>Built-in checking for safety requirements and space efficiency</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🌙</div>
-                        <h3>Mission Ready</h3>
-                        <p>Optimized for Luna and Mars environments with realistic constraints</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🎓</div>
-                        <h3>Educational</h3>
-                        <p>Learn about space architecture through interactive design</p>
-                    </div>
-                </div>
-
-                <!-- Call to action button -->
-                <div class="action-section">
-                    <button class="btn btn--primary btn--lg" id="start-mission-btn">
-                        🚀 Start Mission Planning
-                    </button>
-                    <p class="action-subtitle">Begin your space habitat design journey</p>
-                </div>
-            </div>
-        </main>
+    <!-- Animated Background -->
+    <div class="space-background">
+        <div class="stars-layer"></div>
+        <div class="nebula-overlay"></div>
+        <div class="grid-overlay"></div>
     </div>
+    
+    <!-- Main Content -->
+    <div class="welcome-container">
+        <!-- NASA Header with Animation -->
+        <header class="nasa-header-modern">
+            <div class="logo-container">
+                <img src="assets/images/nasa-logo.png" alt="NASA Logo" class="nasa-logo">
+                <div class="logo-glow"></div>
+            </div>
+            
+            <!-- Main Title with Typewriter Effect -->
+            <div class="title-section">
+                <h1 class="main-title">
+                    <span class="title-line-1">Space Architects</span>
+                    <span class="title-separator">—</span>
+                    <span class="title-line-2">Habitat Layout Creator</span>
+                </h1>
+                <div class="title-underline"></div>
+            </div>
+            
+            <p class="mission-subtitle">Design the Future of Space Living</p>
+        </header>
+        
+        <!-- Primary CTA Section -->
+        <div class="cta-section">
+            <button class="btn-primary-modern" id="start-mission-btn">
+                <span class="btn-icon">🚀</span>
+                <span class="btn-text">Start Mission Planning</span>
+                <span class="btn-arrow">→</span>
+                <div class="btn-glow-effect"></div>
+            </button>
+            
+            <!-- Brief Description -->
+            <p class="mission-description">
+                Design safe, efficient living spaces for astronauts on lunar and Mars missions.<br>
+                Built on real <strong>NASA standards</strong> and requirements for space habitation.
+            </p>
+        </div>
+        
+        <!-- Compact Feature Cards with Hover Effects -->
+        <div class="features-compact">
+            <div class="feature-card-compact" data-feature="design">
+                <div class="feature-icon">
+                    <svg class="icon-svg" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7V17L12 22L22 17V7L12 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        <path d="M2 7L12 12L22 7" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M12 12V22" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <div class="feature-info">
+                    <h3>Drag & Drop Design</h3>
+                    <p>Intuitive room placement with real-time NASA compliance validation</p>
+                </div>
+            </div>
+            
+            <div class="feature-card-compact" data-feature="standards">
+                <div class="feature-icon">
+                    <svg class="icon-svg" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <div class="feature-info">
+                    <h3>NASA Standards</h3>
+                    <p>Built-in checking for safety requirements and space efficiency</p>
+                </div>
+            </div>
+            
+            <div class="feature-card-compact" data-feature="mission">
+                <div class="feature-icon">
+                    <svg class="icon-svg" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        <path d="M12 2A10 10 0 0 0 12 22" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M2 12H22" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <div class="feature-info">
+                    <h3>Mission Ready</h3>
+                    <p>Optimized for Luna and Mars environments with realistic constraints</p>
+                </div>
+            </div>
+            
+            <div class="feature-card-compact" data-feature="education">
+                <div class="feature-icon">
+                    <svg class="icon-svg" viewBox="0 0 24 24">
+                        <path d="M2 3H6.5L9 5.5L15 5.5L17.5 3H22V21H2V3Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        <path d="M9 12H15" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M9 16H13" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <div class="feature-info">
+                    <h3>Educational</h3>
+                    <p>Learn about space architecture through interactive design</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Technical Stats Footer -->
+        <div class="tech-stats">
+            <div class="stat-item">
+                <span class="stat-number">25+</span>
+                <span class="stat-label">m³ per astronaut</span>
+            </div>
+            <div class="stat-separator">|</div>
+            <div class="stat-item">
+                <span class="stat-number">8</span>
+                <span class="stat-label">essential areas</span>
+            </div>
+            <div class="stat-separator">|</div>
+            <div class="stat-item">
+                <span class="stat-number">NASA</span>
+                <span class="stat-label">compliant</span>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- 
         CONFIGURATION PAGE 
