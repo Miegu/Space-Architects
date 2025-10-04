@@ -1,0 +1,464 @@
+/*
+===============================================================================
+SPACE ARCHITECTS - ADDITIONAL STYLES FOR CLEAN VERSION
+NASA Space Apps Challenge Project
+
+Additional styles for:
+- Module selection with Select -> Add More behavior
+- Structure page visualization
+- Clean module cards without broken 3D
+- Quantity controls styling
+===============================================================================
+*/
+
+/* ======================
+   MODULE SELECTION STYLES
+   ====================== */
+
+.select-btn {
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.select-btn:hover {
+    background: linear-gradient(135deg, #357abd, #2968a3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.select-btn:active {
+    transform: translateY(0);
+}
+
+/* Quantity Controls */
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.quantity-btn {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #4a90e2;
+    background: #4a90e2;
+    color: white;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.quantity-btn:hover {
+    background: #357abd;
+    border-color: #357abd;
+    transform: scale(1.05);
+}
+
+.quantity-btn:active {
+    transform: scale(0.95);
+}
+
+.quantity-display {
+    min-width: 24px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #00ff88;
+    text-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+}
+
+.quantity-label {
+    font-size: 11px;
+    color: #a0a8b0;
+    margin-left: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Module Card Selected State */
+.module-card.selected {
+    border-color: #00ff88;
+    box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
+    background: rgba(0, 255, 136, 0.05);
+}
+
+.module-card.selected .module-icon {
+    color: #00ff88;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+}
+
+/* ======================
+   STRUCTURE PAGE STYLES
+   ====================== */
+
+.structure-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.structure-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* Habitat Preview */
+.habitat-preview {
+    background: rgba(30, 58, 95, 0.4);
+    border: 1px solid rgba(74, 158, 255, 0.3);
+    border-radius: 12px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.habitat-preview-container {
+    text-align: center;
+    width: 100%;
+}
+
+.no-modules {
+    color: #a0a8b0;
+}
+
+.no-modules .preview-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+}
+
+.modules-assembly {
+    width: 100%;
+}
+
+.assembly-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #00ff88;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.modules-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.module-group {
+    text-align: center;
+    min-width: 80px;
+}
+
+.module-visual-item {
+    width: 60px;
+    height: 60px;
+    border: 2px solid;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    margin: 0 auto 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.module-icon-large {
+    font-size: 1.5rem;
+    z-index: 2;
+}
+
+.module-shape {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    opacity: 0.2;
+}
+
+.module-shape.dome {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.module-shape.torus {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 6px solid currentColor;
+    background: transparent;
+}
+
+.module-shape.cube {
+    width: 35px;
+    height: 35px;
+    background: currentColor;
+}
+
+.module-shape.cylinder {
+    width: 35px;
+    height: 40px;
+    background: currentColor;
+    border-radius: 4px;
+}
+
+.module-label {
+    font-size: 0.8rem;
+    color: #e0e0e0;
+    margin-bottom: 0.25rem;
+}
+
+.module-quantity {
+    font-size: 0.9rem;
+    color: #00ff88;
+    font-weight: bold;
+}
+
+.assembly-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(74, 158, 255, 0.3);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #a0a8b0;
+    margin-bottom: 0.25rem;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1rem;
+    color: #00ff88;
+    font-weight: bold;
+}
+
+/* Structure Details */
+.structure-details {
+    background: rgba(30, 58, 95, 0.4);
+    border: 1px solid rgba(74, 158, 255, 0.3);
+    border-radius: 12px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+}
+
+.structure-summary h3 {
+    color: #00ff88;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+}
+
+.modules-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.module-detail-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.module-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.module-header .module-icon {
+    font-size: 1.5rem;
+}
+
+.module-info h4 {
+    color: #e0e0e0;
+    margin: 0 0 0.25rem 0;
+}
+
+.module-description {
+    color: #a0a8b0;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.module-count {
+    margin-left: auto;
+    background: rgba(0, 255, 136, 0.2);
+    color: #00ff88;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.module-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-row:last-child {
+    border-bottom: none;
+}
+
+.stat-row span:first-child {
+    color: #a0a8b0;
+}
+
+.stat-row span:last-child {
+    color: #e0e0e0;
+    font-weight: 500;
+}
+
+/* Total Statistics */
+.total-statistics {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: rgba(0, 255, 136, 0.05);
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    border-radius: 8px;
+}
+
+.total-statistics h4 {
+    color: #00ff88;
+    margin-bottom: 1rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+}
+
+.stat-card .stat-label {
+    font-size: 0.8rem;
+    color: #a0a8b0;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card .stat-value {
+    font-size: 1.1rem;
+    color: #00ff88;
+    font-weight: bold;
+}
+
+/* Next Steps */
+.next-steps {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(74, 144, 226, 0.1);
+    border: 1px solid rgba(74, 144, 226, 0.3);
+    border-radius: 8px;
+}
+
+.next-steps h4 {
+    color: #4a90e2;
+    margin-bottom: 1rem;
+}
+
+.next-steps p {
+    color: #e0e0e0;
+    margin-bottom: 1rem;
+}
+
+.next-steps ul {
+    color: #a0a8b0;
+    padding-left: 1.5rem;
+}
+
+.next-steps li {
+    margin-bottom: 0.5rem;
+}
+
+/* No Selection State */
+.no-selection {
+    text-align: center;
+    padding: 3rem 2rem;
+    color: #a0a8b0;
+}
+
+.no-selection h3 {
+    color: #e0e0e0;
+    margin-bottom: 1rem;
+}
+
+/* ======================
+   RESPONSIVE DESIGN
+   ====================== */
+
+@media (max-width: 768px) {
+    .structure-content {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .modules-layout {
+        justify-content: space-around;
+    }
+
+    .module-visual-item {
+        width: 50px;
+        height: 50px;
+    }
+
+    .module-icon-large {
+        font-size: 1.2rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .assembly-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
