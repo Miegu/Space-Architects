@@ -517,13 +517,170 @@
 
     <!-- Include all JavaScript files -->
     <!-- Order matters here - dependencies must be loaded first -->
-    <script src="data/nasa_standarts.js"></script>  <!-- NASA data constants -->
-    <script src="js/rooms.js"></script>            <!-- Room definitions and catalog -->
-    <script src="js/configuration.js"></script>    <!-- Mission configuration logic -->
-    <script src="js/validation.js"></script>       <!-- Real-time validation system -->
-    <script src="js/score.js"></script>           <!-- Scoring and compliance calculation -->
-    <script src="js/editor.js"></script>          <!-- Main editor functionality -->
-    
+  <!-- Load in EXACTLY this order -->
+    <script src="data/nasa_standarts.js"></script>  <!-- First - provides NASA_STANDARDS -->
+    <script src="js/rooms.js"></script>            <!-- Second - uses NASA_STANDARDS -->
+    <script src="js/configuration.js"></script>    <!-- Third - uses NASA_STANDARDS -->
+    <script src="js/validation.js"></script>       <!-- Fourth - uses RoomsManager -->
+    <script src="js/score.js"></script>           <!-- Fifth - uses RoomsManager -->
+    <script src="js/editor.js"></script>          <!-- Last - uses all others -->
+
+    <!-- Main Application Controller -->
+<script>
+        /* ==========================================================================
+        SPACE ARCHITECTS - MAIN APPLICATION CONTROLLER
+        This coordinates all modules and handles page navigation
+        ========================================================================== */
+
+        const SpaceArchitects = (function() {
+            'use strict';
+            
+            let currentPage = 'welcome';
+            
+            /**
+             * Initialize the main application
+             */
+            function init() {
+                console.log('🚀 Initializing Space Architects Application...');
+                
+                // Show welcome page initially
+                showPage('welcome');
+                
+                // Set up navigation handlers
+                setupNavigation();
+                
+                // Initialize modules that need setup
+                if (typeof ValidationSystem !== 'undefined') {
+                    ValidationSystem.initialize();
+                }
+                
+                console.log('✅ Space Architects Application Ready!');
+            }
+            
+            /**
+             * Set up page navigation handlers
+             */
+            function setupNavigation() {
+                // Start Mission Planning button (Welcome -> Config)
+                const startMissionBtn = document.getElementById('start-mission-btn');
+                if (startMissionBtn) {
+                    startMissionBtn.addEventListener('click', function() {
+                        console.log('🎯 Starting mission planning...');
+                        showPage('config');
+                    });
+                }
+                
+                // Generate Habitat button (Config -> Editor)
+                const generateBtn = document.getElementById('generate-habitat-btn');
+                if (generateBtn) {
+                    generateBtn.addEventListener('click', function() {
+                        console.log('🏗️ Generating habitat...');
+                        
+                        // Show loading state
+                        this.disabled = true;
+                        this.textContent = 'Generating...';
+                        
+                        setTimeout(() => {
+                            showPage('editor');
+                            this.disabled = false;
+                            this.textContent = 'Generate Habitat Module →';
+                        }, 500);
+                    });
+                }
+                
+                // Back to Welcome button (Config -> Welcome)
+                const backToWelcomeBtn = document.getElementById('back-to-welcome');
+                if (backToWelcomeBtn) {
+                    backToWelcomeBtn.addEventListener('click', function() {
+                        showPage('welcome');
+                    });
+                }
+                
+                // Reconfigure button (Editor -> Config)
+                const reconfigureBtn = document.getElementById('reconfigure-btn');
+                if (reconfigureBtn) {
+                    reconfigureBtn.addEventListener('click', function() {
+                        showPage('config');
+                    });
+                }
+                
+                // Listen for custom navigation events
+                document.addEventListener('navigateToPage', function(event) {
+                    showPage(event.detail.page);
+                });
+            }
+            
+            /**
+             * Show a specific page and hide others
+             * @param {string} pageName - Name of page to show ('welcome', 'config', 'editor')
+             */
+            function showPage(pageName) {
+                console.log('📄 Navigating to page:', pageName);
+                
+                // Hide all pages
+                const pages = document.querySelectorAll('.page');
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // Show target page
+                const targetPage = document.getElementById(`${pageName}-page`);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                    currentPage = pageName;
+                    
+                    // Initialize page-specific functionality
+                    initializePage(pageName);
+                } else {
+                    console.error('❌ Page not found:', pageName);
+                }
+            }
+            
+            /**
+             * Initialize page-specific functionality
+             * @param {string} pageName - Name of page being shown
+             */
+            function initializePage(pageName) {
+                switch(pageName) {
+                    case 'config':
+                        // Initialize configuration page
+                        if (typeof MissionConfig !== 'undefined' && MissionConfig.initializeConfigPage) {
+                            setTimeout(() => MissionConfig.initializeConfigPage(), 100);
+                        }
+                        break;
+                        
+                    case 'editor':
+                        // Initialize habitat editor
+                        if (typeof HabitatEditor !== 'undefined' && HabitatEditor.initialize) {
+                            setTimeout(() => HabitatEditor.initialize(), 100);
+                        }
+                        break;
+                        
+                    default:
+                        // Welcome page - no special initialization needed
+                        break;
+                }
+            }
+            
+            /**
+             * Get current page
+             * @returns {string} Current page name
+             */
+            function getCurrentPage() {
+                return currentPage;
+            }
+            
+            // Public API
+            return {
+                init: init,
+                showPage: showPage,
+                getCurrentPage: getCurrentPage
+            };
+        })();
+
+        // Make available globally
+        window.SpaceArchitects = SpaceArchitects;
+        </script>
     <!-- Main application initialization -->
     <script>
         // Initialize the application when DOM is loaded
