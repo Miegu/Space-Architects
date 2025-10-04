@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Architects - NASA Habitat Layout Creator</title>
+    
+    <!-- Main CSS Files -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/editor.css">
+    
+    <!-- Preload critical assets for better performance -->
+    <link rel="preload" href="assets/images/lunar-surface.jpg" as="image">
+    <link rel="preload" href="assets/images/nasa-logo.png" as="image">
+</head>
+<body>
+    <!-- 
+        WELCOME PAGE 
+        First screen - NASA branding and project introduction
+        Shows when app first loads
+    -->
+    <div id="welcome-page" class="page active">
+        <header class="nasa-header">
+            <div class="nasa-logo-container">
+                <img src="assets/images/nasa-logo.png" alt="NASA Logo" class="nasa-logo">
+                <span class="nasa-text">NASA</span>
+            </div>
+            <h1 class="main-title">Space Architects - Habitat Layout Creator</h1>
+            <p class="subtitle">Design the Future of Space Living</p>
+        </header>
+
+        <main class="welcome-content">
+            <div class="mission-overview">
+                <div class="intro-text">
+                    <h2>Welcome to NASA's Advanced Habitat Planning System</h2>
+                    <p>Design safe, efficient living spaces for astronauts on lunar and Mars missions. 
+                       Built on real NASA standards and requirements for space habitation.</p>
+                </div>
+
+                <!-- Feature highlights to show what the tool can do -->
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🏗️</div>
+                        <h3>Drag & Drop Design</h3>
+                        <p>Intuitive room placement with real-time NASA compliance validation</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>NASA Standards</h3>
+                        <p>Built-in checking for safety requirements and space efficiency</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌙</div>
+                        <h3>Mission Ready</h3>
+                        <p>Optimized for Luna and Mars environments with realistic constraints</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎓</div>
+                        <h3>Educational</h3>
+                        <p>Learn about space architecture through interactive design</p>
+                    </div>
+                </div>
+
+                <!-- Call to action button -->
+                <div class="action-section">
+                    <button class="btn btn--primary btn--lg" id="start-mission-btn">
+                        🚀 Start Mission Planning
+                    </button>
+                    <p class="action-subtitle">Begin your space habitat design journey</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 
+        CONFIGURATION PAGE 
+        Second screen - mission parameter selection
+        Where users choose mission type, crew size, duration
+    -->
+    <div id="config-page" class="page">
+        <header class="nasa-header">
+            <div class="nasa-logo-container">
+                <img src="assets/images/nasa-logo.png" alt="NASA Logo" class="nasa-logo">
+                <span class="nasa-text">NASA</span>
+            </div>
+            <h1>Mission Configuration</h1>
+        </header>
+
+        <main class="config-content">
+            <div class="config-form">
+                <h2>Define Your Mission Parameters</h2>
+                <p>Configure the mission settings that will determine your habitat requirements</p>
+
+                <!-- Mission Type Selection -->
+                <div class="form-group">
+                    <label for="mission-type">Mission Destination</label>
+                    <select id="mission-type" class="form-control">
+                        <option value="moon">Moon - 1/6 Earth gravity</option>
+                        <option value="mars">Mars - 3/8 Earth gravity</option>
+                    </select>
+                    <div class="field-info">
+                        <span class="info-icon">ℹ️</span>
+                        <span>Different destinations have unique environmental challenges</span>
+                    </div>
+                </div>
+
+                <!-- Crew Size Selection -->
+                <div class="form-group">
+                    <label for="crew-size">Crew Size</label>
+                    <div class="slider-container">
+                        <input type="range" id="crew-size" class="form-range" min="2" max="20" value="4">
+                        <div class="slider-labels">
+                            <span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span>
+                            <span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span>
+                            <span>18</span><span>19</span><span>20</span>
+                        </div>
+                    </div>
+                    <div class="slider-value">
+                        <span id="crew-size-display">4</span> astronauts
+                    </div>
+                </div>
+
+                <!-- Mission Duration Selection -->
+                <div class="form-group">
+                    <label>Mission Duration</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="duration" value="7">
+                            <span class="radio-custom"></span>
+                            <span>7 days - Short Stay</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="duration" value="30">
+                            <span class="radio-custom"></span>
+                            <span>30 days - Extended Stay</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="duration" value="60" checked>
+                            <span class="radio-custom"></span>
+                            <span>60 days - Long Duration</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="duration" value="90">
+                            <span class="radio-custom"></span>
+                            <span>90 days - Extended Mission</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="duration" value="180">
+                            <span class="radio-custom"></span>
+                            <span>180 days - Permanent Base</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Generated module info display -->
+                <div class="module-preview">
+                    <h3>Generated Habitat Module</h3>
+                    <div class="module-specs">
+                        <div class="spec-item">
+                            <strong>Dimensions:</strong> 
+                            <span id="module-dimensions">10.3m x 6.9m x 2.5m</span>
+                        </div>
+                        <div class="spec-item">
+                            <strong>Total Volume:</strong> 
+                            <span id="module-volume">177.7 m³</span>
+                        </div>
+                        <div class="spec-item">
+                            <strong>Habitable Volume:</strong> 
+                            <span id="habitable-volume">124.4 m³</span>
+                        </div>
+                        <div class="spec-item">
+                            <strong>Volume per Person:</strong> 
+                            <span id="volume-per-person">31.1 m³</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="form-actions">
+                    <button class="btn btn--secondary" id="back-to-welcome">
+                        ← Back to Welcome
+                    </button>
+                    <button class="btn btn--primary btn--lg" id="generate-habitat-btn">
+                        Generate Habitat Module →
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 
+        MAIN EDITOR PAGE 
+        Third screen - the actual habitat designer
+        This is where the main interaction happens
+    -->
+    <div id="editor-page" class="page">
+        <header class="editor-header">
+            <div class="nasa-logo-container">
+                <img src="assets/images/nasa-logo.png" alt="NASA Logo" class="nasa-logo">
+            </div>
+            <div class="mission-info">
+                <h1>Habitat Layout Designer</h1>
+                <div class="mission-params">
+                    <span class="param">Mission: <span id="current-mission">Luna</span></span>
+                    <span class="param">Crew: <span id="current-crew">4</span></span>
+                    <span class="param">Duration: <span id="current-duration">60</span> days</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn--secondary" id="reconfigure-btn">⚙️ Reconfigure</button>
+                <button class="btn btn--success" id="submit-design-btn">✅ Submit Design</button>
+            </div>
+        </header>
+
+        <div class="editor-layout">
+            <!-- 
+                LEFT PANEL - NASA Requirements Dashboard
+                Shows real-time compliance with NASA standards
+            -->
+            <aside class="requirements-panel">
+                <h2>NASA Standards Validation</h2>
+                <div class="requirements-list">
+                    <!-- These indicators update in real-time as rooms are placed -->
+                    <div class="requirement-item" id="req-volume">
+                        <div class="req-status red"></div>
+                        <div class="req-content">
+                            <h4>Minimum Volume per Person</h4>
+                            <p class="req-value">0 / 25 m³</p>
+                            <p class="req-description">Each astronaut needs 25+ m³ of habitable space</p>
+                        </div>
+                    </div>
+
+                    <div class="requirement-item" id="req-quarters">
+                        <div class="req-status red"></div>
+                        <div class="req-content">
+                            <h4>Individual Sleeping Quarters</h4>
+                            <p class="req-value">0 / 4 quarters</p>
+                            <p class="req-description">Private sleeping space for each crew member</p>
+                        </div>
+                    </div>
+
+                    <div class="requirement-item" id="req-essential">
+                        <div class="req-status red"></div>
+                        <div class="req-content">
+                            <h4>Essential Areas Complete</h4>
+                            <p class="req-value">0 / 8 areas</p>
+                            <p class="req-description">All critical habitat functions present</p>
+                        </div>
+                    </div>
+
+                    <div class="requirement-item" id="req-hygiene">
+                        <div class="req-status red"></div>
+                        <div class="req-content">
+                            <h4>Hygiene Facilities</h4>
+                            <p class="req-value">0 / 2 stations</p>
+                            <p class="req-description">Adequate bathroom facilities (max 3 people/station)</p>
+                        </div>
+                    </div>
+
+                    <div class="requirement-item" id="req-access">
+                        <div class="req-status red"></div>
+                        <div class="req-content">
+                            <h4>Emergency Access</h4>
+                            <p class="req-value">N/A</p>
+                            <p class="req-description">Quick access to medical bay from all areas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Overall compliance score -->
+                <div class="compliance-score">
+                    <h3>Overall Compliance</h3>
+                    <div class="score-display">
+                        <span class="score-number" id="compliance-percentage">0</span>
+                        <span class="score-unit">%</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-progress" id="score-progress"></div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 
+                CENTER PANEL - Main Design Canvas
+                This is where users drag and drop rooms
+            -->
+            <main class="design-canvas">
+                <div class="canvas-header">
+                    <h2>Design Canvas</h2>
+                    <div class="canvas-controls">
+                        <button class="btn btn--small" id="clear-all-btn">🗑️ Clear All</button>
+                        <button class="btn btn--small" id="auto-arrange-btn">✨ Auto Arrange</button>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="show-grid">
+                            <span class="toggle-slider"></span>
+                            Show Grid
+                        </label>
+                    </div>
+                </div>
+
+                <!-- The actual drag-and-drop canvas -->
+                <div class="habitat-canvas" id="habitat-canvas">
+                    <!-- Grid background is generated by CSS -->
+                    <div class="canvas-background"></div>
+                    
+                    <!-- Module outline showing available space -->
+                    <div class="module-outline" id="module-outline">
+                        <div class="module-label">Habitat Module</div>
+                    </div>
+                    
+                    <!-- Rooms will be dynamically placed here -->
+                    <div class="placed-rooms" id="placed-rooms"></div>
+                    
+                    <!-- Drop zones for better UX -->
+                    <div class="drop-zones" id="drop-zones"></div>
+                </div>
+
+                <!-- Canvas information bar -->
+                <div class="canvas-info">
+                    <div class="info-item">
+                        <strong>Module Size:</strong> <span id="canvas-dimensions">10.3m x 6.9m</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Scale:</strong> 1 grid = 0.5m
+                    </div>
+                    <div class="info-item">
+                        <strong>Rooms Placed:</strong> <span id="rooms-count">0</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Space Used:</strong> <span id="space-used">0%</span>
+                    </div>
+                </div>
+            </main>
+
+            <!-- 
+                RIGHT PANEL - Room Catalog
+                Library of available rooms to drag into the canvas
+            -->
+            <aside class="rooms-panel">
+                <h2>Available Rooms</h2>
+                <p class="panel-description">Drag rooms to the canvas to build your habitat</p>
+
+                <!-- Room categories for better organization -->
+                <div class="room-categories">
+                    <button class="category-btn active" data-category="all">All Rooms</button>
+                    <button class="category-btn" data-category="essential">Essential</button>
+                    <button class="category-btn" data-category="optional">Optional</button>
+                </div>
+
+                <!-- Scrollable list of draggable rooms -->
+                <div class="rooms-catalog" id="rooms-catalog">
+                    <!-- Essential Rooms Section -->
+                    <div class="room-section">
+                        <h3>Essential Rooms</h3>
+                        
+                        <!-- Each room is draggable and shows key info -->
+                        <div class="room-item draggable" draggable="true" data-room-type="crew_quarters" data-category="essential">
+                            <div class="room-icon">🛏️</div>
+                            <div class="room-info">
+                                <h4>Crew Quarters</h4>
+                                <p>2.0m x 2.5m</p>
+                                <p class="room-volume">10.5 m³</p>
+                            </div>
+                            <div class="room-color" style="background-color: #4CAF50;"></div>
+                        </div>
+
+                        <div class="room-item draggable" draggable="true" data-room-type="hygiene" data-category="essential">
+                            <div class="room-icon">🚿</div>
+                            <div class="room-info">
+                                <h4>Hygiene Station</h4>
+                                <p>1.2m x 1.2m</p>
+                                <p class="room-volume">3.0 m³</p>
+                            </div>
+                            <div class="room-color" style="background-color: #2196F3;"></div>
+                        </div>
+
+                        <div class="room-item draggable" draggable="true" data-room-type="galley" data-category="essential">
+                            <div class="room-icon">🍳</div>
+                            <div class="room-info">
+                                <h4>Galley</h4>
+                                <p>2.0m x 1.5m</p>
+                                <p class="room-volume">6.3 m³</p>
+                            </div>
+                            <div class="room-color" style="background-color: #FF9800;"></div>
+                        </div>
+
+                        <div class="room-item draggable" draggable="true" data-room-type="wardroom" data-category="essential">
+                            <div class="room-icon">🍽️</div>
+                            <div class="room-info">
+                                <h4>Wardroom</h4>
+                                <p>3.0m x 2.0m</p>
+                                <p class="room-volume">12.6 m³</p>
+                            </div>
+                            <div class="room-color" style="background-color: #FFC107;"></div>
+                        </div>
+
+                        <div class="room-item draggable" draggable="true" data-room-type="exercise" data-category="essential">
+                            <div class="room-icon">🏃</div>
+                            <div class="room-info">
+                                <h4>Exercise Area</h4>
+                                <p>3.0m x 2.0m</p>
+                                <p class="room-volume">15.0 m³</p>
+                            </div>
+                            <div class="room-color" style="background-color: #E91E63;"></div>
+                        </div>
+
+                        <div class="room-item draggable" draggable="true" data-room-type="workstation" data-category="essential">
+                            <div class="room-icon">💻</div>
+                            <div class="room-info">
+                                <h4>Work Station</h4>
+                                <p>2.0m x 1.5m</p>
+                                <p class="room-volume">6.3 m³</p>
+                            </div>
+                            <div class="room-color" style="background-color: #9C27B0;"></div>
+                        </div>
+
+                        <div class="room-item draggable" draggable="true" data-room-type="medical" data-category="essential">
+                            <div class="room-icon">🏥</div>
+                            <div class="room-info">
+                                <h4>Medical Bay</h4>
+                                <p>2.0m x 1.5m</p>
+                                <p class="room-volume">6.3 m³</p>
+                            </div>
+                            <div class="room-color" style="background-color: #F44336;"></div>
+                        </div>
+
+                        <div class="room-item draggable" draggable="true" data-room-type="storage" data-category="essential">
+                            <div class="room-icon">📦</div>
+                            <div class="room-info">
+                                <h4>Storage</h4>
+                                <p>4.0m x 2.0m</p>
+                                <p class="room-volume">16.8 m³</p>
+                            </div>
+                            <div class="room-color" style="background-color: #795548;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Optional Rooms Section (for future expansion) -->
+                    <div class="room-section">
+                        <h3>Optional Rooms</h3>
+                        
+                        <div class="room-item draggable" draggable="true" data-room-type="recreation" data-category="optional">
+                            <div class="room-icon">🎮</div>
+                            <div class="room-info">
+                                <h4>Recreation</h4>
+                                <p>2.5m x 2.5m</p>
+                                <p class="room-volume">13.1 m³</p>
+                            </div>
+                            <div class="room-color" style="background-color: #00BCD4;"></div>
+                        </div>
+
+                        <div class="room-item draggable" draggable="true" data-room-type="greenhouse" data-category="optional">
+                            <div class="room-icon">🌱</div>
+                            <div class="room-info">
+                                <h4>Greenhouse</h4>
+                                <p>3.0m x 2.5m</p>
+                                <p class="room-volume">15.8 m³</p>
+                            </div>
+                            <div class="room-color" style="background-color: #8BC34A;"></div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- 
+        MODAL DIALOGS 
+        Pop-up windows for various interactions
+    -->
+    
+    <!-- Educational tip modal -->
+    <div class="modal" id="tip-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>💡 Design Tip</h3>
+                <button class="close-btn" id="close-tip">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="tip-message"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--primary" id="got-it-btn">Got it!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final submission modal -->
+    <div class="modal" id="submission-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🏆 Design Submission</h3>
+                <button class="close-btn" id="close-submission">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="final-score">
+                    <h4>Final Compliance Score</h4>
+                    <div class="score-circle">
+                        <span id="final-score">0</span>%
+                    </div>
+                </div>
+                <div class="score-breakdown">
+                    <h4>Requirements Analysis</h4>
+                    <div id="final-requirements"></div>
+                </div>
+                <div class="recommendations">
+                    <h4>Recommendations for Improvement</h4>
+                    <div id="final-recommendations"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--secondary" id="continue-editing">Continue Editing</button>
+                <button class="btn btn--primary" id="export-design">Export Design</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include all JavaScript files -->
+    <!-- Order matters here - dependencies must be loaded first -->
+    <script src="data/nasa_standarts.js"></script>  <!-- NASA data constants -->
+    <script src="js/rooms.js"></script>            <!-- Room definitions and catalog -->
+    <script src="js/configuration.js"></script>    <!-- Mission configuration logic -->
+    <script src="js/validation.js"></script>       <!-- Real-time validation system -->
+    <script src="js/score.js"></script>           <!-- Scoring and compliance calculation -->
+    <script src="js/editor.js"></script>          <!-- Main editor functionality -->
+    
+    <!-- Main application initialization -->
+    <script>
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 NASA Space Architects - Application Loading...');
+            
+            // Initialize all modules
+            SpaceArchitects.init();
+            
+            console.log('✅ Application Ready');
+        });
+    </script>
+</body>
+</html>

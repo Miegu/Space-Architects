@@ -1,0 +1,809 @@
+/* ==========================================================================
+   SPACE ARCHITECTS - EDITOR STYLES
+   NASA Space Apps Challenge Project
+   
+   This file contains styles specific to the main editor page:
+   - Editor layout system (3-panel design)
+   - Drag and drop interactions
+   - Canvas and grid styling
+   - Room placement system
+   - Real-time validation indicators
+   ========================================================================== */
+
+/* 
+   EDITOR LAYOUT SYSTEM
+   Three-panel layout: Requirements | Canvas | Rooms Catalog
+*/
+.editor-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr 300px;  /* Fixed sidebars, flexible center */
+    gap: var(--space-lg);
+    height: calc(100vh - 120px);              /* Account for header height */
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+/* Editor header - different from welcome/config headers */
+.editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg) var(--space-xl);
+    background: var(--nasa-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--space-lg);
+}
+
+.mission-info h1 {
+    margin: 0;
+    font-size: var(--font-size-2xl);
+    color: var(--nasa-blue);
+}
+
+.mission-params {
+    display: flex;
+    gap: var(--space-lg);
+    margin-top: var(--space-sm);
+}
+
+.param {
+    font-size: var(--font-size-sm);
+    color: var(--nasa-dark-gray);
+}
+
+.param span {
+    font-weight: 600;
+    color: var(--nasa-blue);
+}
+
+.header-actions {
+    display: flex;
+    gap: var(--space-md);
+}
+
+/* 
+   LEFT PANEL - NASA REQUIREMENTS DASHBOARD
+   Shows real-time compliance with NASA standards
+*/
+.requirements-panel {
+    background: var(--nasa-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: var(--space-xl);
+    overflow-y: auto;                    /* Scrollable if content overflows */
+    height: fit-content;
+    max-height: 100%;
+}
+
+.requirements-panel h2 {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    color: var(--nasa-blue);
+    font-size: var(--font-size-xl);
+}
+
+.requirements-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+/* Individual requirement items */
+.requirement-item {
+    display: flex;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: #f8f9fa;
+    border-radius: var(--radius-md);
+    border-left: 4px solid transparent;
+    transition: all var(--transition-normal);
+}
+
+/* Status indicator circle */
+.req-status {
+    width: 16px;
+    height: 16px;
+    border-radius: var(--radius-full);
+    margin-top: 2px;
+    flex-shrink: 0;                     /* Don't compress the circle */
+    transition: background-color var(--transition-normal);
+}
+
+.req-status.red {
+    background-color: var(--color-error);
+}
+
+.req-status.yellow {
+    background-color: var(--color-warning);
+}
+
+.req-status.green {
+    background-color: var(--color-success);
+}
+
+/* Update border color based on status */
+.requirement-item:has(.req-status.red) {
+    border-left-color: var(--color-error);
+}
+
+.requirement-item:has(.req-status.yellow) {
+    border-left-color: var(--color-warning);
+}
+
+.requirement-item:has(.req-status.green) {
+    border-left-color: var(--color-success);
+}
+
+.req-content h4 {
+    margin: 0 0 var(--space-xs) 0;
+    font-size: var(--font-size-base);
+    color: var(--nasa-dark-gray);
+}
+
+.req-value {
+    font-weight: 600;
+    color: var(--nasa-blue);
+    margin: 0 0 var(--space-xs) 0;
+    font-size: var(--font-size-sm);
+}
+
+.req-description {
+    font-size: var(--font-size-xs);
+    color: var(--nasa-dark-gray);
+    opacity: 0.8;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Overall compliance score */
+.compliance-score {
+    margin-top: var(--space-2xl);
+    padding: var(--space-xl);
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: var(--radius-lg);
+    text-align: center;
+}
+
+.compliance-score h3 {
+    margin-bottom: var(--space-lg);
+    color: var(--nasa-blue);
+}
+
+.score-display {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-lg);
+}
+
+.score-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--nasa-blue);
+}
+
+.score-unit {
+    font-size: var(--font-size-xl);
+    color: var(--nasa-dark-gray);
+    opacity: 0.7;
+}
+
+.score-bar {
+    width: 100%;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.score-progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-error) 0%, var(--color-warning) 50%, var(--color-success) 100%);
+    border-radius: var(--radius-full);
+    transition: width var(--transition-slow);
+    width: 0%;                          /* Animated via JavaScript */
+}
+
+/* 
+   CENTER PANEL - DESIGN CANVAS
+   The main workspace where users design their habitat
+*/
+.design-canvas {
+    background: var(--nasa-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.canvas-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-lg) var(--space-xl);
+    border-bottom: 1px solid #dee2e6;
+    background: #f8f9fa;
+}
+
+.canvas-header h2 {
+    margin: 0;
+    font-size: var(--font-size-lg);
+    color: var(--nasa-blue);
+}
+
+.canvas-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+/* Toggle switch for grid visibility */
+.toggle-switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+}
+
+.toggle-switch input[type="checkbox"] {
+    display: none;
+}
+
+.toggle-slider {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    background: #ccc;
+    border-radius: var(--radius-full);
+    transition: background var(--transition-normal);
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: 2px;
+    top: 2px;
+    background: var(--nasa-white);
+    border-radius: var(--radius-full);
+    transition: transform var(--transition-normal);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background: var(--nasa-blue);
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(20px);
+}
+
+/* Main canvas area */
+.habitat-canvas {
+    flex: 1;
+    position: relative;
+    overflow: auto;
+    background: #fafbfc;
+    min-height: 500px;
+}
+
+/* Canvas background with optional grid */
+.canvas-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.1;
+    background-image: 
+        linear-gradient(90deg, rgba(11, 61, 145, 0.1) 1px, transparent 1px),
+        linear-gradient(rgba(11, 61, 145, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;        /* Grid size: 20px = 0.5m at scale */
+    transition: opacity var(--transition-normal);
+}
+
+/* Show grid when toggle is active */
+.habitat-canvas.show-grid .canvas-background {
+    opacity: 0.3;
+}
+
+/* Module outline showing available space */
+.module-outline {
+    position: absolute;
+    border: 3px dashed var(--nasa-blue);
+    background: rgba(11, 61, 145, 0.05);
+    border-radius: var(--radius-md);
+    /* Dimensions set via JavaScript based on mission config */
+    top: 40px;
+    left: 40px;
+    width: 412px;                      /* 10.3m * 40px/m scale */
+    height: 276px;                     /* 6.9m * 40px/m scale */
+    z-index: 1;
+}
+
+.module-label {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    background: var(--nasa-blue);
+    color: var(--nasa-white);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+}
+
+/* Container for placed rooms */
+.placed-rooms {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+}
+
+/* Individual placed room styling */
+.placed-room {
+    position: absolute;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: var(--radius-sm);
+    cursor: move;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--nasa-white);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    transition: all var(--transition-fast);
+    user-select: none;                 /* Prevent text selection while dragging */
+}
+
+.placed-room:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-lg);
+    z-index: 20;
+}
+
+.placed-room.dragging {
+    opacity: 0.8;
+    transform: rotate(2deg);
+    z-index: 30;
+}
+
+.placed-room .room-icon {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-xs);
+}
+
+.placed-room .room-name {
+    font-size: var(--font-size-xs);
+    line-height: 1.2;
+}
+
+/* Drop zones for better UX during drag operations */
+.drop-zones {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 5;
+    pointer-events: none;              /* Don't interfere with interactions */
+}
+
+.drop-zone {
+    position: absolute;
+    border: 2px dashed transparent;
+    border-radius: var(--radius-sm);
+    background: rgba(76, 175, 80, 0.1);
+    transition: all var(--transition-fast);
+}
+
+.drop-zone.active {
+    border-color: var(--color-success);
+    background: rgba(76, 175, 80, 0.2);
+}
+
+.drop-zone.invalid {
+    border-color: var(--color-error);
+    background: rgba(244, 67, 54, 0.2);
+}
+
+/* Canvas information bar */
+.canvas-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md) var(--space-xl);
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    font-size: var(--font-size-sm);
+}
+
+.info-item {
+    color: var(--nasa-dark-gray);
+}
+
+.info-item strong {
+    color: var(--nasa-blue);
+}
+
+/* 
+   RIGHT PANEL - ROOM CATALOG
+   Library of draggable rooms
+*/
+.rooms-panel {
+    background: var(--nasa-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.rooms-panel h2 {
+    text-align: center;
+    margin: var(--space-xl) var(--space-xl) var(--space-md);
+    color: var(--nasa-blue);
+    font-size: var(--font-size-xl);
+}
+
+.panel-description {
+    text-align: center;
+    margin: 0 var(--space-xl) var(--space-xl);
+    font-size: var(--font-size-sm);
+    color: var(--nasa-dark-gray);
+    opacity: 0.8;
+}
+
+/* Room category filters */
+.room-categories {
+    display: flex;
+    margin: 0 var(--space-xl) var(--space-lg);
+    background: #f8f9fa;
+    border-radius: var(--radius-md);
+    padding: var(--space-xs);
+}
+
+.category-btn {
+    flex: 1;
+    padding: var(--space-sm) var(--space-md);
+    border: none;
+    background: none;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    color: var(--nasa-dark-gray);
+}
+
+.category-btn.active,
+.category-btn:hover {
+    background: var(--nasa-blue);
+    color: var(--nasa-white);
+}
+
+/* Scrollable room catalog */
+.rooms-catalog {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 var(--space-xl) var(--space-xl);
+}
+
+.room-section {
+    margin-bottom: var(--space-2xl);
+}
+
+.room-section h3 {
+    font-size: var(--font-size-lg);
+    color: var(--nasa-blue);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-sm);
+    border-bottom: 2px solid #e9ecef;
+}
+
+/* Individual room items in catalog */
+.room-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
+    background: #f8f9fa;
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    cursor: grab;
+    transition: all var(--transition-normal);
+    position: relative;
+}
+
+.room-item:hover {
+    background: #e9ecef;
+    border-color: var(--nasa-blue);
+    transform: translateX(4px);        /* Subtle slide effect */
+}
+
+.room-item.dragging {
+    cursor: grabbing;
+    opacity: 0.5;
+    transform: rotate(2deg);
+}
+
+.room-item.hidden {
+    display: none;                     /* Hidden by category filter */
+}
+
+.room-icon {
+    font-size: var(--font-size-2xl);
+    flex-shrink: 0;
+}
+
+.room-info {
+    flex: 1;
+    min-width: 0;                      /* Allow text truncation */
+}
+
+.room-info h4 {
+    margin: 0 0 var(--space-xs) 0;
+    font-size: var(--font-size-base);
+    color: var(--nasa-dark-gray);
+}
+
+.room-info p {
+    margin: 0;
+    font-size: var(--font-size-xs);
+    color: var(--nasa-dark-gray);
+    opacity: 0.7;
+}
+
+.room-volume {
+    font-weight: 600 !important;
+    color: var(--nasa-blue) !important;
+    opacity: 1 !important;
+}
+
+/* Room color indicator */
+.room-color {
+    width: 16px;
+    height: 16px;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+    border: 2px solid var(--nasa-white);
+    box-shadow: var(--shadow-sm);
+}
+
+/* 
+   DRAG AND DROP STATES
+   Visual feedback during drag operations
+*/
+.dragging-over {
+    background: rgba(76, 175, 80, 0.1);
+    border: 2px dashed var(--color-success);
+}
+
+.drag-invalid {
+    background: rgba(244, 67, 54, 0.1);
+    border: 2px dashed var(--color-error);
+}
+
+/* Drag preview/ghost element */
+.drag-ghost {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.8;
+    transform: rotate(2deg);
+    border: 2px solid var(--nasa-white);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    color: var(--nasa-white);
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* 
+   EDUCATIONAL TOOLTIPS
+   Hover tips for rooms and features
+*/
+.tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.9);
+    color: var(--nasa-white);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+    z-index: var(--z-tooltip);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all var(--transition-fast);
+}
+
+.tooltip.show {
+    opacity: 1;
+    transform: translateY(-5px);
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid rgba(0, 0, 0, 0.9);
+}
+
+/* 
+   RESPONSIVE DESIGN FOR EDITOR
+   Adapt the three-panel layout for smaller screens
+*/
+@media (max-width: 1200px) {
+    .editor-layout {
+        grid-template-columns: 250px 1fr 250px;
+        gap: var(--space-md);
+    }
+    
+    .requirements-panel,
+    .rooms-panel {
+        padding: var(--space-lg);
+    }
+}
+
+@media (max-width: 1024px) {
+    /* Tablet layout - stack panels vertically */
+    .editor-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        height: auto;
+    }
+    
+    .requirements-panel,
+    .rooms-panel {
+        max-height: 300px;
+    }
+    
+    .design-canvas {
+        min-height: 400px;
+        order: 2;
+    }
+    
+    .requirements-panel {
+        order: 1;
+    }
+    
+    .rooms-panel {
+        order: 3;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Mobile layout - single column */
+    .editor-header {
+        flex-direction: column;
+        gap: var(--space-md);
+        text-align: center;
+    }
+    
+    .mission-params {
+        justify-content: center;
+    }
+    
+    .header-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .canvas-header {
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+    
+    .canvas-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .canvas-info {
+        flex-direction: column;
+        gap: var(--space-sm);
+        text-align: center;
+    }
+    
+    .room-categories {
+        margin: 0 var(--space-md) var(--space-lg);
+    }
+    
+    .category-btn {
+        font-size: var(--font-size-xs);
+        padding: var(--space-xs) var(--space-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra small mobile */
+    .requirements-panel,
+    .rooms-panel {
+        margin: 0;
+        border-radius: var(--radius-md);
+        max-height: 250px;
+    }
+    
+    .design-canvas {
+        min-height: 300px;
+    }
+    
+    .module-outline {
+        top: 20px;
+        left: 20px;
+        width: calc(100% - 40px);
+        height: 200px;
+    }
+    
+    .room-item {
+        padding: var(--space-md);
+    }
+    
+    .room-info h4 {
+        font-size: var(--font-size-sm);
+    }
+    
+    .placed-room {
+        font-size: var(--font-size-xs);
+    }
+    
+    .placed-room .room-icon {
+        font-size: var(--font-size-base);
+    }
+}
+
+/* 
+   PRINT STYLES
+   For exporting designs
+*/
+@media print {
+    .editor-header,
+    .requirements-panel,
+    .rooms-panel {
+        display: none;
+    }
+    
+    .editor-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .design-canvas {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+    
+    .canvas-header,
+    .canvas-info {
+        display: none;
+    }
+    
+    .habitat-canvas {
+        background: white;
+        min-height: 400px;
+    }
+    
+    .placed-room {
+        border: 1px solid #000;
+        color: #000;
+        text-shadow: none;
+    }
+}
