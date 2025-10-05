@@ -16,7 +16,6 @@ const StructurePage = (function() {
     
     // Module state management
     let structureState = {
-        selectedModules: new Set(),
         missionConfig: null,
         moduleSpecs: {},
         totalStats: {
@@ -87,14 +86,16 @@ const StructurePage = (function() {
         
         // Load mission configuration from previous page
         loadMissionConfig();
+        loadStructureState(); 
+               // New: restore any prior single choice
+        setupModuleSelection();
         
         // Set up event listeners
-        setupModuleSelection();
         setupNavigation();
         
         // Initialize display
         updateMissionInfo();
-        calculateTotalStats();
+        calculateSingleStructureStats();
         
         console.log('✅ Structure Page initialized');
         return true;
@@ -123,15 +124,15 @@ const StructurePage = (function() {
      */
     let selectedStructureType = null;
     let selectedSize = 'medium'; // default size
-    function setupModuleSelection() {
-    const selectButtons = document.querySelectorAll('.structure-select-btn');
-    
-    selectButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const moduleType = this.dataset.module;
-            selectStructureType(moduleType);
+        function setupModuleSelection() {
+        const selectButtons = document.querySelectorAll('.structure-select-btn');
+        
+        selectButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const moduleType = this.dataset.module;
+                selectStructureType(moduleType);
+            });
         });
-    });
     
     console.log('🏗️ Simplified structure selection initialized');
 }
@@ -146,9 +147,7 @@ const StructurePage = (function() {
     }
     
     // Deselect previous selection
-    if (selectedStructureType) {
-        deselectStructureType(selectedStructureType);
-    }
+    if (selectedStructureType) updateStructureSelection(selectedStructureType, false);
     
     // Select new type
     selectedStructureType = moduleType;
@@ -166,13 +165,6 @@ const StructurePage = (function() {
     calculateSingleStructureStats();
 }
 
-/**
- * Deselect a structure type
- */
-function deselectStructureType(moduleType) {
-    updateStructureSelection(moduleType, false);
-    hideSizeConfiguration();
-}
 
 /**
  * Update visual feedback for structure selection
