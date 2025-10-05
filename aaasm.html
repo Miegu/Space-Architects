@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Architects - NASA Habitat Layout Creator</title>
+
+    <!-- Import Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/images/nasa-logo.png" type="image/png">
+</head>
+<body>
+    <!-- WELCOME PAGE -->
+    <div id="welcome-page" class="page active">
+        <div class="container welcome-container">
+            <header class="welcome-header">
+                <h1 class="main-title">Space Architects</h1>
+                <p class="subtitle">NASA Habitat Layout Creator</p>
+                <p class="description">
+                    Design safe, efficient living spaces for astronauts on lunar and Mars missions.
+                    <br>
+                    Built on real NASA standards and requirements for space habitation.
+                </p>
+            </header>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Drag & Drop Design</h3>
+                    <p>Intuitive room placement with real-time NASA compliance validation</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>NASA Standards</h3>
+                    <p>Built-in checking for safety requirements and space efficiency</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Mission Ready</h3>
+                    <p>Optimized for Luna and Mars environments with realistic constraints</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Educational</h3>
+                    <p>Learn about space architecture through interactive design</p>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <button id="start-mission-btn" class="btn-primary-modern">
+                    Start Mission Design
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONFIGURATION PAGE -->
+    <div id="config-page" class="page">
+        <div class="container config-container">
+            <header class="page-header">
+                <h1 class="page-title">Mission Configuration</h1>
+                <p class="page-description">Define your mission parameters and select habitat modules</p>
+            </header>
+
+            <!-- Mission Parameters -->
+            <section class="config-section">
+                <h2 class="section-title">Mission Destination</h2>
+                <!-- Destination selector content here -->
+            </section>
+
+            <section class="config-section">
+                <h2 class="section-title">Crew Size</h2>
+                <div class="parameter-group">
+                    <label for="crew-size" class="parameter-label">Crew Size</label>
+                    <div class="slider-container">
+                        <input type="range" id="crew-size" min="2" max="8" value="4" class="mission-slider">
+                        <div class="slider-display">
+                            <span id="crew-size-display">4</span> astronauts
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mission-stats">
+                    <div class="stat-card">
+                        <div class="stat-label">Volume per Person</div>
+                        <div id="volume-per-person" class="stat-value">27.9 m³</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Module Selection -->
+            <section class="config-section">
+                <h2 class="section-title">Habitat Modules</h2>
+
+                <div class="modules-grid" id="modules-grid">
+                    <div class="module-card" data-module-type="dome">
+                        <div class="module-visual">
+                            <div class="module-icon">🏠</div>
+                        </div>
+                        <div class="module-info">
+                            <h3 class="module-name">Dome</h3>
+                            <p class="module-description">Spherical pressure vessel</p>
+                            <div class="module-specs">
+                                <span>Optimal pressure distribution</span>
+                                <span>85% space efficiency</span>
+                            </div>
+                        </div>
+                        <div class="module-selector">
+                            <input type="checkbox" id="module-dome" class="module-checkbox" data-module-type="dome">
+                            <label for="module-dome" class="checkbox-label">Select</label>
+                        </div>
+                    </div>
+
+                    <div class="module-card" data-module-type="torus">
+                        <div class="module-visual">
+                            <div class="module-icon">🍩</div>
+                        </div>
+                        <div class="module-info">
+                            <h3 class="module-name">Torus</h3>
+                            <p class="module-description">Ring-shaped habitat</p>
+                            <div class="module-specs">
+                                <span>Artificial gravity via rotation</span>
+                                <span>70% space efficiency</span>
+                            </div>
+                        </div>
+                        <div class="module-selector">
+                            <input type="checkbox" id="module-torus" class="module-checkbox" data-module-type="torus">
+                            <label for="module-torus" class="checkbox-label">Select</label>
+                        </div>
+                    </div>
+
+                    <div class="module-card" data-module-type="cube">
+                        <div class="module-visual">
+                            <div class="module-icon">📦</div>
+                        </div>
+                        <div class="module-info">
+                            <h3 class="module-name">Cube</h3>
+                            <p class="module-description">Rectangular habitat</p>
+                            <div class="module-specs">
+                                <span>Maximum volume efficiency</span>
+                                <span>95% space efficiency</span>
+                            </div>
+                        </div>
+                        <div class="module-selector">
+                            <input type="checkbox" id="module-cube" class="module-checkbox" data-module-type="cube">
+                            <label for="module-cube" class="checkbox-label">Select</label>
+                        </div>
+                    </div>
+
+                    <div class="module-card" data-module-type="cylinder">
+                        <div class="module-visual">
+                            <div class="module-icon">🚀</div>
+                        </div>
+                        <div class="module-info">
+                            <h3 class="module-name">Cylinder</h3>
+                            <p class="module-description">Cylindrical habitat</p>
+                            <div class="module-specs">
+                                <span>Traditional space design</span>
+                                <span>80% space efficiency</span>
+                            </div>
+                        </div>
+                        <div class="module-selector">
+                            <input type="checkbox" id="module-cylinder" class="module-checkbox" data-module-type="cylinder">
+                            <label for="module-cylinder" class="checkbox-label">Select</label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Configuration Summary -->
+            <section class="config-section" id="configuration-summary" style="display: none;">
+                <h2 class="section-title">Configuration Summary</h2>
+
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-label">Total Floor Area</div>
+                        <div id="total-floor-area" class="summary-value">0 m²</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Total Volume</div>
+                        <div id="total-volume" class="summary-value">0 m³</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Crew Capacity</div>
+                        <div id="crew-capacity" class="summary-value">0 astronauts</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-label">Efficiency Rating</div>
+                        <div id="efficiency-rating" class="summary-value">0%</div>
+                    </div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button id="back-to-welcome" class="btn-secondary">Back to Welcome</button>
+                    <button id="generate-habitat-btn" class="btn-primary-modern">Generate Habitat Structure</button>
+                </div>
+            </section>
+
+            <!-- Selected Modules Section -->
+            <div id="selected-modules-section" style="display: none;">
+                <!-- Dynamic content for selected modules will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- STRUCTURE PAGE -->
+    <div id="structure-page" class="page">
+        <div class="container structure-container">
+            <header class="page-header">
+                <h1 class="page-title">Habitat Structure</h1>
+                <p class="page-description">Review your selected modules and structure layout</p>
+            </header>
+
+            <div class="structure-content">
+                <div class="structure-preview">
+                    <div class="structure-visual">
+                        <div id="habitat-3d-preview" class="habitat-preview">
+                            <!-- 3D preview will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="structure-details" id="structure-details">
+                    <!-- Selected modules details will be inserted here -->
+                </div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button id="back-to-config-btn" class="btn-secondary">Back to Configuration</button>
+                <button id="continue-to-editor-btn" class="btn-primary-modern">Continue to Interior Design</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDITOR PAGE -->
+    <div id="editor-page" class="page">
+        <div class="container editor-container">
+            <header class="page-header">
+                <h1 class="page-title">Habitat Interior Designer</h1>
+                <p class="page-description">Place rooms and design your habitat interior</p>
+            </header>
+
+            <div class="editor-content">
+                <div class="editor-toolbar">
+                    <!-- Room selection tools will go here -->
+                </div>
+
+                <div class="editor-canvas">
+                    <!-- Interior design canvas will go here -->
+                    <div class="coming-soon">
+                        <h3>Interior Design Tools</h3>
+                        <p>Room placement and interior design functionality coming soon...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="data/nasa_standarts.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/configuration.js"></script>
+    <script src="js/structure.js"></script>
+    <script src="js/rooms.js"></script>
+
+</body>
+</html>

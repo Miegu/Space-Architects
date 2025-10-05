@@ -1,349 +1,665 @@
 /*
 ===============================================================================
-SPACE ARCHITECTS - HABITAT STRUCTURE MODULE
+SPACE ARCHITECTS - STRUCTURE PAGE JAVASCRIPT MODULE
 NASA Space Apps Challenge Project
 
-This module handles:
-- Structure page initialization and display
-- Selected modules visualization
-- 3D habitat preview (simple icon-based approach)
-- Module details display
-- Navigation to interior editor
+This module handles the habitat structure selection page:
+- 3D module selection with animations
+- Real-time statistics calculations  
+- NASA compliance validation
+- Navigation between config and editor pages
 ===============================================================================
 */
 
+/**
+ * Structure page module for managing habitat module selection
+ * Handles 3D animations, statistics, and NASA standards compliance
+ */
 const StructurePage = (function() {
     'use strict';
-
-    // Structure state
+    
+    // Module state management
     let structureState = {
-        selectedModules: {},
+        selectedModules: new Set(),
+        missionConfig: null,
+        moduleSpecs: {},
         totalStats: {
             floorArea: 0,
-            volume: 0,
+            totalVolume: 0,
             crewCapacity: 0,
-            efficiency: 0
+            efficiencyRating: 0
         }
     };
-
-    // Module visual representations
-    const moduleVisuals = {
+    
+    // Module specifications with NASA-compliant data
+    const MODULE_CATALOG = {
         dome: {
+            id: 'dome',
             name: 'Dome Module',
             icon: '🏠',
-            color: '#4CAF50',
-            shape: 'dome'
+            description: 'Spherical pressure vessel',
+            efficiency: 85,
+            sizes: {
+                small: { diameter: 6, floorArea: 28.3, volume: 113.1 },
+                medium: { diameter: 8, floorArea: 50.3, volume: 268.1 },
+                large: { diameter: 10, floorArea: 78.5, volume: 523.6 }
+            },
+            advantages: [
+                'Optimal pressure distribution',
+                'Excellent structural efficiency',
+                'Minimal material usage'
+            ],
+            nasaFacts: [
+                'Spherical shapes distribute pressure loads evenly',
+                'Used in pressure vessel design since early space programs',
+                'Minimizes stress concentrations in pressurized environments'
+            ]
         },
         torus: {
+            id: 'torus',
             name: 'Torus Module', 
             icon: '🍩',
-            color: '#FF9800',
-            shape: 'torus'
+            description: 'Ring-shaped habitat',
+            efficiency: 70,
+            sizes: {
+                small: { diameter: 8, floorArea: 35.2, volume: 176.0 },
+                medium: { diameter: 12, floorArea: 79.2, volume: 592.7 },
+                large: { diameter: 16, floorArea: 140.8, volume: 1407.4 }
+            },
+            advantages: [
+                'Artificial gravity via rotation',
+                'Natural separation of functions',
+                'Psychologically familiar layout'
+            ],
+            nasaFacts: [
+                'Rotation creates artificial gravity through centrifugal force',
+                'Studied extensively for long-duration missions',
+                'Requires careful balance of rotation rate and radius'
+            ]
         },
         cube: {
+            id: 'cube',
             name: 'Cube Module',
             icon: '📦', 
-            color: '#2196F3',
-            shape: 'cube'
+            description: 'Rectangular habitat',
+            efficiency: 95,
+            sizes: {
+                small: { width: 6, length: 6, height: 3, floorArea: 36, volume: 108 },
+                medium: { width: 8, length: 8, height: 3, floorArea: 64, volume: 192 },
+                large: { width: 10, length: 10, height: 3, floorArea: 100, volume: 300 }
+            },
+            advantages: [
+                'Maximum volume efficiency',
+                'Easy modular connections',
+                'Familiar architectural form'
+            ],
+            nasaFacts: [
+                'Rectangular forms maximize usable interior space',
+                'Standard modular approach used on ISS',
+                '95% volume efficiency is optimal for space habitats'
+            ]
         },
         cylinder: {
+            id: 'cylinder',
             name: 'Cylinder Module',
             icon: '🚀',
-            color: '#9C27B0',
-            shape: 'cylinder'
+            description: 'Elongated comet design', 
+            efficiency: 80,
+            sizes: {
+                small: { diameter: 4, length: 8, floorArea: 32, volume: 100.5 },
+                medium: { diameter: 6, length: 10, floorArea: 60, volume: 282.7 },
+                large: { diameter: 8, length: 12, floorArea: 96, volume: 603.2 }
+            },
+            advantages: [
+                'Aerodynamic for transport',
+                'Good structural efficiency',
+                'Easy to manufacture'
+            ],
+            nasaFacts: [
+                'Cylindrical modules are transport-optimized',
+                'Used in most current spacecraft designs',
+                'Structural efficiency good for launch loads'
+            ]
         }
     };
-
+    
     /**
-     * Initialize the structure page
+     * Initialize the structure page functionality
      */
     function initialize() {
-        console.log('🏗️ Initializing Habitat Structure Page');
-
-        loadStructureState();
-        displayHabitatPreview();
-        displayModuleDetails();
-
-        console.log('✅ Structure page initialized');
+        console.log('🏗️ Initializing Structure Page...');
+        
+        // Load mission configuration from previous page
+        loadMissionConfig();
+        
+        // Set up event listeners
+        setupModuleSelection();
+        setupSizeSelectors(); 
+        setupNavigation();
+        setupAnimations();
+        
+        // Initialize display
+        updateMissionInfo();
+        calculateTotalStats();
+        
+        console.log('✅ Structure Page initialized');
+        return true;
     }
-
+    
     /**
-     * Load configuration from MissionConfig
+     * Load mission configuration from previous page
      */
-    function loadStructureState() {
+    function loadMissionConfig() {
         if (typeof MissionConfig !== 'undefined') {
-            const config = MissionConfig.getConfiguration();
-            structureState.selectedModules = config.selectedModules;
-
-            // Calculate total stats
-            calculateTotalStats();
-
-            console.log('📂 Structure state loaded:', structureState);
+            structureState.missionConfig = MissionConfig.getCurrentConfig();
+            console.log('📊 Mission config loaded:', structureState.missionConfig);
         } else {
-            console.warn('⚠️ MissionConfig not available, using default state');
+            // Fallback default config
+            structureState.missionConfig = {
+                missionType: 'moon',
+                crewSize: 4,
+                duration: 60
+            };
+            console.warn('⚠️ Using default mission config');
         }
     }
-
+    
     /**
-     * Calculate total statistics from selected modules
+     * Set up module selection event handlers
      */
-    function calculateTotalStats() {
-        const moduleSpecs = {
-            dome: { floorArea: 78.5, volume: 261.8, crewCapacity: 6, efficiency: 85 },
-            torus: { floorArea: 157.1, volume: 394.8, crewCapacity: 8, efficiency: 70 },
-            cube: { floorArea: 100, volume: 250, crewCapacity: 10, efficiency: 95 },
-            cylinder: { floorArea: 70.7, volume: 176.7, crewCapacity: 5, efficiency: 80 }
-        };
-
-        let totalFloorArea = 0;
-        let totalVolume = 0;
-        let totalCrewCapacity = 0;
-        let weightedEfficiency = 0;
-        let totalWeight = 0;
-
-        Object.entries(structureState.selectedModules).forEach(([moduleType, data]) => {
-            if (data.selected && data.quantity > 0) {
-                const specs = moduleSpecs[moduleType];
-                const quantity = data.quantity;
-
-                totalFloorArea += specs.floorArea * quantity;
-                totalVolume += specs.volume * quantity;
-                totalCrewCapacity += specs.crewCapacity * quantity;
-                weightedEfficiency += specs.efficiency * specs.volume * quantity;
-                totalWeight += specs.volume * quantity;
+    function setupModuleSelection() {
+        const moduleCards = document.querySelectorAll('.module-card');
+        
+        moduleCards.forEach(card => {
+            const moduleId = card.dataset.moduleType;
+            const checkbox = card.querySelector('.module-checkbox');
+            
+            // Card click handler
+            card.addEventListener('click', function(e) {
+                if (e.target.type !== 'checkbox') {
+                    checkbox.checked = !checkbox.checked;
+                    handleModuleSelection(moduleId, checkbox.checked);
+                }
+            });
+            
+            // Checkbox change handler
+            checkbox.addEventListener('change', function() {
+                handleModuleSelection(moduleId, this.checked);
+            });
+            
+            // Hover animations
+            card.addEventListener('mouseenter', function() {
+                startModuleAnimation(moduleId);
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                stopModuleAnimation(moduleId);
+            });
+        });
+    }
+    
+    /**
+     * Handle module selection/deselection
+     */
+    function handleModuleSelection(moduleId, isSelected) {
+        const card = document.querySelector(`[data-module-type="${moduleId}"]`);
+        
+        if (isSelected) {
+            structureState.selectedModules.add(moduleId);
+            card.classList.add('selected');
+            
+            // Initialize with medium size by default
+            if (!structureState.moduleSpecs[moduleId]) {
+                structureState.moduleSpecs[moduleId] = {
+                    id: moduleId,
+                    size: 'medium',
+                    specs: MODULE_CATALOG[moduleId].sizes.medium
+                };
+            }
+            
+            showModuleConfiguration(moduleId);
+        } else {
+            structureState.selectedModules.delete(moduleId);
+            card.classList.remove('selected');
+            delete structureState.moduleSpecs[moduleId];
+            hideModuleConfiguration(moduleId);
+        }
+        
+        calculateTotalStats();
+        updateSelectedModulesDisplay();
+        updateNavigationState();
+        
+        console.log(`📦 Module ${moduleId} ${isSelected ? 'selected' : 'deselected'}`);
+    }
+    
+    /**
+     * Set up size selector handlers
+     */
+    function setupSizeSelectors() {
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('size-btn')) {
+                const moduleId = e.target.closest('.module-config-item').dataset.moduleId;
+                const size = e.target.dataset.size;
+                
+                // Update active size button
+                const sizeButtons = e.target.parentNode.querySelectorAll('.size-btn');
+                sizeButtons.forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                // Update module specs
+                if (structureState.moduleSpecs[moduleId]) {
+                    structureState.moduleSpecs[moduleId].size = size;
+                    structureState.moduleSpecs[moduleId].specs = MODULE_CATALOG[moduleId].sizes[size];
+                }
+                
+                calculateTotalStats();
+                console.log(`📏 Module ${moduleId} size changed to ${size}`);
             }
         });
-
+    }
+    
+    /**
+     * Set up navigation button handlers
+     */
+    function setupNavigation() {
+        const backBtn = document.getElementById('back-to-config-btn');
+        const continueBtn = document.getElementById('continue-to-editor-btn');
+        
+        if (backBtn) {
+            backBtn.addEventListener('click', function() {
+                // Save current selections
+                saveStructureState();
+                
+                // Navigate back to config
+                if (typeof SpaceArchitects !== 'undefined') {
+                    SpaceArchitects.showPage('config');
+                } else {
+                    // Fallback navigation
+                    document.getElementById('structure-page').classList.remove('active');
+                    document.getElementById('config-page').classList.add('active');
+                }
+            });
+        }
+        
+        if (continueBtn) {
+            continueBtn.addEventListener('click', function() {
+                if (structureState.selectedModules.size === 0) {
+                    showNotification('Please select at least one module type to continue.', 'warning');
+                    return;
+                }
+                
+                // Save selections and navigate to editor
+                saveStructureState();
+                
+                if (typeof SpaceArchitects !== 'undefined') {
+                    SpaceArchitects.showPage('editor');
+                } else {
+                    // Fallback navigation
+                    document.getElementById('structure-page').classList.remove('active');
+                    document.getElementById('editor-page').classList.add('active');
+                }
+                
+                console.log('🎨 Navigating to editor with selections:', structureState.selectedModules);
+            });
+        }
+    }
+    
+    /**
+     * Set up 3D animation effects
+     */
+    function setupAnimations() {
+        // 3D rotation animations are handled by CSS
+        // This function could add additional interactive animations
+        console.log('🎭 3D animations initialized');
+    }
+    
+    /**
+     * Start module 3D animation
+     */
+    function startModuleAnimation(moduleId) {
+        const moduleVisual = document.querySelector(`[data-module-type="${moduleId}"] .module-3d`);
+        if (moduleVisual) {
+            moduleVisual.style.animationPlayState = 'running';
+        }
+    }
+    
+    /**
+     * Stop module 3D animation  
+     */
+    function stopModuleAnimation(moduleId) {
+        const moduleVisual = document.querySelector(`[data-module-type="${moduleId}"] .module-3d`);
+        if (moduleVisual) {
+            moduleVisual.style.animationPlayState = 'paused';
+        }
+    }
+    
+    /**
+     * Show module configuration options
+     */
+    function showModuleConfiguration(moduleId) {
+        const configSection = document.getElementById('selected-modules-section');
+        if (!configSection) return;
+        
+        const module = MODULE_CATALOG[moduleId];
+        const configItem = document.createElement('div');
+        configItem.className = 'module-config-item';
+        configItem.dataset.moduleId = moduleId;
+        
+        configItem.innerHTML = `
+            <div class="config-module-name">${module.icon} ${module.name}</div>
+            <div class="size-selector">
+                <button class="size-btn" data-size="small">Small</button>
+                <button class="size-btn active" data-size="medium">Medium</button>
+                <button class="size-btn" data-size="large">Large</button>
+            </div>
+        `;
+        
+        configSection.appendChild(configItem);
+    }
+    
+    /**
+     * Hide module configuration options
+     */
+    function hideModuleConfiguration(moduleId) {
+        const configItem = document.querySelector(`[data-module-id="${moduleId}"]`);
+        if (configItem) {
+            configItem.remove();
+        }
+    }
+    
+    /**
+     * Calculate and update total habitat statistics
+     */
+    function calculateTotalStats() {
+        let totalFloorArea = 0;
+        let totalVolume = 0;
+        let weightedEfficiency = 0;
+        let totalModules = 0;
+        
+        // Sum up all selected modules
+        for (const [moduleId, moduleSpec] of Object.entries(structureState.moduleSpecs)) {
+            const specs = moduleSpec.specs;
+            const efficiency = MODULE_CATALOG[moduleId].efficiency;
+            
+            totalFloorArea += specs.floorArea || 0;
+            totalVolume += specs.volume || 0;
+            weightedEfficiency += efficiency * (specs.volume || 0);
+            totalModules++;
+        }
+        
+        // Calculate crew capacity based on NASA standards
+        const requiredVolumePerPerson = getRequiredVolumePerPerson();
+        const habitableVolume = totalVolume * 0.7; // 70% efficiency factor
+        const crewCapacity = Math.floor(habitableVolume / requiredVolumePerPerson);
+        
+        // Calculate overall efficiency
+        const efficiencyRating = totalVolume > 0 ? Math.round(weightedEfficiency / totalVolume) : 0;
+        
+        // Update state
         structureState.totalStats = {
-            floorArea: totalFloorArea,
-            volume: totalVolume,
-            crewCapacity: totalCrewCapacity,
-            efficiency: totalWeight > 0 ? Math.round(weightedEfficiency / totalWeight) : 0
+            floorArea: Math.round(totalFloorArea),
+            totalVolume: Math.round(totalVolume),
+            crewCapacity: Math.max(0, crewCapacity),
+            efficiencyRating: efficiencyRating
         };
+        
+        // Update display
+        updateStatsDisplay();
+        updateNASAValidation();
     }
-
+    
     /**
-     * Display habitat 3D preview (simple icon-based approach)
+     * Get required volume per person based on mission duration
      */
-    function displayHabitatPreview() {
-        const previewContainer = document.getElementById('habitat-3d-preview');
-        if (!previewContainer) return;
-
-        // Clear existing content
-        previewContainer.innerHTML = '';
-
-        // Create simple 3D-style preview
-        const previewDiv = document.createElement('div');
-        previewDiv.className = 'habitat-preview-container';
-
-        // Count selected modules
-        const selectedModuleTypes = Object.entries(structureState.selectedModules)
-            .filter(([_, data]) => data.selected && data.quantity > 0);
-
-        if (selectedModuleTypes.length === 0) {
-            previewDiv.innerHTML = `
-                <div class="no-modules">
-                    <div class="preview-icon">🏗️</div>
-                    <p>No modules selected</p>
-                </div>
-            `;
-        } else {
-            // Create visual representation
-            previewDiv.innerHTML = `
-                <div class="modules-assembly">
-                    <div class="assembly-title">Habitat Assembly</div>
-                    <div class="modules-layout">
-                        ${selectedModuleTypes.map(([moduleType, data]) => {
-                            const visual = moduleVisuals[moduleType];
-                            return createModuleVisualization(moduleType, data.quantity, visual);
-                        }).join('')}
-                    </div>
-                    <div class="assembly-stats">
-                        <div class="stat-item">
-                            <span class="stat-label">Total Volume:</span>
-                            <span class="stat-value">${structureState.totalStats.volume.toFixed(1)} m³</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Crew Capacity:</span>
-                            <span class="stat-value">${structureState.totalStats.crewCapacity} astronauts</span>
-                        </div>
-                    </div>
-                </div>
-            `;
+    function getRequiredVolumePerPerson() {
+        const duration = structureState.missionConfig?.duration || 60;
+        
+        if (duration <= 30) return 20; // Short missions
+        if (duration <= 90) return 25; // Medium missions  
+        if (duration <= 180) return 30; // Long missions
+        return 40; // Permanent habitation
+    }
+    
+    /**
+     * Update statistics display
+     */
+    function updateStatsDisplay() {
+        const stats = structureState.totalStats;
+        
+        updateElement('total-floor-area', `${stats.floorArea} m²`);
+        updateElement('total-volume', `${stats.totalVolume} m³`);
+        updateElement('crew-capacity', `${stats.crewCapacity} astronauts`);
+        updateElement('efficiency-rating', `${stats.efficiencyRating}%`);
+    }
+    
+    /**
+     * Update NASA standards validation display
+     */
+    function updateNASAValidation() {
+        const config = structureState.missionConfig;
+        const stats = structureState.totalStats;
+        
+        if (!config) return;
+        
+        // Volume per person validation
+        const requiredVolume = getRequiredVolumePerPerson() * config.crewSize;
+        const actualVolume = stats.totalVolume * 0.7; // Habitable volume
+        const volumeCompliant = actualVolume >= requiredVolume;
+        
+        updateValidationItem('volume-per-person', 
+            `${Math.round(actualVolume / config.crewSize)} / ${getRequiredVolumePerPerson()} m³`,
+            volumeCompliant);
+        
+        // Crew capacity validation
+        const capacityCompliant = stats.crewCapacity >= config.crewSize;
+        updateValidationItem('crew-capacity-check',
+            `${stats.crewCapacity} / ${config.crewSize} capacity`,
+            capacityCompliant);
+        
+        // Module selection validation
+        const modulesSelected = structureState.selectedModules.size > 0;
+        updateValidationItem('modules-selected',
+            `${structureState.selectedModules.size} modules selected`,
+            modulesSelected);
+        
+        // Calculate overall compliance
+        const totalChecks = 3;
+        const passedChecks = [volumeCompliant, capacityCompliant, modulesSelected].filter(Boolean).length;
+        const compliancePercentage = Math.round((passedChecks / totalChecks) * 100);
+        
+        updateElement('overall-compliance', `${compliancePercentage}%`);
+    }
+    
+    /**
+     * Update validation item display
+     */
+    function updateValidationItem(itemId, text, isValid) {
+        const element = document.getElementById(itemId);
+        if (element) {
+            element.textContent = text;
+            element.className = isValid ? 'valid' : 'invalid';
         }
-
-        previewContainer.appendChild(previewDiv);
-        console.log('🎨 Habitat preview displayed');
     }
-
+    
     /**
-     * Create visual representation of a module type
+     * Update selected modules display
      */
-    function createModuleVisualization(moduleType, quantity, visual) {
-        return `
-            <div class="module-group" data-module="${moduleType}">
-                <div class="module-visual-item" style="border-color: ${visual.color};">
-                    <div class="module-icon-large" style="color: ${visual.color};">${visual.icon}</div>
-                    <div class="module-shape ${visual.shape}"></div>
-                </div>
-                <div class="module-label">${visual.name}</div>
-                <div class="module-quantity">×${quantity}</div>
-            </div>
-        `;
-    }
-
-    /**
-     * Display detailed module information
-     */
-    function displayModuleDetails() {
-        const detailsContainer = document.getElementById('structure-details');
-        if (!detailsContainer) return;
-
-        detailsContainer.innerHTML = '';
-
-        const selectedModules = Object.entries(structureState.selectedModules)
-            .filter(([_, data]) => data.selected && data.quantity > 0);
-
-        if (selectedModules.length === 0) {
-            detailsContainer.innerHTML = `
-                <div class="no-selection">
-                    <h3>No Modules Selected</h3>
-                    <p>Please go back to configuration and select habitat modules.</p>
-                </div>
-            `;
-            return;
+    function updateSelectedModulesDisplay() {
+        const selectedCount = structureState.selectedModules.size;
+        const countElement = document.getElementById('selected-modules-count');
+        
+        if (countElement) {
+            countElement.textContent = selectedCount;
         }
-
-        // Create module details
-        const detailsHTML = `
-            <div class="structure-summary">
-                <h3>Selected Modules</h3>
-                <div class="modules-list">
-                    ${selectedModules.map(([moduleType, data]) => {
-                        const visual = moduleVisuals[moduleType];
-                        return createModuleDetailCard(moduleType, data, visual);
-                    }).join('')}
-                </div>
-
-                <div class="total-statistics">
-                    <h4>Total Habitat Statistics</h4>
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-label">Floor Area</div>
-                            <div class="stat-value">${structureState.totalStats.floorArea.toFixed(1)} m²</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Volume</div>
-                            <div class="stat-value">${structureState.totalStats.volume.toFixed(1)} m³</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Crew Capacity</div>
-                            <div class="stat-value">${structureState.totalStats.crewCapacity}</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-label">Efficiency</div>
-                            <div class="stat-value">${structureState.totalStats.efficiency}%</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="next-steps">
-                    <h4>Next: Interior Design</h4>
-                    <p>In the next phase, you'll place rooms and design the interior layout of your habitat modules following NASA standards for space efficiency and crew safety.</p>
-                    <ul>
-                        <li>Drag and drop rooms into available spaces</li>
-                        <li>Follow NASA spacing and safety requirements</li>
-                        <li>Optimize for crew efficiency and psychological well-being</li>
-                    </ul>
-                </div>
-            </div>
-        `;
-
-        detailsContainer.innerHTML = detailsHTML;
-        console.log('📋 Module details displayed');
+        
+        // Show/hide configuration section
+        const configSection = document.getElementById('selected-modules-section');
+        if (configSection) {
+            configSection.style.display = selectedCount > 0 ? 'block' : 'none';
+        }
     }
-
+    
     /**
-     * Create detailed card for a module
+     * Update navigation button states
      */
-    function createModuleDetailCard(moduleType, data, visual) {
-        // Module specifications for details
-        const specs = {
-            dome: { floorArea: 78.5, volume: 261.8, efficiency: 85, description: 'Optimal pressure distribution, spherical design' },
-            torus: { floorArea: 157.1, volume: 394.8, efficiency: 70, description: 'Artificial gravity via rotation, ring-shaped' },
-            cube: { floorArea: 100, volume: 250, efficiency: 95, description: 'Maximum volume efficiency, rectangular design' },
-            cylinder: { floorArea: 70.7, volume: 176.7, efficiency: 80, description: 'Traditional cylindrical space habitat' }
-        };
-
-        const spec = specs[moduleType];
-        const totalArea = spec.floorArea * data.quantity;
-        const totalVolume = spec.volume * data.quantity;
-
-        return `
-            <div class="module-detail-card" style="border-left: 4px solid ${visual.color};">
-                <div class="module-header">
-                    <div class="module-icon" style="color: ${visual.color};">${visual.icon}</div>
-                    <div class="module-info">
-                        <h4>${visual.name}</h4>
-                        <p class="module-description">${spec.description}</p>
-                    </div>
-                    <div class="module-count">×${data.quantity}</div>
-                </div>
-                <div class="module-stats">
-                    <div class="stat-row">
-                        <span>Floor Area:</span>
-                        <span>${totalArea.toFixed(1)} m² (${spec.floorArea.toFixed(1)} m² each)</span>
-                    </div>
-                    <div class="stat-row">
-                        <span>Volume:</span>
-                        <span>${totalVolume.toFixed(1)} m³ (${spec.volume.toFixed(1)} m³ each)</span>
-                    </div>
-                    <div class="stat-row">
-                        <span>Efficiency:</span>
-                        <span>${spec.efficiency}%</span>
-                    </div>
-                </div>
-            </div>
-        `;
+    function updateNavigationState() {
+        const continueBtn = document.getElementById('continue-to-editor-btn');
+        const hasSelections = structureState.selectedModules.size > 0;
+        
+        if (continueBtn) {
+            continueBtn.disabled = !hasSelections;
+            continueBtn.classList.toggle('disabled', !hasSelections);
+        }
     }
-
+    
     /**
-     * Save structure state
+     * Update mission info display
+     */
+    function updateMissionInfo() {
+        const config = structureState.missionConfig;
+        if (!config) return;
+        
+        updateElement('mission-destination', 
+            config.missionType === 'moon' ? '🌙 Luna' : '🔴 Mars');
+        updateElement('mission-crew-size', `${config.crewSize} astronauts`);
+        updateElement('mission-duration', `${config.duration} days`);
+    }
+    
+    /**
+     * Save structure selections to localStorage
      */
     function saveStructureState() {
         try {
-            localStorage.setItem('spaceArchitectsStructure', JSON.stringify(structureState));
+            const saveData = {
+                selectedModules: Array.from(structureState.selectedModules),
+                moduleSpecs: structureState.moduleSpecs,
+                totalStats: structureState.totalStats,
+                timestamp: Date.now()
+            };
+            
+            localStorage.setItem('spaceArchitects_structure', JSON.stringify(saveData));
             console.log('💾 Structure state saved');
         } catch (error) {
             console.error('❌ Failed to save structure state:', error);
         }
     }
-
+    
     /**
-     * Get current structure state
+     * Load structure selections from localStorage
+     */
+    function loadStructureState() {
+        try {
+            const saved = localStorage.getItem('spaceArchitects_structure');
+            if (saved) {
+                const saveData = JSON.parse(saved);
+                
+                // Restore selections
+                structureState.selectedModules = new Set(saveData.selectedModules);
+                structureState.moduleSpecs = saveData.moduleSpecs || {};
+                structureState.totalStats = saveData.totalStats || structureState.totalStats;
+                
+                // Update UI to reflect loaded state
+                restoreUIState();
+                
+                console.log('📂 Structure state loaded');
+            }
+        } catch (error) {
+            console.error('❌ Failed to load structure state:', error);
+        }
+    }
+    
+    /**
+     * Restore UI state from loaded data
+     */
+    function restoreUIState() {
+        // Restore module selections
+        structureState.selectedModules.forEach(moduleId => {
+            const checkbox = document.querySelector(`[data-module="${moduleId}"]`);
+            const card = document.querySelector(`[data-module-type="${moduleId}"]`);
+            
+            if (checkbox && card) {
+                checkbox.checked = true;
+                card.classList.add('selected');
+                showModuleConfiguration(moduleId);
+            }
+        });
+        
+        // Restore size selections
+        Object.entries(structureState.moduleSpecs).forEach(([moduleId, spec]) => {
+            const configItem = document.querySelector(`[data-module-id="${moduleId}"]`);
+            if (configItem) {
+                const sizeButtons = configItem.querySelectorAll('.size-btn');
+                sizeButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.size === spec.size);
+                });
+            }
+        });
+        
+        // Update displays
+        updateSelectedModulesDisplay();
+        updateNavigationState();
+        calculateTotalStats();
+    }
+    
+    /**
+     * Show notification to user
+     */
+    function showNotification(message, type = 'info') {
+        // Simple alert for now - could be enhanced with custom modal
+        alert(message);
+    }
+    
+    /**
+     * Utility function to update element text content
+     */
+    function updateElement(id, text) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = text;
+        }
+    }
+    
+    /**
+     * Get current structure state (for external access)
      */
     function getStructureState() {
         return {
-            ...structureState,
-            timestamp: Date.now()
+            selectedModules: Array.from(structureState.selectedModules),
+            moduleSpecs: { ...structureState.moduleSpecs },
+            totalStats: { ...structureState.totalStats },
+            missionConfig: { ...structureState.missionConfig }
         };
     }
-
+    
     // Public API
     return {
-        // Initialization
         initialize: initialize,
-
-        // State management
-        loadStructureState: loadStructureState,
+        getStructureState: getStructureState,
         saveStructureState: saveStructureState,
-        getStructureState: getStructureState
+        loadStructureState: loadStructureState,
+        calculateTotalStats: calculateTotalStats
     };
 })();
 
-// Export for global access
+// Make available globally
 if (typeof window !== 'undefined') {
     window.StructurePage = StructurePage;
 }
+
+// Auto-initialize when DOM loads and structure page is active
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('structure-page')?.classList.contains('active')) {
+        StructurePage.initialize();
+    }
+});
+
+// Listen for page navigation to initialize structure page
+document.addEventListener('navigateToPage', function(event) {
+    if (event.detail.page === 'structure') {
+        setTimeout(() => {
+            StructurePage.initialize();
+        }, 100);
+    }
+});
 
 console.log('🏗️ Structure Page module loaded successfully');
