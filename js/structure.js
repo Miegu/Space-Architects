@@ -183,6 +183,7 @@ const StructurePage = (function() {
             });
             
             // Checkbox change handler
+            if (quantityBtn) {
             checkbox.addEventListener('change', function() {
                 handleModuleSelection(moduleId, this.checked);
             });
@@ -195,7 +196,8 @@ const StructurePage = (function() {
             card.addEventListener('mouseleave', function() {
                 stopModuleAnimation(moduleId);
             });
-        });
+        }
+    });
     }
     
     /**
