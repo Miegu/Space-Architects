@@ -4,6 +4,7 @@ SPACE ARCHITECTS - STRUCTURE PAGE JAVASCRIPT MODULE
 NASA Space Apps Challenge Project
 
 This module handles the habitat structure selection page:
+- Single structure selection (fixed version)
 - Real-time statistics calculations  
 - NASA compliance validation
 - Navigation between config and editor pages
@@ -16,7 +17,6 @@ const StructurePage = (function() {
     // Module state management
     let structureState = {
         missionConfig: null,
-        moduleSpecs: {},
         totalStats: {
             floorArea: 0,
             totalVolume: 0,
@@ -24,6 +24,10 @@ const StructurePage = (function() {
             efficiencyRating: 0
         }
     };
+    
+    // Structure selection state
+    let selectedStructureType = null;
+    let selectedSize = 'medium'; // default size
     
     // Module specifications with NASA-compliant data
     const MODULE_CATALOG = {
@@ -85,16 +89,18 @@ const StructurePage = (function() {
         
         // Load mission configuration from previous page
         loadMissionConfig();
-        loadStructureState(); 
-               // New: restore any prior single choice
-        setupModuleSelection();
+        
+        // Load any previously saved structure state
+        loadStructureState();
         
         // Set up event listeners
+        setupModuleSelection();
         setupNavigation();
-        structureState.selectedModules = new Set();
+        
         // Initialize display
         updateMissionInfo();
         calculateSingleStructureStats();
+        updateNavigationState();
         
         console.log('✅ Structure Page initialized');
         return true;
@@ -121,462 +127,248 @@ const StructurePage = (function() {
     /**
      * Set up module selection event handlers 
      */
-    let selectedStructureType = null;
-    let selectedSize = 'medium'; // default size
-        function setupModuleSelection() {
-        const selectButtons = document.querySelectorAll('.structure-select-btn');
+    function setupModuleSelection() {
+        console.log('🎯 Setting up module selection...');
         
-        selectButtons.forEach(button => {
+        // Find all structure selection buttons
+        const selectButtons = document.querySelectorAll('.structure-select-btn');
+        console.log(`Found ${selectButtons.length} structure select buttons`);
+        
+        // Add click handlers to each button
+        selectButtons.forEach((button, index) => {
+            const moduleType = button.dataset.module;
+            console.log(`Button ${index}: ${moduleType}`);
+            
             button.addEventListener('click', function() {
-                const moduleType = this.dataset.module;
+                console.log(`🖱️ Button clicked for: ${moduleType}`);
                 selectStructureType(moduleType);
             });
         });
-    
-    console.log('🏗️ Simplified structure selection initialized');
-}
-
-    
-   function selectStructureType(moduleType) {
-    console.log(`🏠 Selecting structure type: ${moduleType}`);
-    
-    // If same type is selected, do nothing
-    if (selectedStructureType === moduleType) {
-        return;
-    }
-    
-    // Deselect previous selection
-    if (selectedStructureType) updateStructureSelection(selectedStructureType, false);
-    
-    // Select new type
-    selectedStructureType = moduleType;
-    
-    // Update visual feedback
-    updateStructureSelection(moduleType, true);
-    
-    // Show size configuration for selected structure
-    showSizeConfiguration(moduleType);
-    
-    // Update navigation state
-    updateNavigationState();
-    
-    // Calculate stats for single structure
-    calculateSingleStructureStats();
-}
-
-
-/**
- * Update visual feedback for structure selection
- */
-function updateStructureSelection(moduleType, isSelected) {
-    const card = document.querySelector(`[data-module-type="${moduleType}"]`);
-    const button = card?.querySelector('.structure-select-btn');
-    
-    if (!card || !button) return;
-    
-    if (isSelected) {
-        // Add green glow effect
-        card.classList.add('selected');
-        card.style.borderColor = '#00ff88';
-        card.style.boxShadow = '0 0 25px rgba(0, 255, 136, 0.6)';
-        button.textContent = 'Selected';
-        button.style.backgroundColor = '#00ff88';
-        button.style.color = '#000';
-    } else {
-        // Remove selection effects
-        card.classList.remove('selected');
-        card.style.borderColor = '';
-        card.style.boxShadow = '';
-        button.textContent = 'Select';
-        button.style.backgroundColor = '';
-        button.style.color = '';
-    }
-}
-
-/**
- * Show size configuration for selected structure
- */
-function showSizeConfiguration(moduleType) {
-    const configSection = document.getElementById('selected-modules-section');
-    if (!configSection) return;
-    
-    const module = MODULE_CATALOG[moduleType];
-    
-    configSection.innerHTML = `
-        <h3 class="section-title">Configure Selected Structure</h3>
-        <div class="structure-config-item" data-module-id="${moduleType}">
-            <div class="structure-config-header">
-                <span class="structure-name">${module.icon} ${module.name}</span>
-                <span class="structure-badge">Selected</span>
-            </div>
-            <div class="size-selection">
-                <span class="size-label">Size:</span>
-                <div class="size-buttons">
-                    <button type="button" class="size-btn ${selectedSize === 'small' ? 'active' : ''}" 
-                            data-module="${moduleType}" data-size="small">Small</button>
-                    <button type="button" class="size-btn ${selectedSize === 'medium' ? 'active' : ''}" 
-                            data-module="${moduleType}" data-size="medium">Medium</button>
-                    <button type="button" class="size-btn ${selectedSize === 'large' ? 'active' : ''}" 
-                            data-module="${moduleType}" data-size="large">Large</button>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    configSection.style.display = 'block';
-    setupSizeSelection();
-}
-
-/**
- * Hide size configuration
- */
-function hideSizeConfiguration() {
-    const configSection = document.getElementById('selected-modules-section');
-    if (configSection) {
-        configSection.style.display = 'none';
-        configSection.innerHTML = '';
-    }
-}
-
-/**
- * Set up size selection handlers - UPDATED VERSION
- */
-function setupSizeSelection() {
-    const sizeButtons = document.querySelectorAll('.size-btn');
-    
-    sizeButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const size = this.dataset.size;
-            const moduleType = this.dataset.module;
-            
-            // Update selected size
-            selectedSize = size;
-            
-            // Update button states
-            const allSizeButtons = document.querySelectorAll('.size-btn');
-            allSizeButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            console.log(`📏 Structure size changed to ${size}`);
-            
-            // Recalculate stats
-            calculateSingleStructureStats();
-        });
-    });
-}
-
-/**
- * Calculate statistics for single structure
- */
-function calculateSingleStructureStats() {
-    if (!selectedStructureType) {
-        // Reset stats if nothing selected
-        updateStatsDisplay({
-            floorArea: 0,
-            totalVolume: 0,
-            crewCapacity: 0,
-            efficiencyRating: 0
-        });
-        return;
-    }
-    
-    const module = MODULE_CATALOG[selectedStructureType];
-    const specs = module.sizes[selectedSize];
-    const efficiency = module.efficiency;
-    
-    // Calculate crew capacity based on NASA standards
-    const requiredVolumePerPerson = getRequiredVolumePerPerson();
-    const habitableVolume = specs.volume * 0.7; // 70% efficiency factor
-    const crewCapacity = Math.floor(habitableVolume / requiredVolumePerPerson);
-    
-    const stats = {
-        floorArea: Math.round(specs.floorArea),
-        totalVolume: Math.round(specs.volume),
-        crewCapacity: Math.max(0, crewCapacity),
-        efficiencyRating: efficiency
-    };
-    
-    updateStatsDisplay(stats);
-    updateNASAValidation(stats);
-}
-
-/**
- * Update statistics display - SIMPLIFIED VERSION
- */
-function updateStatsDisplay(stats) {
-    updateElement('total-floor-area', `${stats.floorArea} m²`);
-    updateElement('total-volume', `${stats.totalVolume} m³`);
-    updateElement('crew-capacity', `${stats.crewCapacity} astronauts`);
-    updateElement('efficiency-rating', `${stats.efficiencyRating}%`);
-}
-
-/**
- * Update NASA standards validation display - SIMPLIFIED VERSION
- */
-function updateNASAValidation(stats) {
-    const config = structureState.missionConfig;
-    if (!config) return;
-    
-    // Volume per person validation
-    const requiredVolume = getRequiredVolumePerPerson() * config.crewSize;
-    const actualVolume = stats.totalVolume * 0.7; // Habitable volume
-    const volumeCompliant = actualVolume >= requiredVolume;
-    
-    updateValidationItem('volume-per-person', 
-        `${Math.round(actualVolume / config.crewSize)} / ${getRequiredVolumePerPerson()} m³`,
-        volumeCompliant);
-    
-    // Crew capacity validation
-    const capacityCompliant = stats.crewCapacity >= config.crewSize;
-    updateValidationItem('crew-capacity-check',
-        `${stats.crewCapacity} / ${config.crewSize} capacity`,
-        capacityCompliant);
-    
-    // Structure selection validation
-    const structureSelected = selectedStructureType !== null;
-    updateValidationItem('modules-selected',
-        `${structureSelected ? '1' : '0'} structure selected`,
-        structureSelected);
-    
-    // Calculate overall compliance
-    const totalChecks = 3;
-    const passedChecks = [volumeCompliant, capacityCompliant, structureSelected].filter(Boolean).length;
-    const compliancePercentage = Math.round((passedChecks / totalChecks) * 100);
-    
-    updateElement('overall-compliance', `${compliancePercentage}%`);
-}
-
-/**
- * Update navigation button states - SIMPLIFIED VERSION
- */
-function updateNavigationState() {
-    const continueBtn = document.getElementById('continue-to-editor-btn');
-    const hasSelection = selectedStructureType !== null;
-    
-    if (continueBtn) {
-        continueBtn.disabled = !hasSelection;
-        continueBtn.classList.toggle('disabled', !hasSelection);
-    }
-}
-
-/**
- * Save structure selections - SIMPLIFIED VERSION
- */
-function saveStructureState() {
-    try {
-        const saveData = {
-            selectedStructureType: selectedStructureType,
-            selectedSize: selectedSize,
-            timestamp: Date.now()
-        };
         
-        localStorage.setItem('spaceArchitects_structure', JSON.stringify(saveData));
-        console.log('💾 Structure state saved');
-    } catch (error) {
-        console.error('❌ Failed to save structure state:', error);
+        console.log('✅ Module selection setup complete');
     }
-}
-
-/**
- * Load structure selections - SIMPLIFIED VERSION
- */
-function loadStructureState() {
-    try {
-        const saved = localStorage.getItem('spaceArchitects_structure');
-        if (saved) {
-            const saveData = JSON.parse(saved);
-            
-            if (saveData.selectedStructureType) {
-                selectedStructureType = saveData.selectedStructureType;
-                selectedSize = saveData.selectedSize || 'medium';
-                
-                // Restore UI state
-                updateStructureSelection(selectedStructureType, true);
-                showSizeConfiguration(selectedStructureType);
-                calculateSingleStructureStats();
-                updateNavigationState();
-            }
-            
-            console.log('📂 Structure state loaded');
-        }
-    } catch (error) {
-        console.error('❌ Failed to load structure state:', error);
-    }
-}
-
-/**
- * Get current structure state - SIMPLIFIED VERSION
- */
-function getStructureState() {
-    return {
-        selectedStructureType: selectedStructureType,
-        selectedSize: selectedSize,
-        missionConfig: { ...structureState.missionConfig }
-    };
-}
     
     /**
-     * Set up navigation button handlers
+     * Handle structure type selection
      */
-    function setupNavigation() {
-        const backBtn = document.getElementById('back-to-config-btn');
-        const continueBtn = document.getElementById('continue-to-editor-btn');
+    function selectStructureType(moduleType) {
+        console.log(`🏠 Selecting structure type: ${moduleType}`);
         
-        if (backBtn) {
-            backBtn.addEventListener('click', function() {
-                // Save current selections
-                saveStructureState();
-                
-                // Navigate back to config
-                if (typeof SpaceArchitects !== 'undefined') {
-                    SpaceArchitects.showPage('config');
-                }
-            });
+        // If same type is selected, do nothing
+        if (selectedStructureType === moduleType) {
+            console.log('Same structure already selected, ignoring');
+            return;
         }
         
-        if (continueBtn) {
-            continueBtn.addEventListener('click', function() {
-                if (!selectedStructureType) {
-                    showNotification('Please select a structure type to continue.', 'warning');
-                      return;
-                 }
-                
-                // Save selections and navigate to editor
-                saveStructureState();
-                
-                if (typeof SpaceArchitects !== 'undefined') {
-                    SpaceArchitects.showPage('editor');
-                }
-                
-                console.log('🎨 Navigating to editor with selections:', structureState.selectedModules);
-            });
+        // Deselect previous selection
+        if (selectedStructureType) {
+            console.log(`Deselecting previous: ${selectedStructureType}`);
+            updateStructureSelection(selectedStructureType, false);
+        }
+        
+        // Select new type
+        selectedStructureType = moduleType;
+        console.log(`New selection: ${selectedStructureType}`);
+        
+        // Update visual feedback
+        updateStructureSelection(moduleType, true);
+        
+        // Show size configuration for selected structure
+        showSizeConfiguration(moduleType);
+        
+        // Update navigation state
+        updateNavigationState();
+        
+        // Calculate stats for single structure
+        calculateSingleStructureStats();
+        
+        console.log('✅ Structure selection complete');
+    }
+    
+    /**
+     * Update visual feedback for structure selection
+     */
+    function updateStructureSelection(moduleType, isSelected) {
+        console.log(`🎨 Updating visual for ${moduleType}, selected: ${isSelected}`);
+        
+        const card = document.querySelector(`[data-module-type="${moduleType}"]`);
+        const button = card?.querySelector('.structure-select-btn');
+        
+        if (!card) {
+            console.error(`❌ Card not found for module type: ${moduleType}`);
+            return;
+        }
+        
+        if (!button) {
+            console.error(`❌ Button not found in card for: ${moduleType}`);
+            return;
+        }
+        
+        if (isSelected) {
+            // Add green glow effect
+            card.classList.add('selected');
+            card.style.borderColor = '#00ff88';
+            card.style.boxShadow = '0 0 25px rgba(0, 255, 136, 0.6)';
+            button.textContent = 'Selected';
+            button.style.backgroundColor = '#00ff88';
+            button.style.color = '#000';
+            console.log(`✅ Applied selection styles to ${moduleType}`);
+        } else {
+            // Remove selection effects
+            card.classList.remove('selected');
+            card.style.borderColor = '';
+            card.style.boxShadow = '';
+            button.textContent = 'Select';
+            button.style.backgroundColor = '';
+            button.style.color = '';
+            console.log(`❌ Removed selection styles from ${moduleType}`);
         }
     }
     
-
-    
-
     /**
-     * Show module configuration options
+     * Show size configuration for selected structure
      */
-    function showModuleConfiguration(moduleId) {
+    function showSizeConfiguration(moduleType) {
+        console.log(`🔧 Showing size configuration for: ${moduleType}`);
+        
         const configSection = document.getElementById('selected-modules-section');
-        if (!configSection) return;
+        if (!configSection) {
+            console.error('❌ Config section not found');
+            return;
+        }
         
-        // Check if already exists
-        if (document.querySelector(`[data-module-id="${moduleId}"]`)) return;
+        const module = MODULE_CATALOG[moduleType];
+        if (!module) {
+            console.error(`❌ Module not found: ${moduleType}`);
+            return;
+        }
         
-        const module = MODULE_CATALOG[moduleId];
-        const configItem = document.createElement('div');
-        configItem.className = 'module-config-item';
-        configItem.dataset.moduleId = moduleId;
-        
-        configItem.innerHTML = `
-            <div class="module-header">
-                <span>${module.icon} ${module.name}</span>
-                <span class="module-quantity">Qty: ${structureState.moduleSpecs[moduleId]?.quantity || 1}</span>
-            </div>
-            <div class="size-selection">
-                <label>Size:</label>
-                <button type="button" class="size-btn active" data-size="small">Small</button>
-                <button type="button" class="size-btn" data-size="medium">Medium</button>
-                <button type="button" class="size-btn" data-size="large">Large</button>
+        configSection.innerHTML = `
+            <h3 class="section-title">Configure Selected Structure</h3>
+            <div class="structure-config-item" data-module-id="${moduleType}">
+                <div class="structure-config-header">
+                    <span class="structure-name">${module.icon} ${module.name}</span>
+                    <span class="structure-badge">Selected</span>
+                </div>
+                <div class="size-selection">
+                    <span class="size-label">Size:</span>
+                    <div class="size-buttons">
+                        <button type="button" class="size-btn ${selectedSize === 'small' ? 'active' : ''}" 
+                                data-module="${moduleType}" data-size="small">Small</button>
+                        <button type="button" class="size-btn ${selectedSize === 'medium' ? 'active' : ''}" 
+                                data-module="${moduleType}" data-size="medium">Medium</button>
+                        <button type="button" class="size-btn ${selectedSize === 'large' ? 'active' : ''}" 
+                                data-module="${moduleType}" data-size="large">Large</button>
+                    </div>
+                </div>
             </div>
         `;
         
-        configSection.appendChild(configItem);
         configSection.style.display = 'block';
+        setupSizeSelection();
+        
+        console.log('✅ Size configuration displayed');
     }
     
     /**
-     * Hide module configuration options
+     * Hide size configuration
      */
-    function hideModuleConfiguration(moduleId) {
-        const configItem = document.querySelector(`[data-module-id="${moduleId}"]`);
-        if (configItem) {
-            configItem.remove();
-        }
-        
-        // Hide section if no modules selected
+    function hideSizeConfiguration() {
         const configSection = document.getElementById('selected-modules-section');
-        if (configSection && structureState.selectedModules.size === 0) {
+        if (configSection) {
             configSection.style.display = 'none';
+            configSection.innerHTML = '';
         }
     }
     
     /**
-     * Calculate and update total habitat statistics
+     * Set up size selection handlers
      */
-    function calculateTotalStats() {
-        let totalFloorArea = 0;
-        let totalVolume = 0;
-        let weightedEfficiency = 0;
-        let totalModules = 0;
+    function setupSizeSelection() {
+        const sizeButtons = document.querySelectorAll('.size-btn');
         
-        // Sum up all selected modules
-        for (const [moduleId, moduleSpec] of Object.entries(structureState.moduleSpecs)) {
-            const specs = moduleSpec.specs;
-            const efficiency = MODULE_CATALOG[moduleId].efficiency;
-            const quantity = moduleSpec.quantity || 1;
-            
-            totalFloorArea += (specs.floorArea || 0) * quantity;
-            totalVolume += (specs.volume || 0) * quantity;
-            weightedEfficiency += efficiency * (specs.volume || 0) * quantity;
-            totalModules += quantity;
+        sizeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const size = this.dataset.size;
+                const moduleType = this.dataset.module;
+                
+                // Update selected size
+                selectedSize = size;
+                
+                // Update button states
+                const allSizeButtons = document.querySelectorAll('.size-btn');
+                allSizeButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                console.log(`📏 Structure size changed to ${size}`);
+                
+                // Recalculate stats
+                calculateSingleStructureStats();
+            });
+        });
+    }
+    
+    /**
+     * Calculate statistics for single structure
+     */
+    function calculateSingleStructureStats() {
+        console.log('🧮 Calculating structure stats...');
+        
+        if (!selectedStructureType) {
+            console.log('No structure selected, resetting stats');
+            // Reset stats if nothing selected
+            const emptyStats = {
+                floorArea: 0,
+                totalVolume: 0,
+                crewCapacity: 0,
+                efficiencyRating: 0
+            };
+            updateStatsDisplay(emptyStats);
+            updateNASAValidation(emptyStats);
+            return;
         }
+        
+        const module = MODULE_CATALOG[selectedStructureType];
+        const specs = module.sizes[selectedSize];
+        const efficiency = module.efficiency;
+        
+        console.log(`Module: ${module.name}, Size: ${selectedSize}`, specs);
         
         // Calculate crew capacity based on NASA standards
         const requiredVolumePerPerson = getRequiredVolumePerPerson();
-        const habitableVolume = totalVolume * 0.7; // 70% efficiency factor
+        const habitableVolume = specs.volume * 0.7; // 70% efficiency factor
         const crewCapacity = Math.floor(habitableVolume / requiredVolumePerPerson);
         
-        // Calculate overall efficiency
-        const efficiencyRating = totalVolume > 0 ? Math.round(weightedEfficiency / totalVolume) : 0;
-        
-        // Update state
-        structureState.totalStats = {
-            floorArea: Math.round(totalFloorArea),
-            totalVolume: Math.round(totalVolume),
+        const stats = {
+            floorArea: Math.round(specs.floorArea),
+            totalVolume: Math.round(specs.volume),
             crewCapacity: Math.max(0, crewCapacity),
-            efficiencyRating: efficiencyRating
+            efficiencyRating: efficiency
         };
         
-        // Update display
-        updateStatsDisplay();
-        updateNASAValidation();
-    }
-    
-    /**
-     * Get required volume per person based on mission duration
-     */
-    function getRequiredVolumePerPerson() {
-        const duration = structureState.missionConfig?.duration || 60;
+        console.log('Calculated stats:', stats);
         
-        if (duration <= 30) return 20; // Short missions
-        if (duration <= 90) return 25; // Medium missions 
-        if (duration <= 180) return 30; // Long missions
-        return 40; // Permanent habitation
+        updateStatsDisplay(stats);
+        updateNASAValidation(stats);
     }
     
     /**
      * Update statistics display
      */
-    function updateStatsDisplay() {
-        const stats = structureState.totalStats;
-        
+    function updateStatsDisplay(stats) {
         updateElement('total-floor-area', `${stats.floorArea} m²`);
         updateElement('total-volume', `${stats.totalVolume} m³`);
         updateElement('crew-capacity', `${stats.crewCapacity} astronauts`);
         updateElement('efficiency-rating', `${stats.efficiencyRating}%`);
+        
+        console.log('📊 Stats display updated');
     }
     
     /**
      * Update NASA standards validation display
      */
-    function updateNASAValidation() {
+    function updateNASAValidation(stats) {
         const config = structureState.missionConfig;
-        const stats = structureState.totalStats;
-        
         if (!config) return;
         
         // Volume per person validation
@@ -594,18 +386,20 @@ function getStructureState() {
             `${stats.crewCapacity} / ${config.crewSize} capacity`,
             capacityCompliant);
         
-        // Module selection validation
-        const modulesSelected = structureState.selectedModules.size > 0;
+        // Structure selection validation
+        const structureSelected = selectedStructureType !== null;
         updateValidationItem('modules-selected',
-            `${structureState.selectedModules.size} modules selected`,
-            modulesSelected);
+            `${structureSelected ? '1' : '0'} structure selected`,
+            structureSelected);
         
         // Calculate overall compliance
         const totalChecks = 3;
-        const passedChecks = [volumeCompliant, capacityCompliant, modulesSelected].filter(Boolean).length;
+        const passedChecks = [volumeCompliant, capacityCompliant, structureSelected].filter(Boolean).length;
         const compliancePercentage = Math.round((passedChecks / totalChecks) * 100);
         
         updateElement('overall-compliance', `${compliancePercentage}%`);
+        
+        console.log('✅ NASA validation updated');
     }
     
     /**
@@ -620,34 +414,78 @@ function getStructureState() {
     }
     
     /**
-     * Update selected modules display
+     * Update navigation button states
      */
-    function updateSelectedModulesDisplay() {
-        const selectedCount = structureState.selectedModules.size;
-        const countElement = document.getElementById('selected-modules-count');
+    function updateNavigationState() {
+        console.log('🧭 Updating navigation state...');
         
-        if (countElement) {
-            countElement.textContent = selectedCount;
-        }
+        const continueBtn = document.getElementById('continue-to-editor-btn');
+        const hasSelection = selectedStructureType !== null;
         
-        // Show/hide configuration section
-        const configSection = document.getElementById('selected-modules-section');
-        if (configSection) {
-            configSection.style.display = selectedCount > 0 ? 'block' : 'none';
+        console.log(`Has selection: ${hasSelection}, Button exists: ${!!continueBtn}`);
+        
+        if (continueBtn) {
+            continueBtn.disabled = !hasSelection;
+            continueBtn.classList.toggle('disabled', !hasSelection);
+            console.log(`Continue button enabled: ${hasSelection}`);
         }
     }
     
     /**
-     * Update navigation button states
+     * Set up navigation button handlers
      */
-    function updateNavigationState() {
-         const continueBtn = document.getElementById('continue-to-editor-btn');
-        const hasSelection = selectedStructureType !== null;
-    
+    function setupNavigation() {
+        console.log('🚀 Setting up navigation...');
+        
+        const backBtn = document.getElementById('back-to-config-btn');
+        const continueBtn = document.getElementById('continue-to-editor-btn');
+        
+        if (backBtn) {
+            backBtn.addEventListener('click', function() {
+                console.log('🔙 Back button clicked');
+                // Save current selections
+                saveStructureState();
+                
+                // Navigate back to config
+                if (typeof SpaceArchitects !== 'undefined') {
+                    SpaceArchitects.showPage('config');
+                }
+            });
+        }
+        
         if (continueBtn) {
-        continueBtn.disabled = !hasSelection;
-        continueBtn.classList.toggle('disabled', !hasSelection);
-     }
+            continueBtn.addEventListener('click', function() {
+                console.log('▶️ Continue button clicked');
+                
+                if (!selectedStructureType) {
+                    showNotification('Please select a structure type to continue.', 'warning');
+                    return;
+                }
+                
+                // Save selections and navigate to editor
+                saveStructureState();
+                
+                if (typeof SpaceArchitects !== 'undefined') {
+                    SpaceArchitects.showPage('editor');
+                }
+                
+                console.log('🎨 Navigating to editor with selection:', selectedStructureType);
+            });
+        }
+        
+        console.log('✅ Navigation setup complete');
+    }
+    
+    /**
+     * Get required volume per person based on mission duration
+     */
+    function getRequiredVolumePerPerson() {
+        const duration = structureState.missionConfig?.duration || 60;
+        
+        if (duration <= 30) return 20; // Short missions
+        if (duration <= 90) return 25; // Medium missions 
+        if (duration <= 180) return 30; // Long missions
+        return 40; // Permanent habitation
     }
     
     /**
@@ -661,6 +499,8 @@ function getStructureState() {
             config.missionType === 'moon' ? '🌙 Luna' : '🔴 Mars');
         updateElement('mission-crew-size', `${config.crewSize} astronauts`);
         updateElement('mission-duration', `${config.duration} days`);
+        
+        console.log('📋 Mission info updated');
     }
     
     /**
@@ -669,60 +509,47 @@ function getStructureState() {
     function saveStructureState() {
         try {
             const saveData = {
-                selectedModules: Array.from(structureState.selectedModules),
-                moduleSpecs: structureState.moduleSpecs,
-                totalStats: structureState.totalStats,
+                selectedStructureType: selectedStructureType,
+                selectedSize: selectedSize,
                 timestamp: Date.now()
             };
             
             localStorage.setItem('spaceArchitects_structure', JSON.stringify(saveData));
-            console.log('💾 Structure state saved');
+            console.log('💾 Structure state saved:', saveData);
         } catch (error) {
             console.error('❌ Failed to save structure state:', error);
         }
     }
     
-    
     /**
-     * Restore UI state from loaded data
+     * Load structure selections from localStorage
      */
-    function restoreUIState() {
-        // Restore module selections
-        structureState.selectedModules.forEach(moduleId => {
-            const checkbox = document.querySelector(`[data-module="${moduleId}"]`);
-            const card = document.querySelector(`[data-module-type="${moduleId}"]`);
-            
-            if (card) {
-                card.classList.add('selected');
-                showModuleConfiguration(moduleId);
+    function loadStructureState() {
+        try {
+            const saved = localStorage.getItem('spaceArchitects_structure');
+            if (saved) {
+                const saveData = JSON.parse(saved);
+                
+                if (saveData.selectedStructureType) {
+                    selectedStructureType = saveData.selectedStructureType;
+                    selectedSize = saveData.selectedSize || 'medium';
+                    
+                    console.log('📂 Restoring structure state:', saveData);
+                    
+                    // Delay UI restoration to ensure DOM is ready
+                    setTimeout(() => {
+                        updateStructureSelection(selectedStructureType, true);
+                        showSizeConfiguration(selectedStructureType);
+                        calculateSingleStructureStats();
+                        updateNavigationState();
+                    }, 100);
+                }
+                
+                console.log('✅ Structure state loaded');
             }
-            
-            if (checkbox) {
-                checkbox.checked = true;
-            }
-            
-            // Update quantity display if exists
-            const moduleSpec = structureState.moduleSpecs[moduleId];
-            if (moduleSpec && moduleSpec.quantity) {
-                updateQuantityDisplay(moduleId, moduleSpec.quantity);
-            }
-        });
-        
-        // Restore size selections
-        Object.entries(structureState.moduleSpecs).forEach(([moduleId, spec]) => {
-            const configItem = document.querySelector(`[data-module-id="${moduleId}"]`);
-            if (configItem) {
-                const sizeButtons = configItem.querySelectorAll('.size-btn');
-                sizeButtons.forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.size === spec.size);
-                });
-            }
-        });
-        
-        // Update displays
-        updateSelectedModulesDisplay();
-        updateNavigationState();
-        calculateTotalStats();
+        } catch (error) {
+            console.error('❌ Failed to load structure state:', error);
+        }
     }
     
     /**
@@ -740,6 +567,8 @@ function getStructureState() {
         const element = document.getElementById(id);
         if (element) {
             element.textContent = text;
+        } else {
+            console.warn(`Element not found: ${id}`);
         }
     }
     
@@ -748,9 +577,8 @@ function getStructureState() {
      */
     function getStructureState() {
         return {
-            selectedModules: Array.from(structureState.selectedModules),
-            moduleSpecs: { ...structureState.moduleSpecs },
-            totalStats: { ...structureState.totalStats },
+            selectedStructureType: selectedStructureType,
+            selectedSize: selectedSize,
             missionConfig: { ...structureState.missionConfig }
         };
     }
@@ -760,8 +588,7 @@ function getStructureState() {
         initialize: initialize,
         getStructureState: getStructureState,
         saveStructureState: saveStructureState,
-        loadStructureState: loadStructureState,
-        calculateTotalStats: calculateTotalStats
+        loadStructureState: loadStructureState
     };
 })();
 
