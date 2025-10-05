@@ -1,22 +1,24 @@
 /*
 ===============================================================================
-SPACE ARCHITECTS - STRUCTURE PAGE JAVASCRIPT MODULE
+SPACE ARCHITECTS - STRUCTURE PAGE JAVASCRIPT MODULE (FIXED VERSION)
 NASA Space Apps Challenge Project
 
 This module handles the habitat structure selection page:
-- Single structure selection (fixed version)
+- Single structure selection with real-time updates
 - Real-time statistics calculations  
 - NASA compliance validation
-- Navigation between config and editor pages
+- Clean, conflict-free implementation
 ===============================================================================
 */
 
 const StructurePage = (function() {
     'use strict';
     
-    // Module state management
+    // Module state management - SINGLE SOURCE OF TRUTH
     let structureState = {
         missionConfig: null,
+        selectedStructureType: null,
+        selectedSize: 'medium',
         totalStats: {
             floorArea: 0,
             totalVolume: 0,
@@ -24,10 +26,6 @@ const StructurePage = (function() {
             efficiencyRating: 0
         }
     };
-    
-    // Structure selection state
-    let selectedStructureType = null;
-    let selectedSize = 'medium'; // default size
     
     // Module specifications with NASA-compliant data
     const MODULE_CATALOG = {
@@ -85,13 +83,10 @@ const StructurePage = (function() {
      * Initialize the structure page functionality
      */
     function initialize() {
-        console.log('🏗️ Initializing Structure Page...');
+        console.log('🏗️ Initializing Structure Page (FIXED VERSION)...');
         
         // Load mission configuration from previous page
         loadMissionConfig();
-        
-        // Load any previously saved structure state
-        loadStructureState();
         
         // Set up event listeners
         setupModuleSelection();
@@ -99,10 +94,10 @@ const StructurePage = (function() {
         
         // Initialize display
         updateMissionInfo();
-        calculateSingleStructureStats();
+        calculateAndUpdateStats();
         updateNavigationState();
         
-        console.log('✅ Structure Page initialized');
+        console.log('✅ Structure Page initialized successfully');
         return true;
     }
     
@@ -134,41 +129,49 @@ const StructurePage = (function() {
         const selectButtons = document.querySelectorAll('.structure-select-btn');
         console.log(`Found ${selectButtons.length} structure select buttons`);
         
+        if (selectButtons.length === 0) {
+            console.error('❌ No structure select buttons found!');
+            return;
+        }
+        
         // Add click handlers to each button
         selectButtons.forEach((button, index) => {
             const moduleType = button.dataset.module;
             console.log(`Button ${index}: ${moduleType}`);
             
-            button.addEventListener('click', function() {
-                console.log(`🖱️ Button clicked for: ${moduleType}`);
-                selectStructureType(moduleType);
-            });
+            if (moduleType) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log(`🖱️ Button clicked for: ${moduleType}`);
+                    selectStructureType(moduleType);
+                });
+            }
         });
         
         console.log('✅ Module selection setup complete');
     }
     
     /**
-     * Handle structure type selection
+     * Handle structure type selection - MAIN SELECTION LOGIC
      */
     function selectStructureType(moduleType) {
         console.log(`🏠 Selecting structure type: ${moduleType}`);
         
         // If same type is selected, do nothing
-        if (selectedStructureType === moduleType) {
+        if (structureState.selectedStructureType === moduleType) {
             console.log('Same structure already selected, ignoring');
             return;
         }
         
         // Deselect previous selection
-        if (selectedStructureType) {
-            console.log(`Deselecting previous: ${selectedStructureType}`);
-            updateStructureSelection(selectedStructureType, false);
+        if (structureState.selectedStructureType) {
+            console.log(`Deselecting previous: ${structureState.selectedStructureType}`);
+            updateStructureSelection(structureState.selectedStructureType, false);
         }
         
         // Select new type
-        selectedStructureType = moduleType;
-        console.log(`New selection: ${selectedStructureType}`);
+        structureState.selectedStructureType = moduleType;
+        console.log(`New selection: ${structureState.selectedStructureType}`);
         
         // Update visual feedback
         updateStructureSelection(moduleType, true);
@@ -179,8 +182,8 @@ const StructurePage = (function() {
         // Update navigation state
         updateNavigationState();
         
-        // Calculate stats for single structure
-        calculateSingleStructureStats();
+        // Calculate and update stats - REAL-TIME UPDATE
+        calculateAndUpdateStats();
         
         console.log('✅ Structure selection complete');
     }
@@ -253,11 +256,11 @@ const StructurePage = (function() {
                 <div class="size-selection">
                     <span class="size-label">Size:</span>
                     <div class="size-buttons">
-                        <button type="button" class="size-btn ${selectedSize === 'small' ? 'active' : ''}" 
+                        <button type="button" class="size-btn ${structureState.selectedSize === 'small' ? 'active' : ''}" 
                                 data-module="${moduleType}" data-size="small">Small</button>
-                        <button type="button" class="size-btn ${selectedSize === 'medium' ? 'active' : ''}" 
+                        <button type="button" class="size-btn ${structureState.selectedSize === 'medium' ? 'active' : ''}" 
                                 data-module="${moduleType}" data-size="medium">Medium</button>
-                        <button type="button" class="size-btn ${selectedSize === 'large' ? 'active' : ''}" 
+                        <button type="button" class="size-btn ${structureState.selectedSize === 'large' ? 'active' : ''}" 
                                 data-module="${moduleType}" data-size="large">Large</button>
                     </div>
                 </div>
@@ -266,34 +269,27 @@ const StructurePage = (function() {
         
         configSection.style.display = 'block';
         setupSizeSelection();
+        calculateAndUpdateStats(); // Update stats immediately
         
         console.log('✅ Size configuration displayed');
     }
     
     /**
-     * Hide size configuration
-     */
-    function hideSizeConfiguration() {
-        const configSection = document.getElementById('selected-modules-section');
-        if (configSection) {
-            configSection.style.display = 'none';
-            configSection.innerHTML = '';
-        }
-    }
-    
-    /**
-     * Set up size selection handlers
+     * Set up size selection handlers - WITH REAL-TIME UPDATES
      */
     function setupSizeSelection() {
         const sizeButtons = document.querySelectorAll('.size-btn');
+        console.log(`Setting up ${sizeButtons.length} size buttons`);
         
         sizeButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const size = this.dataset.size;
                 const moduleType = this.dataset.module;
                 
+                console.log(`📏 Size button clicked: ${size} for ${moduleType}`);
+                
                 // Update selected size
-                selectedSize = size;
+                structureState.selectedSize = size;
                 
                 // Update button states
                 const allSizeButtons = document.querySelectorAll('.size-btn');
@@ -302,19 +298,21 @@ const StructurePage = (function() {
                 
                 console.log(`📏 Structure size changed to ${size}`);
                 
-                // Recalculate stats
-                calculateSingleStructureStats();
+                // REAL-TIME UPDATE - Calculate stats immediately
+                calculateAndUpdateStats();
             });
         });
+        
+        console.log('✅ Size selection handlers set up');
     }
     
     /**
-     * Calculate statistics for single structure
+     * Calculate and update statistics - MAIN CALCULATION FUNCTION
      */
-    function calculateSingleStructureStats() {
+    function calculateAndUpdateStats() {
         console.log('🧮 Calculating structure stats...');
         
-        if (!selectedStructureType) {
+        if (!structureState.selectedStructureType) {
             console.log('No structure selected, resetting stats');
             // Reset stats if nothing selected
             const emptyStats = {
@@ -328,11 +326,11 @@ const StructurePage = (function() {
             return;
         }
         
-        const module = MODULE_CATALOG[selectedStructureType];
-        const specs = module.sizes[selectedSize];
+        const module = MODULE_CATALOG[structureState.selectedStructureType];
+        const specs = module.sizes[structureState.selectedSize];
         const efficiency = module.efficiency;
         
-        console.log(`Module: ${module.name}, Size: ${selectedSize}`, specs);
+        console.log(`Module: ${module.name}, Size: ${structureState.selectedSize}`, specs);
         
         // Calculate crew capacity based on NASA standards
         const requiredVolumePerPerson = getRequiredVolumePerPerson();
@@ -346,30 +344,40 @@ const StructurePage = (function() {
             efficiencyRating: efficiency
         };
         
+        // Update state
+        structureState.totalStats = stats;
+        
         console.log('Calculated stats:', stats);
         
+        // Update displays IMMEDIATELY
         updateStatsDisplay(stats);
         updateNASAValidation(stats);
+        
+        console.log('✅ Stats updated in real-time');
     }
     
     /**
-     * Update statistics display
+     * Update statistics display - REAL-TIME UI UPDATE
      */
     function updateStatsDisplay(stats) {
-        updateElement('total-floor-area', `${stats.floorArea} m²`);
-        updateElement('total-volume', `${stats.totalVolume} m³`);
-        updateElement('crew-capacity', `${stats.crewCapacity} astronauts`);
-        updateElement('efficiency-rating', `${stats.efficiencyRating}%`);
+        console.log('📊 Updating stats display...');
         
-        console.log('📊 Stats display updated');
+        updateElementSafely('total-floor-area', `${stats.floorArea} m²`);
+        updateElementSafely('total-volume', `${stats.totalVolume} m³`);
+        updateElementSafely('crew-capacity', `${stats.crewCapacity} astronauts`);
+        updateElementSafely('efficiency-rating', `${stats.efficiencyRating}%`);
+        
+        console.log('📊 Stats display updated successfully');
     }
     
     /**
-     * Update NASA standards validation display
+     * Update NASA standards validation display - REAL-TIME VALIDATION
      */
     function updateNASAValidation(stats) {
         const config = structureState.missionConfig;
         if (!config) return;
+        
+        console.log('🔍 Updating NASA validation...');
         
         // Volume per person validation
         const requiredVolume = getRequiredVolumePerPerson() * config.crewSize;
@@ -387,7 +395,7 @@ const StructurePage = (function() {
             capacityCompliant);
         
         // Structure selection validation
-        const structureSelected = selectedStructureType !== null;
+        const structureSelected = structureState.selectedStructureType !== null;
         updateValidationItem('modules-selected',
             `${structureSelected ? '1' : '0'} structure selected`,
             structureSelected);
@@ -397,7 +405,7 @@ const StructurePage = (function() {
         const passedChecks = [volumeCompliant, capacityCompliant, structureSelected].filter(Boolean).length;
         const compliancePercentage = Math.round((passedChecks / totalChecks) * 100);
         
-        updateElement('overall-compliance', `${compliancePercentage}%`);
+        updateElementSafely('overall-compliance', `${compliancePercentage}%`);
         
         console.log('✅ NASA validation updated');
     }
@@ -410,24 +418,8 @@ const StructurePage = (function() {
         if (element) {
             element.textContent = text;
             element.className = isValid ? 'valid' : 'invalid';
-        }
-    }
-    
-    /**
-     * Update navigation button states
-     */
-    function updateNavigationState() {
-        console.log('🧭 Updating navigation state...');
-        
-        const continueBtn = document.getElementById('continue-to-editor-btn');
-        const hasSelection = selectedStructureType !== null;
-        
-        console.log(`Has selection: ${hasSelection}, Button exists: ${!!continueBtn}`);
-        
-        if (continueBtn) {
-            continueBtn.disabled = !hasSelection;
-            continueBtn.classList.toggle('disabled', !hasSelection);
-            console.log(`Continue button enabled: ${hasSelection}`);
+        } else {
+            console.warn(`⚠️ Validation element not found: ${itemId}`);
         }
     }
     
@@ -457,7 +449,7 @@ const StructurePage = (function() {
             continueBtn.addEventListener('click', function() {
                 console.log('▶️ Continue button clicked');
                 
-                if (!selectedStructureType) {
+                if (!structureState.selectedStructureType) {
                     showNotification('Please select a structure type to continue.', 'warning');
                     return;
                 }
@@ -469,11 +461,29 @@ const StructurePage = (function() {
                     SpaceArchitects.showPage('editor');
                 }
                 
-                console.log('🎨 Navigating to editor with selection:', selectedStructureType);
+                console.log('🎨 Navigating to editor with selection:', structureState.selectedStructureType);
             });
         }
         
         console.log('✅ Navigation setup complete');
+    }
+    
+    /**
+     * Update navigation button states
+     */
+    function updateNavigationState() {
+        console.log('🧭 Updating navigation state...');
+        
+        const continueBtn = document.getElementById('continue-to-editor-btn');
+        const hasSelection = structureState.selectedStructureType !== null;
+        
+        console.log(`Has selection: ${hasSelection}, Button exists: ${!!continueBtn}`);
+        
+        if (continueBtn) {
+            continueBtn.disabled = !hasSelection;
+            continueBtn.classList.toggle('disabled', !hasSelection);
+            console.log(`Continue button enabled: ${hasSelection}`);
+        }
     }
     
     /**
@@ -495,34 +505,35 @@ const StructurePage = (function() {
         const config = structureState.missionConfig;
         if (!config) return;
         
-        updateElement('mission-destination', 
+        updateElementSafely('mission-destination', 
             config.missionType === 'moon' ? '🌙 Luna' : '🔴 Mars');
-        updateElement('mission-crew-size', `${config.crewSize} astronauts`);
-        updateElement('mission-duration', `${config.duration} days`);
+        updateElementSafely('mission-crew-size', `${config.crewSize} astronauts`);
+        updateElementSafely('mission-duration', `${config.duration} days`);
         
         console.log('📋 Mission info updated');
     }
     
     /**
-     * Save structure selections to localStorage
+     * Save structure state to localStorage
      */
     function saveStructureState() {
         try {
             const saveData = {
-                selectedStructureType: selectedStructureType,
-                selectedSize: selectedSize,
+                selectedStructureType: structureState.selectedStructureType,
+                selectedSize: structureState.selectedSize,
+                totalStats: structureState.totalStats,
                 timestamp: Date.now()
             };
             
             localStorage.setItem('spaceArchitects_structure', JSON.stringify(saveData));
-            console.log('💾 Structure state saved:', saveData);
+            console.log('💾 Structure state saved');
         } catch (error) {
             console.error('❌ Failed to save structure state:', error);
         }
     }
     
     /**
-     * Load structure selections from localStorage
+     * Load structure state from localStorage
      */
     function loadStructureState() {
         try {
@@ -531,24 +542,34 @@ const StructurePage = (function() {
                 const saveData = JSON.parse(saved);
                 
                 if (saveData.selectedStructureType) {
-                    selectedStructureType = saveData.selectedStructureType;
-                    selectedSize = saveData.selectedSize || 'medium';
+                    structureState.selectedStructureType = saveData.selectedStructureType;
+                    structureState.selectedSize = saveData.selectedSize || 'medium';
+                    structureState.totalStats = saveData.totalStats || structureState.totalStats;
                     
-                    console.log('📂 Restoring structure state:', saveData);
-                    
-                    // Delay UI restoration to ensure DOM is ready
-                    setTimeout(() => {
-                        updateStructureSelection(selectedStructureType, true);
-                        showSizeConfiguration(selectedStructureType);
-                        calculateSingleStructureStats();
-                        updateNavigationState();
-                    }, 100);
+                    // Restore UI state
+                    updateStructureSelection(structureState.selectedStructureType, true);
+                    showSizeConfiguration(structureState.selectedStructureType);
+                    calculateAndUpdateStats();
+                    updateNavigationState();
                 }
                 
-                console.log('✅ Structure state loaded');
+                console.log('📂 Structure state loaded');
             }
         } catch (error) {
             console.error('❌ Failed to load structure state:', error);
+        }
+    }
+    
+    /**
+     * Utility function to safely update element text content
+     */
+    function updateElementSafely(id, text) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = text;
+            console.log(`✅ Updated ${id}: ${text}`);
+        } else {
+            console.warn(`⚠️ Element not found: ${id}`);
         }
     }
     
@@ -561,24 +582,13 @@ const StructurePage = (function() {
     }
     
     /**
-     * Utility function to update element text content
-     */
-    function updateElement(id, text) {
-        const element = document.getElementById(id);
-        if (element) {
-            element.textContent = text;
-        } else {
-            console.warn(`Element not found: ${id}`);
-        }
-    }
-    
-    /**
      * Get current structure state (for external access)
      */
     function getStructureState() {
         return {
-            selectedStructureType: selectedStructureType,
-            selectedSize: selectedSize,
+            selectedStructureType: structureState.selectedStructureType,
+            selectedSize: structureState.selectedSize,
+            totalStats: { ...structureState.totalStats },
             missionConfig: { ...structureState.missionConfig }
         };
     }
@@ -586,6 +596,8 @@ const StructurePage = (function() {
     // Public API
     return {
         initialize: initialize,
+        selectStructureType: selectStructureType,
+        calculateAndUpdateStats: calculateAndUpdateStats,
         getStructureState: getStructureState,
         saveStructureState: saveStructureState,
         loadStructureState: loadStructureState
@@ -613,4 +625,4 @@ document.addEventListener('navigateToPage', function(event) {
     }
 });
 
-console.log('🏗️ Structure Page module loaded successfully');
+console.log('🏗️ Structure Page module (FIXED VERSION) loaded successfully');

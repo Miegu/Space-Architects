@@ -372,3 +372,4 @@ if (typeof window !== 'undefined') {
 }
 
 console.log('🚀 Space Architects main module loaded successfully');
+
