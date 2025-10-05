@@ -4,7 +4,6 @@ SPACE ARCHITECTS - STRUCTURE PAGE JAVASCRIPT MODULE
 NASA Space Apps Challenge Project
 
 This module handles the habitat structure selection page:
-- 3D module selection with animations
 - Real-time statistics calculations  
 - NASA compliance validation
 - Navigation between config and editor pages
@@ -92,7 +91,7 @@ const StructurePage = (function() {
         
         // Set up event listeners
         setupNavigation();
-        
+        structureState.selectedModules = new Set();
         // Initialize display
         updateMissionInfo();
         calculateSingleStructureStats();
@@ -437,10 +436,10 @@ function getStructureState() {
         
         if (continueBtn) {
             continueBtn.addEventListener('click', function() {
-                if (structureState.selectedModules.size === 0) {
-                    showNotification('Please select at least one module type to continue.', 'warning');
-                    return;
-                }
+                if (!selectedStructureType) {
+                    showNotification('Please select a structure type to continue.', 'warning');
+                      return;
+                 }
                 
                 // Save selections and navigate to editor
                 saveStructureState();
@@ -642,13 +641,13 @@ function getStructureState() {
      * Update navigation button states
      */
     function updateNavigationState() {
-        const continueBtn = document.getElementById('continue-to-editor-btn');
-        const hasSelections = structureState.selectedModules.size > 0;
-        
+         const continueBtn = document.getElementById('continue-to-editor-btn');
+        const hasSelection = selectedStructureType !== null;
+    
         if (continueBtn) {
-            continueBtn.disabled = !hasSelections;
-            continueBtn.classList.toggle('disabled', !hasSelections);
-        }
+        continueBtn.disabled = !hasSelection;
+        continueBtn.classList.toggle('disabled', !hasSelection);
+     }
     }
     
     /**
@@ -683,29 +682,6 @@ function getStructureState() {
         }
     }
     
-    /**
-     * Load structure selections from localStorage
-     */
-    function loadStructureState() {
-        try {
-            const saved = localStorage.getItem('spaceArchitects_structure');
-            if (saved) {
-                const saveData = JSON.parse(saved);
-                
-                // Restore selections
-                structureState.selectedModules = new Set(saveData.selectedModules);
-                structureState.moduleSpecs = saveData.moduleSpecs || {};
-                structureState.totalStats = saveData.totalStats || structureState.totalStats;
-                
-                // Update UI to reflect loaded state
-                restoreUIState();
-                
-                console.log('📂 Structure state loaded');
-            }
-        } catch (error) {
-            console.error('❌ Failed to load structure state:', error);
-        }
-    }
     
     /**
      * Restore UI state from loaded data
