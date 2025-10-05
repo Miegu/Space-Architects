@@ -624,5 +624,19 @@ document.addEventListener('navigateToPage', function(event) {
         }, 100);
     }
 });
-
+function updateValidationItem(itemId, text, isValid) {
+    const element = document.getElementById(itemId);
+    if (element) {
+        element.textContent = text;
+        element.className = isValid ? 'valid' : 'invalid';
+        
+        // Update status indicator
+        const statusEl = document.getElementById(itemId + '-status');
+        if (statusEl) {
+            statusEl.className = isValid ? 'req-status green' : 'req-status red';
+        }
+    } else {
+        console.warn(`⚠️ Validation element not found: ${itemId}`);
+    }
+}
 console.log('🏗️ Structure Page module (FIXED VERSION) loaded successfully');

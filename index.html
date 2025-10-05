@@ -357,19 +357,7 @@ Key fixes implemented:
                         </div>
                         
                         <!-- Cylinder Module -->
-                        <div class="module-card" data-module-type="cylinder">
-                            <div class="module-info">
-                                <h4> Cylinder</h4>
-                                <p class="module-desc">Elongated comet design</p>
-                                <div class="module-specs">
-                                    <div class="spec-item">Aerodynamic transport</div>
-                                    <div class="spec-item">80% space efficiency</div>
-                                </div>
-                            </div>
-                            <div class="module-selector">
-                                <button type="button" class="structure-select-btn" data-module="cylinder">Select</button>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
                 
@@ -682,13 +670,13 @@ function recalculateHabitatStats() {
     const volumePerPerson = habitableVolume / crewSize;
     
     // Update display elements
-    updateElementText('module-dimensions', `${length}m x ${width}m x ${height}m`);
+    updateElementText('module-dimensions', `${length}m × ${width}m × ${height}m`);
     updateElementText('module-volume', `${actualVolume.toFixed(1)} m³`);
     updateElementText('habitable-volume', `${habitableVolume.toFixed(1)} m³`);
     updateElementText('volume-per-person', `${volumePerPerson.toFixed(1)} m³`);
     
     console.log('✅ Statistics updated:', {
-        dimensions: `${length}x${width}x${height}m`,
+        dimensions: `${length}×${width}×${height}m`,
         totalVolume: actualVolume.toFixed(1),
         habitableVolume: habitableVolume.toFixed(1),
         volumePerPerson: volumePerPerson.toFixed(1)
@@ -1674,6 +1662,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+
 function markModuleAsSelected(moduleType, isSelected) {
     const card = document.querySelector(`[data-module-type="${moduleType}"]`);
     const svg = card?.querySelector('.animated-svg');
@@ -1745,7 +1734,6 @@ function updateSelectedModulesSection() {
     
     configSection.innerHTML = configHTML;
     setupSizeSelection();
-    calculateSingleStructureStats();
 }
 
 function setupSizeSelection() {
@@ -1997,7 +1985,5 @@ console.log('  ✅ Estadísticas en tiempo real');
 console.log('  ✅ Efectos visuales mejorados');
 console.log('  ✅ Compatible 100%');
 </script>
-
-
 </body>
 </html>

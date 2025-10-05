@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Architects - Room Layout Editor</title>
+    
+    <!-- External Font Imports (matching your existing style) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Michroma&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Your existing stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/editor.css">
+    <link rel="stylesheet" href="css/additional_styles.css">
+</head>
+<body>
+    <!-- Page Container (consistent with your page structure) -->
+    <div id="editor-page" class="page active">
+        
+        <!-- Space background effects (matching welcome page style) -->
+        <div class="space-background">
+            <div class="stars-layer"></div>
+            <div class="nebula-overlay"></div>
+            <div class="grid-overlay"></div>
+        </div>
+
+        <!-- Progress Indicator (step 4 of 4) -->
+        <div class="progress-indicator">
+            <div class="progress-step completed">1</div>
+            <div class="progress-line completed"></div>
+            <div class="progress-step completed">2</div>
+            <div class="progress-line completed"></div>
+            <div class="progress-step completed">3</div>
+            <div class="progress-line completed"></div>
+            <div class="progress-step active">4</div>
+        </div>
+
+        <!-- Header Section (consistent with your header style) -->
+        <div class="editor-header">
+            <div class="mission-info">
+                <h1>Room Layout Editor</h1>
+                <div class="mission-params">
+                    <div class="param">
+                        <span>Mission:</span> <span id="mission-destination-display">Mars</span>
+                    </div>
+                    <div class="param">
+                        <span>Crew:</span> <span id="mission-crew-display">4 astronauts</span>
+                    </div>
+                    <div class="param">
+                        <span>Duration:</span> <span id="mission-duration-display">60 days</span>
+                    </div>
+                    <div class="param">
+                        <span>Structure:</span> <span id="selected-structure-display">Dome Module</span>
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn--secondary" id="back-to-structure-btn">
+                    ← Back to Structure
+                </button>
+                <button class="btn--primary" id="complete-design-btn" disabled>
+                    Complete Design →
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Editor Layout (3-panel design from your editor.css) -->
+        <div class="editor-layout">
+            
+            <!-- Left Panel: NASA Requirements Dashboard -->
+            <div class="requirements-panel">
+                <h2>🛰️ NASA Standards</h2>
+                <div class="requirements-list">
+                    
+                    <!-- Volume Requirement -->
+                    <div class="requirement-item">
+                        <div class="req-status red" id="volume-status"></div>
+                        <div class="req-content">
+                            <h4>Volume per Astronaut</h4>
+                            <div class="req-value" id="volume-per-person-value">0 / 25 m³</div>
+                            <p class="req-description">Minimum 25m³ per astronaut for mission duration</p>
+                        </div>
+                    </div>
+
+                    <!-- Essential Rooms -->
+                    <div class="requirement-item">
+                        <div class="req-status red" id="essential-rooms-status"></div>
+                        <div class="req-content">
+                            <h4>Essential Modules</h4>
+                            <div class="req-value" id="essential-rooms-value">0 / 6 required</div>
+                            <p class="req-description">Airlock, Life Support, Sleeping, Kitchen, Hygiene, Medical</p>
+                        </div>
+                    </div>
+
+                    <!-- Noise Separation -->
+                    <div class="requirement-item">
+                        <div class="req-status yellow" id="noise-separation-status"></div>
+                        <div class="req-content">
+                            <h4>Noise Separation</h4>
+                            <div class="req-value" id="noise-separation-value">Checking...</div>
+                            <p class="req-description">Gym and machinery away from sleeping quarters</p>
+                        </div>
+                    </div>
+
+                    <!-- Room Adjacency -->
+                    <div class="requirement-item">
+                        <div class="req-status green" id="adjacency-status"></div>
+                        <div class="req-content">
+                            <h4>Room Adjacency</h4>
+                            <div class="req-value" id="adjacency-value">Compliant</div>
+                            <p class="req-description">Kitchen and bathroom not adjacent</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Overall Compliance Score -->
+                <div class="compliance-score">
+                    <h3>Compliance Score</h3>
+                    <div class="score-display">
+                        <span class="score-number" id="compliance-score-number">0</span>
+                        <span class="score-unit">%</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-progress" id="compliance-progress"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center Panel: Design Canvas -->
+            <div class="design-canvas">
+                <div class="canvas-header">
+                    <h2>Habitat Layout</h2>
+                    <div class="canvas-controls">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="grid-toggle" checked>
+                            <span class="toggle-slider"></span>
+                            Grid
+                        </label>
+                        <button class="btn--sm" id="clear-all-btn">Clear All</button>
+                        <button class="btn--sm" id="auto-layout-btn">Auto Layout</button>
+                    </div>
+                </div>
+
+                <!-- Main Habitat Canvas -->
+                <div class="habitat-canvas show-grid" id="habitat-canvas">
+                    <!-- Background grid -->
+                    <div class="canvas-background"></div>
+                    
+                    <!-- Module outline showing habitat boundaries -->
+                    <div class="module-outline" id="module-outline">
+                        <div class="module-label" id="module-outline-label">Dome Module - 144m²</div>
+                    </div>
+
+                    <!-- Drop zones for better UX -->
+                    <div class="drop-zones" id="drop-zones"></div>
+
+                    <!-- Container for placed rooms -->
+                    <div class="placed-rooms" id="placed-rooms"></div>
+                </div>
+
+                <!-- Canvas Information Bar -->
+                <div class="canvas-info">
+                    <div class="info-item">
+                        <strong>Rooms Placed:</strong> <span id="rooms-placed-count">0</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Space Used:</strong> <span id="space-used-percent">0%</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Volume Allocated:</strong> <span id="volume-allocated">0 m³</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Room Catalog -->
+            <div class="rooms-panel">
+                <h2>🏠 Room Modules</h2>
+                <p class="panel-description">Drag rooms into the habitat layout</p>
+
+                <!-- Room Category Filters -->
+                <div class="room-categories">
+                    <button class="category-btn active" data-category="all">All</button>
+                    <button class="category-btn" data-category="essential">Essential</button>
+                    <button class="category-btn" data-category="optional">Optional</button>
+                </div>
+
+                <!-- Scrollable Room Catalog -->
+                <div class="rooms-catalog" id="rooms-catalog">
+                    
+                    <!-- Essential Rooms Section -->
+                    <div class="room-section">
+                        <h3>Essential Modules</h3>
+                        
+                        <!-- Airlock -->
+                        <div class="room-item" draggable="true" data-room-id="airlock" data-category="essential">
+                            <div class="room-color" style="background-color: #4A9EFF;"></div>
+                            <div class="room-icon">🚪</div>
+                            <div class="room-info">
+                                <h4>Airlock</h4>
+                                <p>Entry/exit with spacesuit storage</p>
+                                <p class="room-volume">10m² (2.5 × 4m)</p>
+                            </div>
+                        </div>
+
+                        <!-- Life Support -->
+                        <div class="room-item" draggable="true" data-room-id="life-support" data-category="essential">
+                            <div class="room-color" style="background-color: #FF9800;"></div>
+                            <div class="room-icon">🔄</div>
+                            <div class="room-info">
+                                <h4>Life Support</h4>
+                                <p>ECLSS core, waste management</p>
+                                <p class="room-volume">10m² (2.5 × 4m)</p>
+                            </div>
+                        </div>
+
+                        <!-- Sleeping Quarters -->
+                        <div class="room-item" draggable="true" data-room-id="sleeping" data-category="essential">
+                            <div class="room-color" style="background-color: #4CAF50;"></div>
+                            <div class="room-icon">🛏️</div>
+                            <div class="room-info">
+                                <h4>Sleeping Quarters</h4>
+                                <p>Individual soundproof quarters</p>
+                                <p class="room-volume">6m² individual</p>
+                            </div>
+                        </div>
+
+                        <!-- Kitchen -->
+                        <div class="room-item" draggable="true" data-room-id="kitchen" data-category="essential">
+                            <div class="room-color" style="background-color: #FFC107;"></div>
+                            <div class="room-icon">🍽️</div>
+                            <div class="room-info">
+                                <h4>Kitchen/Dining</h4>
+                                <p>Food prep and eating area</p>
+                                <p class="room-volume">10m² (2.5 × 4m)</p>
+                            </div>
+                        </div>
+
+                        <!-- Hygiene -->
+                        <div class="room-item" draggable="true" data-room-id="hygiene" data-category="essential">
+                            <div class="room-color" style="background-color: #2196F3;"></div>
+                            <div class="room-icon">🚿</div>
+                            <div class="room-info">
+                                <h4>Hygiene</h4>
+                                <p>Toilet, shower, sink facilities</p>
+                                <p class="room-volume">6m² (2 × 3m)</p>
+                            </div>
+                        </div>
+
+                        <!-- Medical -->
+                        <div class="room-item" draggable="true" data-room-id="medical" data-category="essential">
+                            <div class="room-color" style="background-color: #F44336;"></div>
+                            <div class="room-icon">🏥</div>
+                            <div class="room-info">
+                                <h4>Medical</h4>
+                                <p>Basic medical care station</p>
+                                <p class="room-volume">10m² (2.5 × 4m)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Required Rooms Section -->
+                    <div class="room-section">
+                        <h3>Required Modules</h3>
+                        
+                        <!-- Gym -->
+                        <div class="room-item" draggable="true" data-room-id="gym" data-category="optional">
+                            <div class="room-color" style="background-color: #E91E63;"></div>
+                            <div class="room-icon">💪</div>
+                            <div class="room-info">
+                                <h4>Gym</h4>
+                                <p>Exercise equipment area</p>
+                                <p class="room-volume">10m² (2.5 × 4m)</p>
+                            </div>
+                        </div>
+
+                        <!-- Maintenance -->
+                        <div class="room-item" draggable="true" data-room-id="maintenance" data-category="optional">
+                            <div class="room-color" style="background-color: #9C27B0;"></div>
+                            <div class="room-icon">🔧</div>
+                            <div class="room-info">
+                                <h4>Maintenance</h4>
+                                <p>Tools and mission planning</p>
+                                <p class="room-volume">10m² (2.5 × 4m)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Optional Rooms Section -->
+                    <div class="room-section">
+                        <h3>Optional Modules</h3>
+                        
+                        <!-- Storage -->
+                        <div class="room-item" draggable="true" data-room-id="storage" data-category="optional">
+                            <div class="room-color" style="background-color: #795548;"></div>
+                            <div class="room-icon">📦</div>
+                            <div class="room-info">
+                                <h4>Storage</h4>
+                                <p>Additional storage space</p>
+                                <p class="room-volume">6m² (2 × 3m)</p>
+                            </div>
+                        </div>
+
+                        <!-- Laboratory -->
+                        <div class="room-item" draggable="true" data-room-id="laboratory" data-category="optional">
+                            <div class="room-color" style="background-color: #607D8B;"></div>
+                            <div class="room-icon">🔬</div>
+                            <div class="room-info">
+                                <h4>Laboratory</h4>
+                                <p>Experiments and research</p>
+                                <p class="room-volume">10m² (2.5 × 4m)</p>
+                            </div>
+                        </div>
+
+                        <!-- Greenhouse -->
+                        <div class="room-item" draggable="true" data-room-id="greenhouse" data-category="optional">
+                            <div class="room-color" style="background-color: #4CAF50;"></div>
+                            <div class="room-icon">🌱</div>
+                            <div class="room-info">
+                                <h4>Greenhouse</h4>
+                                <p>Plant growth, oxygen generation</p>
+                                <p class="room-volume">10m² (2.5 × 4m)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript Dependencies (matching your module structure) -->
+    <script src="data/nasa_standarts.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/configuration.js"></script>
+    <script src="js/structure.js"></script>
+    <script src="js/rooms.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/editor.js"></script>
+
+    <!-- Editor Page Specific JavaScript -->
+    <script>
+        // Initialize editor when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof HabitatEditor !== 'undefined') {
+                HabitatEditor.initialize();
+            }
+        });
+    </script>
+</body>
+</html>
