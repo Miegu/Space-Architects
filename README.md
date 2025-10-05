@@ -13,7 +13,7 @@ The application allows users to configure the destination (Moon, Mars, or in orb
 
 **GENERAL ACCOMMODATION DESCRIPTION**
 
-Shape: Square and vertical (modular tower type)  
+Shape: Dome, Ring, Cube and vertical (modular tower type)  
 Height per level: 2.5 m  
 Base: 144 m² (12 × 12 m)  
 Usable total volume: 300 m³ per level (12 × 10 × 2.5 m) (central corridor not included)  
