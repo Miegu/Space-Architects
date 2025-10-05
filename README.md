@@ -94,7 +94,7 @@ To ensure sleep quality and privacy, we offer two sleeping quarter options. Both
 **Kitchen and Dining Area**
 
 This area contains:  
-- Small area with compact ovens,  air filters, countertop…  
+- Small area with compact ovens,  air filters, countertop…
 - Table to eat together  
 - Storage for freeze-dried food and water
  
@@ -106,7 +106,7 @@ We offer a 10m² (2.5 × 4 m) kitchen which should be enough for up to 6 people.
 **Hygiene and sanitation**
 
 This area contains:  
-- Toilet cabin  
+- Toilet cabin
 - Shower / Body wash area (air shower for minimal water use)  
 - A sink for handwashing, oral hygiene ..  
 - Full-sized mirror

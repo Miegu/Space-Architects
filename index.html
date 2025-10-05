@@ -3320,19 +3320,6 @@ function updateTotalStatistics() {
     
     const efficiencyRatings = { dome: 85, torus: 70, cube: 95, cylinder: 80 };
     
-    Object.entries(moduleSelection).forEach(([moduleType, data]) => {
-        if (data.selected && data.quantity > 0) {
-            const specs = moduleSpecs[moduleType][data.size];
-            const quantity = data.quantity;
-            const efficiency = efficiencyRatings[moduleType];
-            
-            totalFloorArea += specs.floorArea * quantity;
-            totalVolume += specs.volume * quantity;
-            totalCrewCapacity += specs.crewCapacity * quantity;
-            weightedEfficiency += efficiency * specs.volume * quantity;
-        }
-    });
-    
     const avgEfficiency = totalVolume > 0 ? Math.round(weightedEfficiency / totalVolume) : 0;
     
     updateElementText('total-floor-area', `${totalFloorArea.toFixed(1)} m²`);
