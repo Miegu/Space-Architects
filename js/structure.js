@@ -11,10 +11,6 @@ This module handles the habitat structure selection page:
 ===============================================================================
 */
 
-/**
- * Structure page module for managing habitat module selection
- * Handles 3D animations, statistics, and NASA standards compliance
- */
 const StructurePage = (function() {
     'use strict';
     
@@ -43,17 +39,7 @@ const StructurePage = (function() {
                 small: { diameter: 6, floorArea: 28.3, volume: 113.1 },
                 medium: { diameter: 8, floorArea: 50.3, volume: 268.1 },
                 large: { diameter: 10, floorArea: 78.5, volume: 523.6 }
-            },
-            advantages: [
-                'Optimal pressure distribution',
-                'Excellent structural efficiency',
-                'Minimal material usage'
-            ],
-            nasaFacts: [
-                'Spherical shapes distribute pressure loads evenly',
-                'Used in pressure vessel design since early space programs',
-                'Minimizes stress concentrations in pressurized environments'
-            ]
+            }
         },
         torus: {
             id: 'torus',
@@ -65,17 +51,7 @@ const StructurePage = (function() {
                 small: { diameter: 8, floorArea: 35.2, volume: 176.0 },
                 medium: { diameter: 12, floorArea: 79.2, volume: 592.7 },
                 large: { diameter: 16, floorArea: 140.8, volume: 1407.4 }
-            },
-            advantages: [
-                'Artificial gravity via rotation',
-                'Natural separation of functions',
-                'Psychologically familiar layout'
-            ],
-            nasaFacts: [
-                'Rotation creates artificial gravity through centrifugal force',
-                'Studied extensively for long-duration missions',
-                'Requires careful balance of rotation rate and radius'
-            ]
+            }
         },
         cube: {
             id: 'cube',
@@ -87,17 +63,7 @@ const StructurePage = (function() {
                 small: { width: 6, length: 6, height: 3, floorArea: 36, volume: 108 },
                 medium: { width: 8, length: 8, height: 3, floorArea: 64, volume: 192 },
                 large: { width: 10, length: 10, height: 3, floorArea: 100, volume: 300 }
-            },
-            advantages: [
-                'Maximum volume efficiency',
-                'Easy modular connections',
-                'Familiar architectural form'
-            ],
-            nasaFacts: [
-                'Rectangular forms maximize usable interior space',
-                'Standard modular approach used on ISS',
-                '95% volume efficiency is optimal for space habitats'
-            ]
+            }
         },
         cylinder: {
             id: 'cylinder',
@@ -109,17 +75,7 @@ const StructurePage = (function() {
                 small: { diameter: 4, length: 8, floorArea: 32, volume: 100.5 },
                 medium: { diameter: 6, length: 10, floorArea: 60, volume: 282.7 },
                 large: { diameter: 8, length: 12, floorArea: 96, volume: 603.2 }
-            },
-            advantages: [
-                'Aerodynamic for transport',
-                'Good structural efficiency',
-                'Easy to manufacture'
-            ],
-            nasaFacts: [
-                'Cylindrical modules are transport-optimized',
-                'Used in most current spacecraft designs',
-                'Structural efficiency good for launch loads'
-            ]
+            }
         }
     };
     
@@ -165,28 +121,43 @@ const StructurePage = (function() {
     }
     
     /**
-     * Set up module selection event handlers
+     * Set up module selection event handlers - FIXED VERSION
      */
     function setupModuleSelection() {
         const moduleCards = document.querySelectorAll('.module-card');
         
         moduleCards.forEach(card => {
             const moduleId = card.dataset.moduleType;
-            const checkbox = card.querySelector('.module-checkbox');
             
-            // Card click handler
-            card.addEventListener('click', function(e) {
-                if (e.target.type !== 'checkbox') {
-                    checkbox.checked = !checkbox.checked;
-                    handleModuleSelection(moduleId, checkbox.checked);
+            // Handle quantity button clicks if they exist
+            const quantityButtons = card.querySelectorAll('.quantity-btn');
+            if (quantityButtons.length > 0) {
+                quantityButtons.forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const moduleType = this.dataset.module;
+                        const isPlus = this.classList.contains('plus');
+                        handleQuantityChange(moduleType, isPlus ? 1 : -1);
+                    });
+                });
+            } else {
+                // Fallback to checkbox system if quantity buttons don't exist
+                const checkbox = card.querySelector('.module-checkbox');
+                if (checkbox) {
+                    // Card click handler
+                    card.addEventListener('click', function(e) {
+                        if (e.target.type !== 'checkbox') {
+                            checkbox.checked = !checkbox.checked;
+                            handleModuleSelection(moduleId, checkbox.checked);
+                        }
+                    });
+                    
+                    // Checkbox change handler
+                    checkbox.addEventListener('change', function() {
+                        handleModuleSelection(moduleId, this.checked);
+                    });
                 }
-            });
-            
-            // Checkbox change handler
-            if (quantityBtn) {
-            checkbox.addEventListener('change', function() {
-                handleModuleSelection(moduleId, this.checked);
-            });
+            }
             
             // Hover animations
             card.addEventListener('mouseenter', function() {
@@ -196,25 +167,71 @@ const StructurePage = (function() {
             card.addEventListener('mouseleave', function() {
                 stopModuleAnimation(moduleId);
             });
-        }
-    });
+        });
     }
     
     /**
-     * Handle module selection/deselection
+     * Handle quantity changes for modules
+     */
+    function handleQuantityChange(moduleId, change) {
+        const currentQuantity = getCurrentQuantity(moduleId);
+        const newQuantity = Math.max(0, Math.min(5, currentQuantity + change));
+        
+        if (newQuantity !== currentQuantity) {
+            updateQuantityDisplay(moduleId, newQuantity);
+            
+            if (newQuantity > 0) {
+                handleModuleSelection(moduleId, true);
+                if (!structureState.moduleSpecs[moduleId]) {
+                    structureState.moduleSpecs[moduleId] = {
+                        id: moduleId,
+                        size: 'medium',
+                        quantity: newQuantity,
+                        specs: MODULE_CATALOG[moduleId].sizes.medium
+                    };
+                } else {
+                    structureState.moduleSpecs[moduleId].quantity = newQuantity;
+                }
+            } else {
+                handleModuleSelection(moduleId, false);
+            }
+        }
+    }
+    
+    /**
+     * Get current quantity for a module
+     */
+    function getCurrentQuantity(moduleId) {
+        const display = document.getElementById(`qty-${moduleId}`);
+        return display ? parseInt(display.textContent) || 0 : 0;
+    }
+    
+    /**
+     * Update quantity display
+     */
+    function updateQuantityDisplay(moduleId, quantity) {
+        const display = document.getElementById(`qty-${moduleId}`);
+        if (display) {
+            display.textContent = quantity;
+        }
+    }
+    
+    /**
+     * Handle module selection/deselection - IMPROVED VERSION
      */
     function handleModuleSelection(moduleId, isSelected) {
         const card = document.querySelector(`[data-module-type="${moduleId}"]`);
         
         if (isSelected) {
             structureState.selectedModules.add(moduleId);
-            card.classList.add('selected');
+            if (card) card.classList.add('selected');
             
             // Initialize with medium size by default
             if (!structureState.moduleSpecs[moduleId]) {
                 structureState.moduleSpecs[moduleId] = {
                     id: moduleId,
                     size: 'medium',
+                    quantity: getCurrentQuantity(moduleId) || 1,
                     specs: MODULE_CATALOG[moduleId].sizes.medium
                 };
             }
@@ -222,7 +239,7 @@ const StructurePage = (function() {
             showModuleConfiguration(moduleId);
         } else {
             structureState.selectedModules.delete(moduleId);
-            card.classList.remove('selected');
+            if (card) card.classList.remove('selected');
             delete structureState.moduleSpecs[moduleId];
             hideModuleConfiguration(moduleId);
         }
@@ -240,11 +257,14 @@ const StructurePage = (function() {
     function setupSizeSelectors() {
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('size-btn')) {
-                const moduleId = e.target.closest('.module-config-item').dataset.moduleId;
+                const configItem = e.target.closest('.module-config-item');
+                if (!configItem) return;
+                
+                const moduleId = configItem.dataset.moduleId;
                 const size = e.target.dataset.size;
                 
                 // Update active size button
-                const sizeButtons = e.target.parentNode.querySelectorAll('.size-btn');
+                const sizeButtons = configItem.querySelectorAll('.size-btn');
                 sizeButtons.forEach(btn => btn.classList.remove('active'));
                 e.target.classList.add('active');
                 
@@ -275,10 +295,6 @@ const StructurePage = (function() {
                 // Navigate back to config
                 if (typeof SpaceArchitects !== 'undefined') {
                     SpaceArchitects.showPage('config');
-                } else {
-                    // Fallback navigation
-                    document.getElementById('structure-page').classList.remove('active');
-                    document.getElementById('config-page').classList.add('active');
                 }
             });
         }
@@ -295,10 +311,6 @@ const StructurePage = (function() {
                 
                 if (typeof SpaceArchitects !== 'undefined') {
                     SpaceArchitects.showPage('editor');
-                } else {
-                    // Fallback navigation
-                    document.getElementById('structure-page').classList.remove('active');
-                    document.getElementById('editor-page').classList.add('active');
                 }
                 
                 console.log('🎨 Navigating to editor with selections:', structureState.selectedModules);
@@ -310,8 +322,6 @@ const StructurePage = (function() {
      * Set up 3D animation effects
      */
     function setupAnimations() {
-        // 3D rotation animations are handled by CSS
-        // This function could add additional interactive animations
         console.log('🎭 3D animations initialized');
     }
     
@@ -326,7 +336,7 @@ const StructurePage = (function() {
     }
     
     /**
-     * Stop module 3D animation  
+     * Stop module 3D animation 
      */
     function stopModuleAnimation(moduleId) {
         const moduleVisual = document.querySelector(`[data-module-type="${moduleId}"] .module-3d`);
@@ -342,21 +352,29 @@ const StructurePage = (function() {
         const configSection = document.getElementById('selected-modules-section');
         if (!configSection) return;
         
+        // Check if already exists
+        if (document.querySelector(`[data-module-id="${moduleId}"]`)) return;
+        
         const module = MODULE_CATALOG[moduleId];
         const configItem = document.createElement('div');
         configItem.className = 'module-config-item';
         configItem.dataset.moduleId = moduleId;
         
         configItem.innerHTML = `
-            <div class="config-module-name">${module.icon} ${module.name}</div>
-            <div class="size-selector">
-                <button class="size-btn" data-size="small">Small</button>
-                <button class="size-btn active" data-size="medium">Medium</button>
-                <button class="size-btn" data-size="large">Large</button>
+            <div class="module-header">
+                <span>${module.icon} ${module.name}</span>
+                <span class="module-quantity">Qty: ${structureState.moduleSpecs[moduleId]?.quantity || 1}</span>
+            </div>
+            <div class="size-selection">
+                <label>Size:</label>
+                <button type="button" class="size-btn active" data-size="small">Small</button>
+                <button type="button" class="size-btn" data-size="medium">Medium</button>
+                <button type="button" class="size-btn" data-size="large">Large</button>
             </div>
         `;
         
         configSection.appendChild(configItem);
+        configSection.style.display = 'block';
     }
     
     /**
@@ -366,6 +384,12 @@ const StructurePage = (function() {
         const configItem = document.querySelector(`[data-module-id="${moduleId}"]`);
         if (configItem) {
             configItem.remove();
+        }
+        
+        // Hide section if no modules selected
+        const configSection = document.getElementById('selected-modules-section');
+        if (configSection && structureState.selectedModules.size === 0) {
+            configSection.style.display = 'none';
         }
     }
     
@@ -382,11 +406,12 @@ const StructurePage = (function() {
         for (const [moduleId, moduleSpec] of Object.entries(structureState.moduleSpecs)) {
             const specs = moduleSpec.specs;
             const efficiency = MODULE_CATALOG[moduleId].efficiency;
+            const quantity = moduleSpec.quantity || 1;
             
-            totalFloorArea += specs.floorArea || 0;
-            totalVolume += specs.volume || 0;
-            weightedEfficiency += efficiency * (specs.volume || 0);
-            totalModules++;
+            totalFloorArea += (specs.floorArea || 0) * quantity;
+            totalVolume += (specs.volume || 0) * quantity;
+            weightedEfficiency += efficiency * (specs.volume || 0) * quantity;
+            totalModules += quantity;
         }
         
         // Calculate crew capacity based on NASA standards
@@ -417,7 +442,7 @@ const StructurePage = (function() {
         const duration = structureState.missionConfig?.duration || 60;
         
         if (duration <= 30) return 20; // Short missions
-        if (duration <= 90) return 25; // Medium missions  
+        if (duration <= 90) return 25; // Medium missions 
         if (duration <= 180) return 30; // Long missions
         return 40; // Permanent habitation
     }
@@ -579,10 +604,19 @@ const StructurePage = (function() {
             const checkbox = document.querySelector(`[data-module="${moduleId}"]`);
             const card = document.querySelector(`[data-module-type="${moduleId}"]`);
             
-            if (checkbox && card) {
-                checkbox.checked = true;
+            if (card) {
                 card.classList.add('selected');
                 showModuleConfiguration(moduleId);
+            }
+            
+            if (checkbox) {
+                checkbox.checked = true;
+            }
+            
+            // Update quantity display if exists
+            const moduleSpec = structureState.moduleSpecs[moduleId];
+            if (moduleSpec && moduleSpec.quantity) {
+                updateQuantityDisplay(moduleId, moduleSpec.quantity);
             }
         });
         

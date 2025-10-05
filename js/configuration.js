@@ -1,14 +1,16 @@
-/* ==========================================================================
-   SPACE ARCHITECTS - CONFIGURATION MODULE
-   NASA Space Apps Challenge Project
-   
-   This module handles:
-   - Mission parameter selection (type, crew, duration)
-   - Dynamic module dimension calculations
-   - Configuration page interactions
-   - Data persistence between pages
-   - Real-time preview updates
-   ========================================================================== */
+/*
+=============================================================================
+SPACE ARCHITECTS - CONFIGURATION MODULE
+NASA Space Apps Challenge Project
+
+This module handles:
+- Mission parameter selection (type, crew, duration)
+- Dynamic module dimension calculations
+- Configuration page interactions
+- Data persistence between pages
+- Real-time preview updates
+=============================================================================
+*/
 
 /**
  * Configuration module for managing mission parameters
@@ -19,42 +21,42 @@ const MissionConfig = (function() {
     
     // Private variables - encapsulated within the module
     let currentConfig = {
-        missionType: 'moon',           // 'moon' or 'mars'
-        crewSize: 4,                   // Number of astronauts (2-6)
-        duration: 60,                  // Mission duration in days
-        moduleType: 'rectangular'       // Module shape (only rectangular for MVP)
+        missionType: 'moon', // 'moon' or 'mars'
+        crewSize: 4, // Number of astronauts (2-6)
+        duration: 60, // Mission duration in days
+        moduleType: 'rectangular' // Module shape (only rectangular for MVP)
     };
     
     // NASA standards and calculations
     const NASA_STANDARDS = {
         // Volume requirements per person based on mission duration
         volumePerPerson: {
-            short: 20,      // < 30 days
-            medium: 25,     // 30-90 days  
-            long: 30,       // 90+ days
-            permanent: 40   // 180+ days
+            short: 20, // < 30 days
+            medium: 25, // 30-90 days 
+            long: 30, // 90+ days
+            permanent: 40 // 180+ days
         },
         
         // Module efficiency factor (usable space vs total space)
-        moduleEfficiency: 0.70,        // 70% of space is habitable, 30% for systems
+        moduleEfficiency: 0.70, // 70% of space is habitable, 30% for systems
         
         // Standard module height for all habitats
-        standardHeight: 2.5,           // meters
+        standardHeight: 2.5, // meters
         
         // Optimal length-to-width ratio for rectangular modules
-        optimalRatio: 1.5,             // length / width
+        optimalRatio: 1.5, // length / width
         
         // Environmental factors by destination
         environmental: {
             moon: {
-                gravity: 0.167,        // 1/6 Earth gravity
+                gravity: 0.167, // 1/6 Earth gravity
                 radiationShielding: 1.2, // 20% additional shielding needed
-                thermalRequirement: 1.1   // 10% additional insulation
+                thermalRequirement: 1.1 // 10% additional insulation
             },
             mars: {
-                gravity: 0.378,        // 3/8 Earth gravity  
-                radiationShielding: 1.1,  // 10% additional shielding
-                thermalRequirement: 1.05  // 5% additional insulation
+                gravity: 0.378, // 3/8 Earth gravity 
+                radiationShielding: 1.1, // 10% additional shielding
+                thermalRequirement: 1.05 // 5% additional insulation
             }
         }
     };
@@ -168,7 +170,7 @@ const MissionConfig = (function() {
      * 
      * @param {Object} newConfig - New configuration values to merge
      */
-    function updateConfig(newConfig) {
+    function updateConfiguration(newConfig) {
         console.log('⚙️ Updating mission configuration:', newConfig);
         
         // Merge new config with current config
@@ -182,6 +184,9 @@ const MissionConfig = (function() {
         
         // Save to localStorage for persistence
         saveConfig();
+        
+        // Update displays
+        updateModulePreview();
         
         // Trigger configuration update event
         document.dispatchEvent(new CustomEvent('configurationUpdated', {
@@ -231,21 +236,6 @@ const MissionConfig = (function() {
             console.error('❌ Failed to save configuration:', error);
         }
     }
-        const generateBtn = document.getElementById('generate-habitat-btn');
-    if (generateBtn) {
-        generateBtn.addEventListener('click', function() {
-            console.log('🏗️ Going to structure selection...');
-            
-            this.disabled = true;
-            this.textContent = 'Loading...';
-            
-            setTimeout(() => {
-                SpaceArchitects.showPage('structure'); // Change from 'editor' to 'structure'
-                this.disabled = false;
-                this.textContent = 'Generate Habitat Module →';
-            }, 500);
-        });
-    }
     
     /**
      * Load configuration from localStorage
@@ -268,36 +258,67 @@ const MissionConfig = (function() {
     }
     
     /**
-     * Initialize the configuration page interactions
+     * Initialize the configuration page interactions - FIXED VERSION
      */
     function initializeConfigPage() {
         console.log('🚀 Initializing configuration page...');
         
-        // Get DOM elements
-        const missionTypeSelect = document.getElementById('mission-type');
-        const crewSizeSlider = document.getElementById('crew-size');
-        const crewSizeDisplay = document.getElementById('crew-size-display');
-        const durationRadios = document.querySelectorAll('input[name="duration"]');
+        // Use a more robust element finding approach with retries
+        const maxRetries = 5;
+        let retryCount = 0;
         
-        // Module preview elements
-        const dimensionsDisplay = document.getElementById('module-dimensions');
-        const volumeDisplay = document.getElementById('module-volume');
-        const habitableVolumeDisplay = document.getElementById('habitable-volume');
-        const volumePerPersonDisplay = document.getElementById('volume-per-person');
-        
-        // Action buttons
-        const generateBtn = document.getElementById('generate-habitat-btn');
-        const backBtn = document.getElementById('back-to-welcome');
-        
-        if (!missionTypeSelect || !crewSizeSlider) {
-            console.error('❌ Configuration page elements not found');
-            return;
+        function tryInitialize() {
+            const elementsFound = findAndSetupElements();
+            
+            if (elementsFound) {
+                console.log('✅ Configuration page initialized successfully');
+                return;
+            }
+            
+            retryCount++;
+            if (retryCount < maxRetries) {
+                console.log(`🔄 Retry ${retryCount}/${maxRetries} - Elements not found, retrying...`);
+                setTimeout(tryInitialize, 200);
+            } else {
+                console.error('❌ Configuration page elements not found after multiple retries');
+            }
         }
         
+        tryInitialize();
+    }
+    
+    /**
+     * Find and setup configuration page elements - IMPROVED VERSION
+     */
+    function findAndSetupElements() {
+        // Get DOM elements with better fallback handling
+        const missionTypeSelect = document.getElementById('mission-type') || 
+                                 document.querySelector('select[name="mission-type"]');
+        const crewSizeSlider = document.getElementById('crew-size') ||
+                              document.querySelector('input[type="range"]');
+        const crewSizeDisplay = document.getElementById('crew-size-display') ||
+                               document.querySelector('.crew-size-display');
+        const durationRadios = document.querySelectorAll('input[name="duration"]');
+        
+        // Check if essential elements exist
+        if (!missionTypeSelect || !crewSizeSlider) {
+            return false; // Elements not found, will retry
+        }
+        
+        console.log('🎯 Configuration elements found, setting up...');
+        
         // Set initial values from current config
-        missionTypeSelect.value = currentConfig.missionType;
-        crewSizeSlider.value = currentConfig.crewSize;
-        crewSizeDisplay.textContent = currentConfig.crewSize;
+        if (missionTypeSelect) {
+            missionTypeSelect.value = currentConfig.missionType;
+        }
+        
+        if (crewSizeSlider) {
+            crewSizeSlider.value = currentConfig.crewSize;
+        }
+        
+        if (crewSizeDisplay) {
+            crewSizeDisplay.textContent = currentConfig.crewSize;
+        }
         
         // Set duration radio button
         const durationRadio = document.querySelector(`input[name="duration"][value="${currentConfig.duration}"]`);
@@ -308,59 +329,102 @@ const MissionConfig = (function() {
         // Update preview with initial values
         updateModulePreview();
         
+        // Set up event listeners
+        setupEventListeners(missionTypeSelect, crewSizeSlider, crewSizeDisplay, durationRadios);
+        
+        return true; // Success
+    }
+    
+    /**
+     * Setup event listeners for configuration elements
+     */
+    function setupEventListeners(missionTypeSelect, crewSizeSlider, crewSizeDisplay, durationRadios) {
         // Mission type change handler
-        missionTypeSelect.addEventListener('change', function() {
-            updateConfig({ missionType: this.value });
-            updateModulePreview();
-        });
+        if (missionTypeSelect) {
+            missionTypeSelect.addEventListener('change', function() {
+                updateConfiguration({ missionType: this.value });
+            });
+        }
         
         // Crew size slider handler
-        crewSizeSlider.addEventListener('input', function() {
-            const size = parseInt(this.value);
-            crewSizeDisplay.textContent = size;
-            updateConfig({ crewSize: size });
-            updateModulePreview();
-        });
+        if (crewSizeSlider) {
+            crewSizeSlider.addEventListener('input', function() {
+                const size = parseInt(this.value);
+                if (crewSizeDisplay) {
+                    crewSizeDisplay.textContent = size;
+                }
+                updateConfiguration({ crewSize: size });
+            });
+        }
         
         // Duration radio button handlers
         durationRadios.forEach(radio => {
             radio.addEventListener('change', function() {
                 if (this.checked) {
-                    updateConfig({ duration: parseInt(this.value) });
-                    updateModulePreview();
+                    updateConfiguration({ duration: parseInt(this.value) });
                 }
             });
         });
         
+        // Setup navigation buttons
+        setupNavigationButtons();
+        
+        console.log('🎛️ Event listeners configured');
+    }
+    
+    /**
+     * Setup navigation button handlers
+     */
+    function setupNavigationButtons() {
         // Generate habitat button
+        const generateBtn = document.getElementById('generate-habitat-btn') ||
+                           document.querySelector('.generate-btn');
+        
         if (generateBtn) {
             generateBtn.addEventListener('click', function() {
-                console.log('🏗️ Generating habitat with config:', currentConfig);
+                console.log('🏗️ Going to structure selection...');
+                
+                // Save current config before navigation
+                saveConfig();
                 
                 // Show loading state
+                const originalText = this.textContent;
                 this.disabled = true;
-                this.textContent = 'Generating...';
+                this.textContent = 'Loading...';
                 
-                // Simulate brief loading for better UX
                 setTimeout(() => {
-                    // Navigate to editor page
-                    document.dispatchEvent(new CustomEvent('navigateToPage', {
-                        detail: { page: 'editor' }
-                    }));
+                    // Navigate to structure page
+                    if (typeof SpaceArchitects !== 'undefined') {
+                        SpaceArchitects.showPage('structure');
+                    } else {
+                        console.warn('SpaceArchitects not available, using fallback navigation');
+                        // Fallback navigation
+                        document.getElementById('config-page')?.classList.remove('active');
+                        document.getElementById('structure-page')?.classList.add('active');
+                    }
+                    
+                    // Reset button
+                    this.disabled = false;
+                    this.textContent = originalText;
                 }, 500);
             });
         }
         
         // Back to welcome button
+        const backBtn = document.getElementById('back-to-welcome') ||
+                       document.querySelector('.back-btn');
+        
         if (backBtn) {
             backBtn.addEventListener('click', function() {
-                document.dispatchEvent(new CustomEvent('navigateToPage', {
-                    detail: { page: 'welcome' }
-                }));
+                if (typeof SpaceArchitects !== 'undefined') {
+                    SpaceArchitects.showPage('welcome');
+                } else {
+                    // Fallback navigation
+                    document.getElementById('config-page')?.classList.remove('active');
+                    document.getElementById('welcome-page')?.classList.add('active');
+                }
             });
         }
-        
-        console.log('✅ Configuration page initialized');
     }
     
     /**
@@ -369,35 +433,31 @@ const MissionConfig = (function() {
     function updateModulePreview() {
         const dimensions = calculateModuleDimensions(currentConfig);
         
-        // Update display elements
-        const dimensionsEl = document.getElementById('module-dimensions');
-        const volumeEl = document.getElementById('module-volume');
-        const habitableVolumeEl = document.getElementById('habitable-volume');
-        const volumePerPersonEl = document.getElementById('volume-per-person');
-        
-        if (dimensionsEl) {
-            dimensionsEl.textContent = `${dimensions.length}m × ${dimensions.width}m × ${dimensions.height}m`;
-        }
-        
-        if (volumeEl) {
-            volumeEl.textContent = `${dimensions.totalVolume.toFixed(1)} m³`;
-        }
-        
-        if (habitableVolumeEl) {
-            habitableVolumeEl.textContent = `${dimensions.habitableVolume.toFixed(1)} m³`;
-        }
-        
-        if (volumePerPersonEl) {
-            volumePerPersonEl.textContent = `${dimensions.volumePerPerson.toFixed(1)} m³`;
-        }
+        // Update display elements with better error handling
+        updateElementSafely('module-dimensions', `${dimensions.length}m × ${dimensions.width}m × ${dimensions.height}m`);
+        updateElementSafely('module-volume', `${dimensions.totalVolume.toFixed(1)} m³`);
+        updateElementSafely('habitable-volume', `${dimensions.habitableVolume.toFixed(1)} m³`);
+        updateElementSafely('volume-per-person', `${dimensions.volumePerPerson.toFixed(1)} m³`);
         
         console.log('📊 Module preview updated');
     }
     
     /**
+     * Safely update element text content
+     */
+    function updateElementSafely(id, text) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = text;
+        } else {
+            console.debug(`Element ${id} not found for update`);
+        }
+    }
+    
+    /**
      * Get mission type information
      * 
-     * @param {string} type - Mission type ('luna' or 'mars')
+     * @param {string} type - Mission type ('moon' or 'mars')
      * @returns {Object} Mission type details
      */
     function getMissionTypeInfo(type) {
@@ -427,7 +487,7 @@ const MissionConfig = (function() {
     // Public API - methods available to other modules
     return {
         // Configuration management
-        updateConfig: updateConfig,
+        updateConfig: updateConfiguration,
         getCurrentConfig: () => ({ ...currentConfig }), // Return copy to prevent mutation
         loadConfig: loadConfig,
         saveConfig: saveConfig,
@@ -440,7 +500,7 @@ const MissionConfig = (function() {
         
         // Data access
         getMissionOptions: () => ({ ...MISSION_OPTIONS }), // Return copy
-        getNASAStandards: () => ({ ...NASA_STANDARDS }),   // Return copy
+        getNASAStandards: () => ({ ...NASA_STANDARDS }), // Return copy
         getMissionTypeInfo: getMissionTypeInfo,
         getCrewSizeInfo: getCrewSizeInfo, 
         getDurationInfo: getDurationInfo,
@@ -461,10 +521,12 @@ if (typeof window !== 'undefined') {
     window.MissionConfig = MissionConfig;
 }
 
-/* ==========================================================================
-   MODULE INITIALIZATION
-   Auto-initialize when DOM is ready
-   ========================================================================== */
+/*
+=============================================================================
+MODULE INITIALIZATION
+Auto-initialize when DOM is ready
+=============================================================================
+*/
 
 // Auto-initialize configuration when DOM loads
 document.addEventListener('DOMContentLoaded', function() {
@@ -472,8 +534,11 @@ document.addEventListener('DOMContentLoaded', function() {
     MissionConfig.loadConfig();
     
     // Initialize config page if we're on it
-    if (document.getElementById('config-page')) {
-        MissionConfig.initializeConfigPage();
+    if (document.getElementById('config-page')?.classList.contains('active')) {
+        // Delay initialization to ensure all elements are rendered
+        setTimeout(() => {
+            MissionConfig.initializeConfigPage();
+        }, 100);
     }
 });
 
@@ -483,7 +548,16 @@ document.addEventListener('navigateToPage', function(event) {
         // Small delay to ensure page is shown
         setTimeout(() => {
             MissionConfig.initializeConfigPage();
-        }, 100);
+        }, 200);
+    }
+});
+
+// Listen for SpaceArchitects page changes
+document.addEventListener('pageChanged', function(event) {
+    if (event.detail.to === 'config') {
+        setTimeout(() => {
+            MissionConfig.initializeConfigPage();
+        }, 200);
     }
 });
 
