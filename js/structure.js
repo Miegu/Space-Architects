@@ -90,9 +90,7 @@ const StructurePage = (function() {
         
         // Set up event listeners
         setupModuleSelection();
-        setupSizeSelectors(); 
         setupNavigation();
-        setupAnimations();
         
         // Initialize display
         updateMissionInfo();
@@ -121,164 +119,310 @@ const StructurePage = (function() {
     }
     
     /**
-     * Set up module selection event handlers - FIXED VERSION
+     * Set up module selection event handlers 
      */
+    let selectedStructureType = null;
+    let selectedSize = 'medium'; // default size
     function setupModuleSelection() {
-        const moduleCards = document.querySelectorAll('.module-card');
-        
-        moduleCards.forEach(card => {
-            const moduleId = card.dataset.moduleType;
-            
-            // Handle quantity button clicks if they exist
-            const quantityButtons = card.querySelectorAll('.quantity-btn');
-            if (quantityButtons.length > 0) {
-                quantityButtons.forEach(button => {
-                    button.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const moduleType = this.dataset.module;
-                        const isPlus = this.classList.contains('plus');
-                        handleQuantityChange(moduleType, isPlus ? 1 : -1);
-                    });
-                });
-            } else {
-                // Fallback to checkbox system if quantity buttons don't exist
-                const checkbox = card.querySelector('.module-checkbox');
-                if (checkbox) {
-                    // Card click handler
-                    card.addEventListener('click', function(e) {
-                        if (e.target.type !== 'checkbox') {
-                            checkbox.checked = !checkbox.checked;
-                            handleModuleSelection(moduleId, checkbox.checked);
-                        }
-                    });
-                    
-                    // Checkbox change handler
-                    checkbox.addEventListener('change', function() {
-                        handleModuleSelection(moduleId, this.checked);
-                    });
-                }
-            }
-            
-            // Hover animations
-            card.addEventListener('mouseenter', function() {
-                startModuleAnimation(moduleId);
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                stopModuleAnimation(moduleId);
-            });
+    const selectButtons = document.querySelectorAll('.structure-select-btn');
+    
+    selectButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const moduleType = this.dataset.module;
+            selectStructureType(moduleType);
         });
+    });
+    
+    console.log('🏗️ Simplified structure selection initialized');
+}
+
+    
+   function selectStructureType(moduleType) {
+    console.log(`🏠 Selecting structure type: ${moduleType}`);
+    
+    // If same type is selected, do nothing
+    if (selectedStructureType === moduleType) {
+        return;
     }
     
-    /**
-     * Handle quantity changes for modules
-     */
-    function handleQuantityChange(moduleId, change) {
-        const currentQuantity = getCurrentQuantity(moduleId);
-        const newQuantity = Math.max(0, Math.min(5, currentQuantity + change));
-        
-        if (newQuantity !== currentQuantity) {
-            updateQuantityDisplay(moduleId, newQuantity);
+    // Deselect previous selection
+    if (selectedStructureType) {
+        deselectStructureType(selectedStructureType);
+    }
+    
+    // Select new type
+    selectedStructureType = moduleType;
+    
+    // Update visual feedback
+    updateStructureSelection(moduleType, true);
+    
+    // Show size configuration for selected structure
+    showSizeConfiguration(moduleType);
+    
+    // Update navigation state
+    updateNavigationState();
+    
+    // Calculate stats for single structure
+    calculateSingleStructureStats();
+}
+
+/**
+ * Deselect a structure type
+ */
+function deselectStructureType(moduleType) {
+    updateStructureSelection(moduleType, false);
+    hideSizeConfiguration();
+}
+
+/**
+ * Update visual feedback for structure selection
+ */
+function updateStructureSelection(moduleType, isSelected) {
+    const card = document.querySelector(`[data-module-type="${moduleType}"]`);
+    const button = card?.querySelector('.structure-select-btn');
+    
+    if (!card || !button) return;
+    
+    if (isSelected) {
+        // Add green glow effect
+        card.classList.add('selected');
+        card.style.borderColor = '#00ff88';
+        card.style.boxShadow = '0 0 25px rgba(0, 255, 136, 0.6)';
+        button.textContent = 'Selected';
+        button.style.backgroundColor = '#00ff88';
+        button.style.color = '#000';
+    } else {
+        // Remove selection effects
+        card.classList.remove('selected');
+        card.style.borderColor = '';
+        card.style.boxShadow = '';
+        button.textContent = 'Select';
+        button.style.backgroundColor = '';
+        button.style.color = '';
+    }
+}
+
+/**
+ * Show size configuration for selected structure
+ */
+function showSizeConfiguration(moduleType) {
+    const configSection = document.getElementById('selected-modules-section');
+    if (!configSection) return;
+    
+    const module = MODULE_CATALOG[moduleType];
+    
+    configSection.innerHTML = `
+        <h3 class="section-title">Configure Selected Structure</h3>
+        <div class="structure-config-item" data-module-id="${moduleType}">
+            <div class="structure-config-header">
+                <span class="structure-name">${module.icon} ${module.name}</span>
+                <span class="structure-badge">Selected</span>
+            </div>
+            <div class="size-selection">
+                <span class="size-label">Size:</span>
+                <div class="size-buttons">
+                    <button type="button" class="size-btn ${selectedSize === 'small' ? 'active' : ''}" 
+                            data-module="${moduleType}" data-size="small">Small</button>
+                    <button type="button" class="size-btn ${selectedSize === 'medium' ? 'active' : ''}" 
+                            data-module="${moduleType}" data-size="medium">Medium</button>
+                    <button type="button" class="size-btn ${selectedSize === 'large' ? 'active' : ''}" 
+                            data-module="${moduleType}" data-size="large">Large</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    configSection.style.display = 'block';
+    setupSizeSelection();
+}
+
+/**
+ * Hide size configuration
+ */
+function hideSizeConfiguration() {
+    const configSection = document.getElementById('selected-modules-section');
+    if (configSection) {
+        configSection.style.display = 'none';
+        configSection.innerHTML = '';
+    }
+}
+
+/**
+ * Set up size selection handlers - UPDATED VERSION
+ */
+function setupSizeSelection() {
+    const sizeButtons = document.querySelectorAll('.size-btn');
+    
+    sizeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const size = this.dataset.size;
+            const moduleType = this.dataset.module;
             
-            if (newQuantity > 0) {
-                handleModuleSelection(moduleId, true);
-                if (!structureState.moduleSpecs[moduleId]) {
-                    structureState.moduleSpecs[moduleId] = {
-                        id: moduleId,
-                        size: 'medium',
-                        quantity: newQuantity,
-                        specs: MODULE_CATALOG[moduleId].sizes.medium
-                    };
-                } else {
-                    structureState.moduleSpecs[moduleId].quantity = newQuantity;
-                }
-            } else {
-                handleModuleSelection(moduleId, false);
-            }
-        }
-    }
-    
-    /**
-     * Get current quantity for a module
-     */
-    function getCurrentQuantity(moduleId) {
-        const display = document.getElementById(`qty-${moduleId}`);
-        return display ? parseInt(display.textContent) || 0 : 0;
-    }
-    
-    /**
-     * Update quantity display
-     */
-    function updateQuantityDisplay(moduleId, quantity) {
-        const display = document.getElementById(`qty-${moduleId}`);
-        if (display) {
-            display.textContent = quantity;
-        }
-    }
-    
-    /**
-     * Handle module selection/deselection - IMPROVED VERSION
-     */
-    function handleModuleSelection(moduleId, isSelected) {
-        const card = document.querySelector(`[data-module-type="${moduleId}"]`);
-        
-        if (isSelected) {
-            structureState.selectedModules.add(moduleId);
-            if (card) card.classList.add('selected');
+            // Update selected size
+            selectedSize = size;
             
-            // Initialize with medium size by default
-            if (!structureState.moduleSpecs[moduleId]) {
-                structureState.moduleSpecs[moduleId] = {
-                    id: moduleId,
-                    size: 'medium',
-                    quantity: getCurrentQuantity(moduleId) || 1,
-                    specs: MODULE_CATALOG[moduleId].sizes.medium
-                };
-            }
+            // Update button states
+            const allSizeButtons = document.querySelectorAll('.size-btn');
+            allSizeButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
             
-            showModuleConfiguration(moduleId);
-        } else {
-            structureState.selectedModules.delete(moduleId);
-            if (card) card.classList.remove('selected');
-            delete structureState.moduleSpecs[moduleId];
-            hideModuleConfiguration(moduleId);
-        }
-        
-        calculateTotalStats();
-        updateSelectedModulesDisplay();
-        updateNavigationState();
-        
-        console.log(`📦 Module ${moduleId} ${isSelected ? 'selected' : 'deselected'}`);
-    }
-    
-    /**
-     * Set up size selector handlers
-     */
-    function setupSizeSelectors() {
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('size-btn')) {
-                const configItem = e.target.closest('.module-config-item');
-                if (!configItem) return;
-                
-                const moduleId = configItem.dataset.moduleId;
-                const size = e.target.dataset.size;
-                
-                // Update active size button
-                const sizeButtons = configItem.querySelectorAll('.size-btn');
-                sizeButtons.forEach(btn => btn.classList.remove('active'));
-                e.target.classList.add('active');
-                
-                // Update module specs
-                if (structureState.moduleSpecs[moduleId]) {
-                    structureState.moduleSpecs[moduleId].size = size;
-                    structureState.moduleSpecs[moduleId].specs = MODULE_CATALOG[moduleId].sizes[size];
-                }
-                
-                calculateTotalStats();
-                console.log(`📏 Module ${moduleId} size changed to ${size}`);
-            }
+            console.log(`📏 Structure size changed to ${size}`);
+            
+            // Recalculate stats
+            calculateSingleStructureStats();
         });
+    });
+}
+
+/**
+ * Calculate statistics for single structure
+ */
+function calculateSingleStructureStats() {
+    if (!selectedStructureType) {
+        // Reset stats if nothing selected
+        updateStatsDisplay({
+            floorArea: 0,
+            totalVolume: 0,
+            crewCapacity: 0,
+            efficiencyRating: 0
+        });
+        return;
     }
+    
+    const module = MODULE_CATALOG[selectedStructureType];
+    const specs = module.sizes[selectedSize];
+    const efficiency = module.efficiency;
+    
+    // Calculate crew capacity based on NASA standards
+    const requiredVolumePerPerson = getRequiredVolumePerPerson();
+    const habitableVolume = specs.volume * 0.7; // 70% efficiency factor
+    const crewCapacity = Math.floor(habitableVolume / requiredVolumePerPerson);
+    
+    const stats = {
+        floorArea: Math.round(specs.floorArea),
+        totalVolume: Math.round(specs.volume),
+        crewCapacity: Math.max(0, crewCapacity),
+        efficiencyRating: efficiency
+    };
+    
+    updateStatsDisplay(stats);
+    updateNASAValidation(stats);
+}
+
+/**
+ * Update statistics display - SIMPLIFIED VERSION
+ */
+function updateStatsDisplay(stats) {
+    updateElement('total-floor-area', `${stats.floorArea} m²`);
+    updateElement('total-volume', `${stats.totalVolume} m³`);
+    updateElement('crew-capacity', `${stats.crewCapacity} astronauts`);
+    updateElement('efficiency-rating', `${stats.efficiencyRating}%`);
+}
+
+/**
+ * Update NASA standards validation display - SIMPLIFIED VERSION
+ */
+function updateNASAValidation(stats) {
+    const config = structureState.missionConfig;
+    if (!config) return;
+    
+    // Volume per person validation
+    const requiredVolume = getRequiredVolumePerPerson() * config.crewSize;
+    const actualVolume = stats.totalVolume * 0.7; // Habitable volume
+    const volumeCompliant = actualVolume >= requiredVolume;
+    
+    updateValidationItem('volume-per-person', 
+        `${Math.round(actualVolume / config.crewSize)} / ${getRequiredVolumePerPerson()} m³`,
+        volumeCompliant);
+    
+    // Crew capacity validation
+    const capacityCompliant = stats.crewCapacity >= config.crewSize;
+    updateValidationItem('crew-capacity-check',
+        `${stats.crewCapacity} / ${config.crewSize} capacity`,
+        capacityCompliant);
+    
+    // Structure selection validation
+    const structureSelected = selectedStructureType !== null;
+    updateValidationItem('modules-selected',
+        `${structureSelected ? '1' : '0'} structure selected`,
+        structureSelected);
+    
+    // Calculate overall compliance
+    const totalChecks = 3;
+    const passedChecks = [volumeCompliant, capacityCompliant, structureSelected].filter(Boolean).length;
+    const compliancePercentage = Math.round((passedChecks / totalChecks) * 100);
+    
+    updateElement('overall-compliance', `${compliancePercentage}%`);
+}
+
+/**
+ * Update navigation button states - SIMPLIFIED VERSION
+ */
+function updateNavigationState() {
+    const continueBtn = document.getElementById('continue-to-editor-btn');
+    const hasSelection = selectedStructureType !== null;
+    
+    if (continueBtn) {
+        continueBtn.disabled = !hasSelection;
+        continueBtn.classList.toggle('disabled', !hasSelection);
+    }
+}
+
+/**
+ * Save structure selections - SIMPLIFIED VERSION
+ */
+function saveStructureState() {
+    try {
+        const saveData = {
+            selectedStructureType: selectedStructureType,
+            selectedSize: selectedSize,
+            timestamp: Date.now()
+        };
+        
+        localStorage.setItem('spaceArchitects_structure', JSON.stringify(saveData));
+        console.log('💾 Structure state saved');
+    } catch (error) {
+        console.error('❌ Failed to save structure state:', error);
+    }
+}
+
+/**
+ * Load structure selections - SIMPLIFIED VERSION
+ */
+function loadStructureState() {
+    try {
+        const saved = localStorage.getItem('spaceArchitects_structure');
+        if (saved) {
+            const saveData = JSON.parse(saved);
+            
+            if (saveData.selectedStructureType) {
+                selectedStructureType = saveData.selectedStructureType;
+                selectedSize = saveData.selectedSize || 'medium';
+                
+                // Restore UI state
+                updateStructureSelection(selectedStructureType, true);
+                showSizeConfiguration(selectedStructureType);
+                calculateSingleStructureStats();
+                updateNavigationState();
+            }
+            
+            console.log('📂 Structure state loaded');
+        }
+    } catch (error) {
+        console.error('❌ Failed to load structure state:', error);
+    }
+}
+
+/**
+ * Get current structure state - SIMPLIFIED VERSION
+ */
+function getStructureState() {
+    return {
+        selectedStructureType: selectedStructureType,
+        selectedSize: selectedSize,
+        missionConfig: { ...structureState.missionConfig }
+    };
+}
     
     /**
      * Set up navigation button handlers
@@ -318,33 +462,9 @@ const StructurePage = (function() {
         }
     }
     
-    /**
-     * Set up 3D animation effects
-     */
-    function setupAnimations() {
-        console.log('🎭 3D animations initialized');
-    }
+
     
-    /**
-     * Start module 3D animation
-     */
-    function startModuleAnimation(moduleId) {
-        const moduleVisual = document.querySelector(`[data-module-type="${moduleId}"] .module-3d`);
-        if (moduleVisual) {
-            moduleVisual.style.animationPlayState = 'running';
-        }
-    }
-    
-    /**
-     * Stop module 3D animation 
-     */
-    function stopModuleAnimation(moduleId) {
-        const moduleVisual = document.querySelector(`[data-module-type="${moduleId}"] .module-3d`);
-        if (moduleVisual) {
-            moduleVisual.style.animationPlayState = 'paused';
-        }
-    }
-    
+
     /**
      * Show module configuration options
      */

@@ -288,7 +288,7 @@ Key fixes implemented:
         </div>
     </div>
     
-    <!-- STRUCTURE PAGE (FIXED VERSION) -->
+    <!-- STRUCTURE PAGE  -->
     <div id="structure-page" class="page">
         <!-- Reuse space background -->
         <div class="space-background">
@@ -322,8 +322,7 @@ Key fixes implemented:
                                 </div>
                             </div>
                             <div class="module-selector">
-                                <input type="checkbox" id="dome-checkbox" class="module-checkbox" data-module="dome">
-                                <label for="dome-checkbox" class="checkbox-label">Select</label>
+                               <button type="button" class="structure-select-btn" data-module="dome">Select</button>
                             </div>
                         </div>
                         
@@ -337,10 +336,9 @@ Key fixes implemented:
                                     <div class="spec-item">70% space efficiency</div>
                                 </div>
                             </div>
-                            <div class="module-selector">
-                                <input type="checkbox" id="torus-checkbox" class="module-checkbox" data-module="torus">
-                                <label for="torus-checkbox" class="checkbox-label">Select</label>
-                            </div>
+                           <div class="module-selector">
+                            <button type="button" class="structure-select-btn" data-module="torus">Select</button>
+                          </div>
                         </div>
                         
                         <!-- Cube Module -->
@@ -354,8 +352,7 @@ Key fixes implemented:
                                 </div>
                             </div>
                             <div class="module-selector">
-                                <input type="checkbox" id="cube-checkbox" class="module-checkbox" data-module="cube">
-                                <label for="cube-checkbox" class="checkbox-label">Select</label>
+                                <button type="button" class="structure-select-btn" data-module="cube">Select</button>
                             </div>
                         </div>
                         
@@ -370,8 +367,7 @@ Key fixes implemented:
                                 </div>
                             </div>
                             <div class="module-selector">
-                                <input type="checkbox" id="cylinder-checkbox" class="module-checkbox" data-module="cylinder">
-                                <label for="cylinder-checkbox" class="checkbox-label">Select</label>
+                                <button type="button" class="structure-select-btn" data-module="cylinder">Select</button>
                             </div>
                         </div>
                     </div>
@@ -1449,242 +1445,7 @@ select.form-control {
     format('woff2');
 }
 
-/* END PERPLEXITY DESIGN SYSTEM */
-/* FIX 2: 3D MODULE ANIMATIONS */
-/* Add this CSS to make all modules properly 3D */
 
-/* Base 3D container for all modules */
-.module-3d {
-    width: 80px;
-    height: 80px;
-    position: relative;
-    margin: 0 auto var(--space-16);
-    transform-style: preserve-3d;
-    animation: moduleRotate 6s infinite linear;
-}
-
-/* Rotation animation for all modules */
-@keyframes moduleRotate {
-    from { transform: rotateY(0deg) rotateX(15deg); }
-    to { transform: rotateY(360deg) rotateX(15deg); }
-}
-
-/* DOME MODULE - Spherical 3D effect */
-.dome-shape {
-    position: relative;
-    perspective: 200px;
-}
-
-.dome-hemisphere {
-    width: 80px;
-    height: 40px;
-    background: linear-gradient(135deg, var(--color-teal-300) 0%, var(--color-teal-500) 50%, var(--color-teal-700) 100%);
-    border-radius: 40px 40px 0 0;
-    position: relative;
-    transform-style: preserve-3d;
-    box-shadow: 
-        inset -10px -5px 15px rgba(var(--color-slate-900-rgb), 0.3),
-        0 5px 15px rgba(var(--color-teal-500-rgb), 0.4);
-}
-
-.dome-hemisphere::before {
-    content: '';
-    position: absolute;
-    top: var(--space-8);
-    left: var(--space-12);
-    width: 56px;
-    height: var(--space-24);
-    background: linear-gradient(135deg, rgba(var(--color-gray-200-rgb), 0.6) 0%, rgba(var(--color-gray-200-rgb), 0.1) 100%);
-    border-radius: 28px 28px 0 0;
-    transform: rotateX(-15deg);
-}
-
-.dome-base {
-    width: 80px;
-    height: var(--space-20);
-    background: linear-gradient(135deg, var(--color-teal-500) 0%, var(--color-teal-700) 50%, var(--color-teal-800) 100%);
-    border-radius: 0 0 var(--radius-base) var(--radius-base);
-    transform: translateZ(2px);
-    box-shadow: 
-        inset 0 2px 5px rgba(var(--color-slate-900-rgb), 0.3),
-        var(--shadow-lg);
-}
-
-/* TORUS MODULE - Ring 3D effect */
-.torus-shape {
-    position: relative;
-    perspective: 200px;
-}
-
-.torus-ring {
-    width: 80px;
-    height: 80px;
-    border: var(--space-16) solid var(--color-red-400);
-    border-radius: 50%;
-    position: relative;
-    background: transparent;
-    transform-style: preserve-3d;
-    box-shadow: 
-        inset -8px -8px 15px rgba(var(--color-slate-900-rgb), 0.3),
-        inset 8px 8px 15px rgba(var(--color-gray-200-rgb), 0.2),
-        0 8px 20px rgba(var(--color-red-400-rgb), 0.4);
-}
-
-.torus-ring::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: -8px;
-    right: -8px;
-    bottom: -8px;
-    border: var(--space-4) solid rgba(var(--color-gray-200-rgb), 0.3);
-    border-radius: 50%;
-    transform: rotateX(60deg) translateZ(8px);
-}
-
-.torus-inner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: var(--space-32);
-    height: var(--space-32);
-    transform: translate(-50%, -50%) translateZ(8px);
-    background: radial-gradient(circle, rgba(var(--color-slate-900-rgb), 0.6) 30%, transparent 70%);
-    border-radius: 50%;
-}
-
-/* CYLINDER MODULE - Elongated 3D effect */
-.cylinder-shape {
-    position: relative;
-    perspective: 200px;
-}
-
-.cylinder-nose {
-    width: var(--space-24);
-    height: var(--space-24);
-    background: linear-gradient(135deg, var(--color-gray-300) 0%, var(--color-gray-400) 50%, var(--color-slate-500) 100%);
-    border-radius: 50%;
-    position: absolute;
-    top: var(--space-8);
-    left: 28px;
-    transform: translateZ(12px);
-    box-shadow: 
-        inset -3px -3px 6px rgba(var(--color-slate-900-rgb), 0.3),
-        var(--shadow-md);
-}
-
-.cylinder-body {
-    width: 80px;
-    height: 48px;
-    background: linear-gradient(135deg, var(--color-gray-200) 0%, var(--color-gray-300) 50%, var(--color-gray-400) 100%);
-    position: relative;
-    top: var(--space-16);
-    border-radius: var(--radius-base);
-    transform-style: preserve-3d;
-    box-shadow: 
-        inset -8px -4px 12px rgba(var(--color-slate-900-rgb), 0.3),
-        inset 8px 4px 12px rgba(var(--color-gray-200-rgb), 0.2),
-        var(--shadow-lg);
-}
-
-.cylinder-body::before {
-    content: '';
-    position: absolute;
-    top: var(--space-4);
-    left: var(--space-8);
-    width: 64px;
-    height: var(--space-8);
-    background: linear-gradient(90deg, rgba(var(--color-gray-200-rgb), 0.4) 0%, rgba(var(--color-gray-200-rgb), 0.1) 100%);
-    border-radius: var(--radius-sm);
-    transform: rotateX(-30deg);
-}
-
-.cylinder-end {
-    width: var(--space-20);
-    height: var(--space-20);
-    background: linear-gradient(135deg, var(--color-gray-400) 0%, var(--color-slate-500) 100%);
-    border-radius: 50%;
-    position: absolute;
-    top: 30px;
-    right: -2px;
-    transform: translateZ(6px);
-    box-shadow: 
-        inset 2px 2px 4px rgba(var(--color-slate-900-rgb), 0.4),
-        var(--shadow-sm);
-}
-
-/* CUBE MODULE - Enhanced 3D effect (keep existing but improve) */
-.cube-shape {
-    width: 60px;
-    height: 60px;
-    position: relative;
-    transform-style: preserve-3d;
-    margin: var(--space-10) auto;
-}
-
-.cube-face {
-    position: absolute;
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, var(--color-orange-400) 0%, var(--color-orange-500) 50%, var(--color-red-400) 100%);
-    border: 2px solid var(--color-red-500);
-    box-shadow: inset 0 0 20px rgba(var(--color-slate-900-rgb), 0.2);
-}
-
-.cube-face.front {
-    transform: rotateY(0deg) translateZ(30px);
-}
-
-.cube-face.back {
-    transform: rotateY(180deg) translateZ(30px);
-}
-
-.cube-face.right {
-    transform: rotateY(90deg) translateZ(30px);
-    background: linear-gradient(135deg, var(--color-orange-500) 0%, var(--color-red-400) 50%, var(--color-red-500) 100%);
-}
-
-.cube-face.left {
-    transform: rotateY(-90deg) translateZ(30px);
-    background: linear-gradient(135deg, var(--color-orange-500) 0%, var(--color-red-400) 50%, var(--color-red-500) 100%);
-}
-
-.cube-face.top {
-    transform: rotateX(90deg) translateZ(30px);
-    background: linear-gradient(135deg, var(--color-orange-400) 0%, var(--color-orange-500) 100%);
-}
-
-.cube-face.bottom {
-    transform: rotateX(-90deg) translateZ(30px);
-    background: linear-gradient(135deg, var(--color-red-400) 0%, var(--color-red-500) 100%);
-}
-
-/* Hover effects for all modules */
-.module-card:hover .module-3d {
-    animation-duration: 2s; /* Speed up rotation on hover */
-    transform: scale(1.1);
-    transition: transform var(--duration-normal) var(--ease-standard);
-}
-
-.module-card:hover .dome-hemisphere {
-    box-shadow: 
-        inset -10px -5px 15px rgba(var(--color-slate-900-rgb), 0.3),
-        0 8px 25px rgba(var(--color-teal-500-rgb), 0.6);
-}
-
-.module-card:hover .torus-ring {
-    box-shadow: 
-        inset -8px -8px 15px rgba(var(--color-slate-900-rgb), 0.3),
-        inset 8px 8px 15px rgba(var(--color-gray-200-rgb), 0.2),
-        0 12px 30px rgba(var(--color-red-400-rgb), 0.6);
-}
-
-.module-card:hover .cylinder-body {
-    box-shadow: 
-        inset -8px -4px 12px rgba(var(--color-slate-900-rgb), 0.3),
-        inset 8px 4px 12px rgba(var(--color-gray-200-rgb), 0.2),
-        0 10px 25px rgba(var(--color-slate-900-rgb), 0.6);
-}
 
 /* Additional lighting effects */
 .module-visual {
@@ -1840,8 +1601,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(function() {
         console.log('🏗️ Setting up module selection system...');
         
-        // Convert checkboxes to quantity selectors
-        setupModuleQuantityControls();
         
         // Update statistics initially
         updateTotalStatistics();
@@ -1849,85 +1608,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1500);
 });
 
-function setupModuleQuantityControls() {
-    const moduleCards = document.querySelectorAll('.module-card');
-    
-    moduleCards.forEach(card => {
-        const moduleType = card.dataset.moduleType;
-        const checkbox = card.querySelector('.module-checkbox');
-        const label = card.querySelector('.checkbox-label');
-        
-        if (checkbox && label && moduleType) {
-            // Replace checkbox with quantity controls
-            const quantityControls = createQuantityControls(moduleType);
-            const selectorDiv = card.querySelector('.module-selector');
-            
-            if (selectorDiv) {
-                selectorDiv.innerHTML = '';
-                selectorDiv.appendChild(quantityControls);
-                console.log(`✅ Converted ${moduleType} to quantity control`);
-            }
-        }
-    });
-}
 
-function createQuantityControls(moduleType) {
-    const container = document.createElement('div');
-    container.className = 'quantity-controls';
-    container.innerHTML = `
-        <button type="button" class="quantity-btn minus" data-module="${moduleType}">−</button>
-        <span class="quantity-display" id="qty-${moduleType}">0</span>
-        <button type="button" class="quantity-btn plus" data-module="${moduleType}">+</button>
-        <div class="quantity-label">modules</div>
-    `;
-    
-    // Add event listeners
-    const minusBtn = container.querySelector('.minus');
-    const plusBtn = container.querySelector('.plus');
-    
-    minusBtn.addEventListener('click', () => changeQuantity(moduleType, -1));
-    plusBtn.addEventListener('click', () => changeQuantity(moduleType, 1));
-    
-    return container;
-}
 
-function changeQuantity(moduleType, change) {
-    const currentQty = selectedModules[moduleType];
-    const newQty = Math.max(0, Math.min(5, currentQty + change)); // 0-5 modules max
-    
-    if (newQty !== currentQty) {
-        selectedModules[moduleType] = newQty;
-        
-        // Update display
-        const display = document.getElementById(`qty-${moduleType}`);
-        if (display) {
-            display.textContent = newQty;
-        }
-        
-        // Update module card appearance
-        updateModuleCardAppearance(moduleType, newQty);
-        
-        // Update total statistics
-        updateTotalStatistics();
-        
-        console.log(`📊 ${moduleType}: ${currentQty} → ${newQty}`);
-    }
-}
-
-function updateModuleCardAppearance(moduleType, quantity) {
-    const card = document.querySelector(`[data-module-type="${moduleType}"]`);
-    if (card) {
-        if (quantity > 0) {
-            card.classList.add('selected');
-            card.style.borderColor = '#4a90e2';
-            card.style.boxShadow = '0 4px 15px rgba(74, 144, 226, 0.3)';
-        } else {
-            card.classList.remove('selected');
-            card.style.borderColor = '';
-            card.style.boxShadow = '';
-        }
-    }
-}
 
 function updateTotalStatistics() {
     console.log('📊 Updating total habitat statistics...');
@@ -3117,85 +2799,7 @@ canvas {
 
 <script>
 
-function convertModulesToQuantitySystem() {
-    const moduleCards = document.querySelectorAll('.module-card');
-    
-    moduleCards.forEach(card => {
-        const moduleType = card.dataset.moduleType;
-        const selectorDiv = card.querySelector('.module-selector');
-        
-        if (moduleType && selectorDiv) {
-            // Reemplazar con sistema de cantidad como segunda imagen
-            selectorDiv.innerHTML = `
-                <div class="quantity-system">
-                    <button type="button" class="quantity-btn minus" data-module="${moduleType}">−</button>
-                    <span class="quantity-display" id="qty-${moduleType}">0</span>
-                    <button type="button" class="quantity-btn plus" data-module="${moduleType}">+</button>
-                    <div class="quantity-label">MODULES</div>
-                </div>
-            `;
-            
-            console.log(`✅ Convertido ${moduleType} a sistema de cantidad`);
-        }
-    });
-}
 
-function setupQuantityControls() {
-    // Event listeners para botones + y -
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('quantity-btn')) {
-            const moduleType = e.target.dataset.module;
-            const isPlus = e.target.classList.contains('plus');
-            
-            if (isPlus) {
-                increaseQuantity(moduleType);
-            } else {
-                decreaseQuantity(moduleType);
-            }
-        }
-    });
-}
-
-function increaseQuantity(moduleType) {
-    if (moduleSelection[moduleType].quantity < 5) {
-        moduleSelection[moduleType].quantity += 1;
-        
-        // Marcar como seleccionado si es el primero
-        if (moduleSelection[moduleType].quantity === 1) {
-            moduleSelection[moduleType].selected = true;
-            markModuleAsSelected(moduleType, true);
-        }
-        
-        updateQuantityDisplay(moduleType);
-        updateConfigurationDisplay();
-        
-        console.log(`➕ ${moduleType}: ${moduleSelection[moduleType].quantity}`);
-    }
-}
-
-function decreaseQuantity(moduleType) {
-    if (moduleSelection[moduleType].quantity > 0) {
-        moduleSelection[moduleType].quantity -= 1;
-        
-        // Marcar como no seleccionado si llega a 0
-        if (moduleSelection[moduleType].quantity === 0) {
-            moduleSelection[moduleType].selected = false;
-            markModuleAsSelected(moduleType, false);
-        }
-        
-        updateQuantityDisplay(moduleType);
-        updateConfigurationDisplay();
-        
-        console.log(`➖ ${moduleType}: ${moduleSelection[moduleType].quantity}`);
-    }
-}
-
-function updateQuantityDisplay(moduleType) {
-    const display = document.getElementById(`qty-${moduleType}`);
-    if (display) {
-        display.textContent = moduleSelection[moduleType].quantity;
-    }
-}
 
 function markModuleAsSelected(moduleType, isSelected) {
     const card = document.querySelector(`[data-module-type="${moduleType}"]`);
